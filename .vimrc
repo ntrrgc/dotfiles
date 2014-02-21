@@ -1,6 +1,6 @@
 set nocompatible
 set linebreak ts=4 sw=4 expandtab
-set relativenumber
+set number relativenumber
 filetype off
 
 if has('unnamedplus')
