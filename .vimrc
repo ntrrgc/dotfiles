@@ -81,3 +81,4 @@ Bundle 'sickill/vim-pasta'
 Bundle 'b4winckler/vim-angry'
 
 filetype plugin indent on
+syntax on
