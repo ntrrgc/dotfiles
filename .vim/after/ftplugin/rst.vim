@@ -10,7 +10,11 @@ function! s:UpdateHeaderLine()
   let header_line = getline(line('.') + 1)
   if header_line =~# '^[\-=]\+$'
     let line_char = matchstr(header_line, '^[\-=]')
-    call setline(line('.') + 1, substitute(getline('.'), '.', line_char, 'g'))
+    let line_before = getline(line('.') + 1)
+    let line_after = substitute(getline(line('.')), '.', line_char, 'g')
+    if line_after != line_before
+      call setline(line('.') + 1, line_after)
+    endif
   endif
 endfunction
 
