@@ -9,9 +9,34 @@ else
     set clipboard=unnamed
 endif
 
+function! Strip(input_string)
+    return substitute(a:input_string, '^\s*\(.\{-}\)\s*$', '\1', '')
+endfunction
+
+function! SystemName()
+  let lsb = readfile("/etc/lsb-release")
+  let lsb_data = {}
+  for line in lsb
+    let line_data = split(line, "=")
+    let key = Strip(line_data[0])
+    let value = Strip(line_data[1])
+    let value = substitute(value, '"', '', 'g')
+    let lsb_data[key] = value
+  endfor
+
+  return lsb_data['DISTRIB_ID']
+endfunction
+let system_name = SystemName()
+
 if has('gui_running')
     set guioptions-=T
     colorscheme django
+
+    " Use Oxygen Mono font, but not in Ubuntu, where default font is nice
+    " enough
+    if system_name != "Ubuntu"
+        set guifont=Oxygen\ Mono\ 10
+    endif
 
     " Vim 7.3 mouse bug workaround
     set nomousehide
