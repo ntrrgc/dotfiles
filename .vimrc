@@ -19,7 +19,7 @@ if has('gui_running')
     " If gvim has just been executed, set width and height, but do not if
     " vimrc has been sourced.
     if ! exists("g:vimrc_sourced")
-        set lines=34 columns=84
+        set lines=34 columns=120
         let g:vimrc_sourced=1
     endif
 else
@@ -45,6 +45,7 @@ Bundle 'gmarik/vundle'
 
 " NERDTree
 map <F3> :NERDTreeToggle<Return>
+let NERDTreeChDirMode=2
 let NERDTreeIgnore=['\.pyc$', '__pycache__', '\~$']
 Bundle 'scrooloose/nerdtree'
 
