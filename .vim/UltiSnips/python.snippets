@@ -1,0 +1,79 @@
+snippet ipdb "ipdb" !b
+import ipdb; ipdb.set_trace()
+endsnippet
+snippet imp "Module import" b
+import ${1:module}
+endsnippet
+
+snippet fim "from import" !b
+from ${1:module} import ${2:thing}
+endsnippet
+
+snippet ut "Unit test" b
+import unittest
+
+
+class Test${1:Name}(unittest.TestCase):
+    def setUp(self):
+        ${2:pass}
+
+    def test_${3:thing}(self):
+        ${4:pass}
+
+
+if __name__ == "__main__":
+    unittest.main()
+endsnippet
+
+snippet m "Method" !b
+def ${1:method}(self`!p 
+snip.rv = ', ' if t[2] != "" else ""
+`${2}):
+    ${3:pass}
+
+endsnippet
+
+snippet in "__init__" !b
+def __init__(self`!p
+snip.rv = ', ' if t[2] != "" else ""
+`${2}):
+    `!p
+snip >> 1
+args = [x.split('=')[0].strip() for x in t[2].split(',')]
+first_time = True
+snip.rv = ""
+for arg in args:
+    if arg == "":
+        continue
+    line = 'self.{0} = {0}'.format(arg)
+    if first_time:
+        snip.rv = line
+        first_time = False
+    else:
+        snip += line
+
+if snip.rv == "":
+    snip.rv = "pass"
+`
+
+endsnippet
+
+snippet r "return" b
+return 
+endsnippet
+
+snippet ifm "if main" !b
+if __name__ == "__main__":
+    ${1:pass}
+endsnippet
+
+snippet lic "License" !b
+# -*- encoding: UTF-8 -*-
+"""
+django_idp
+
+(c) 2014 Juan Luis Boya García
+MIT License
+"""
+
+endsnippet
