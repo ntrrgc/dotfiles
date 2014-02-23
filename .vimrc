@@ -92,6 +92,7 @@ Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-pyref'
 
 " Emmet
+let g:user_emmet_expandabbr_key='<c-space>'
 Bundle 'mattn/emmet-vim'
 
 " UltiSnips
