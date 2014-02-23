@@ -108,5 +108,8 @@ Bundle 'sickill/vim-pasta'
 " vim-angry
 Bundle 'b4winckler/vim-angry'
 
+" DrawIt
+Bundle 'vim-scripts/DrawIt'
+
 filetype plugin indent on
 syntax on
