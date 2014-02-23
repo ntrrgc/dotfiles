@@ -18,8 +18,33 @@ function! s:UpdateHeaderLine()
   endif
 endfunction
 
+function! MakeTitle()
+  let line_char = getchar()
+  " Cancel with Esc key
+  if line_char == 27
+    return 1
+  endif
+
+  let line = substitute(getline(line('.')), '.', nr2char(line_char), 'g')
+  call append(line('.'), line)
+  call append(line('.') + 1, "")
+  call append(line('.') + 2, "")
+  call setpos('.', [0, line('.') + 3, 1, 0])
+endfunction
+
+function! SaveAndMake()
+  write
+  silent !make html
+  silent !f5chrome
+endfunction
+
 augroup UpdateHeader
   au!
 
   autocmd CursorMoved,CursorMovedI <buffer> call s:UpdateHeaderLine()
 augroup END
+
+noremap <buffer> <silent> tt :call MakeTitle()<CR>
+noremap <buffer> <C-s> :call SaveAndMake()<CR>
+
+setlocal spell spelllang=en_us
