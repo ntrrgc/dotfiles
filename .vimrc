@@ -111,5 +111,8 @@ Bundle 'b4winckler/vim-angry'
 " DrawIt
 Bundle 'vim-scripts/DrawIt'
 
+" Javascript
+Bundle 'pangloss/vim-javascript'
+
 filetype plugin indent on
 syntax on
