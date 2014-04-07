@@ -111,5 +111,8 @@ Bundle 'vim-scripts/DrawIt'
 " Javascript
 Bundle 'pangloss/vim-javascript'
 
+" Ansible
+Bundle 'chase/vim-ansible-yaml'
+
 filetype plugin indent on
 syntax on
