@@ -32,11 +32,8 @@ if has('gui_running')
     set guioptions-=T
     colorscheme django
 
-    " Use Oxygen Mono font, but not in Ubuntu, where default font is nice
-    " enough
-    if system_name != "Ubuntu"
-        set guifont=Oxygen\ Mono\ 10
-    endif
+    set guifont="Ubuntu Mono 12"
+    colorscheme jellybeans
 
     " Vim 7.3 mouse bug workaround
     set nomousehide
