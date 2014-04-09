@@ -32,7 +32,7 @@ if has('gui_running')
     set guioptions-=T
     colorscheme django
 
-    set guifont="Ubuntu Mono 12"
+    set guifont=Ubuntu\ Mono\ 12
     colorscheme jellybeans
 
     " Vim 7.3 mouse bug workaround
