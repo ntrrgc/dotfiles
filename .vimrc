@@ -101,6 +101,9 @@ Bundle 'vim-scripts/DrawIt'
 " Javascript
 Bundle 'pangloss/vim-javascript'
 
+" Better JSON
+Bundle 'jakar/vim-json'
+
 " Ansible
 Bundle 'chase/vim-ansible-yaml'
 
