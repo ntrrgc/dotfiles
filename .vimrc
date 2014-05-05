@@ -107,5 +107,10 @@ Bundle 'jakar/vim-json'
 " Ansible
 Bundle 'chase/vim-ansible-yaml'
 
+" AutoPairs
+let g:AutoPairsFlyMode = 0
+let g:AutoPairsShortcutFastWrap = '<C-e>'
+Bundle 'jiangmiao/auto-pairs'
+
 filetype plugin indent on
 syntax on
