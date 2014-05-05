@@ -49,6 +49,8 @@ else
     set mouse=a
 endif
 
+noremap Q <nop>
+
 cmap w!! w !sudo tee >/dev/null %
 
 set rtp+=~/.vim/bundle/vundle/
