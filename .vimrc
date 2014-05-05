@@ -52,6 +52,7 @@ endif
 noremap Q <nop>
 command W w !sudo tee >/dev/null %
 noremap <C-s> :w<CR>
+noremap <F2> @q
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
