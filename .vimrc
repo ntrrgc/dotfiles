@@ -49,18 +49,6 @@ else
     set mouse=a
 endif
 
-" Unset Caps Lock when leaving command mode
-function! UnsetCapsLock()
-  python << endpython
-from ctypes import *
-X11 = cdll.LoadLibrary("libX11.so.6")
-display = X11.XOpenDisplay(None)
-X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0))
-X11.XCloseDisplay(display)
-endpython
-endfunction
-autocmd InsertLeave * call UnsetCapsLock()
-
 cmap w!! w !sudo tee >/dev/null %
 
 set rtp+=~/.vim/bundle/vundle/
