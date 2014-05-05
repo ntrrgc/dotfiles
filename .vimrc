@@ -79,7 +79,14 @@ Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-pyref'
 
 " Emmet
-let g:user_emmet_expandabbr_key='<c-space>'
+let g:user_emmet_install_global = 0
+if has('gui_running')
+  let g:user_emmet_expandabbr_key='<c-space>'
+endif
+let g:user_emmet_balancetagoutward_key='<c-d>'
+let g:user_emmet_balancetaginward_key='<c-e>'
+inoremap <C-@> <C-Space>
+autocmd FileType html,css EmmetInstall
 Bundle 'mattn/emmet-vim'
 
 " UltiSnips
