@@ -121,5 +121,8 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutFastWrap = '<C-e>'
 Bundle 'jiangmiao/auto-pairs'
 
+" vim-fugitive (git integration)
+Bundle 'tpope/vim-fugitive'
+
 filetype plugin indent on
 syntax on
