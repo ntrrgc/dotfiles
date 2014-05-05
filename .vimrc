@@ -50,7 +50,7 @@ else
 endif
 
 noremap Q <nop>
-command W w !sudo tee >/dev/null %
+command! W w !sudo tee >/dev/null %
 noremap <C-s> :w<CR>
 noremap <F2> @q
 
