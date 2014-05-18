@@ -79,11 +79,40 @@ MIT License
 endsnippet
 
 snippet d "define" !b
-def ${1}(${2}):
-    ${3}
+def ${1:function}(${2}):
+    ${3:pass}
 endsnippet
 
 snippet c "class" !b
-class ${1}(${2}):
-    ${3}
+class ${1}(${2:object}):
+    ${3:pass}
+endsnippet
+
+snippet eq "equal" !b
+self.assertEqual(${1}, ${2})
+endsnippet
+
+snippet no "equal" !b
+self.assertIsNone(${1})
+endsnippet
+
+snippet ex "exception" !b
+class ${1}(${2:Exception}):
+    ${3:pass}
+
+endsnippet
+
+snippet ar "assert raises" !b
+with self.assertRaises(${1}):
+    ${2:pass}
+endsnippet
+
+snippet tc "TestCase" !b
+class Test${1}(unittest.TestCase):
+    ${2}
+endsnippet
+
+snippet t "test" !b
+def test_${1}(self${2}):
+    ${3:pass}
 endsnippet
