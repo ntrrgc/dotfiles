@@ -22,7 +22,7 @@ class NotInTag(Exception):
 class BadSyntax(Exception):
     pass
 
-def get_tag_bounds(pos):
+def get_tag_bounds(pos, allow_comments=False):
     """
     Given a cursor, if the cursor is within the bounds of a tag, returns two
     cursors to the bounds of that tag. In other case, returns None.
@@ -36,6 +36,10 @@ def get_tag_bounds(pos):
     if start_tag_left is None or end_tag_right is None:
         raise NotInTag
     else:
+        if not allow_comments:
+            code = Range(start_tag_left, end_tag_right).text
+            if code.startswith("<!--") or code.endswith("-->"):
+                raise NotInTag
         return (start_tag_left, end_tag_right)
 
 def cursor_in_tag(pos):
@@ -65,6 +69,18 @@ def get_tag_stack_level(tag_code):
         else:
             return 1
 
+def find_tag(cursor, direction):
+    while True:
+        cursor = search(cursor, direction, ["<"], [])
+
+        try:
+            bounds = get_tag_bounds(cursor)
+            return bounds
+        except NotInTag:
+            # Not a tag really (e.g. a <!-- comment -->)
+            cursor = cursor.advance_chars({"left": -1, "right": 1}[direction])
+            continue
+
 def find_tag_pair(pos):
     try:
         tag_start, tag_end = get_tag_bounds(pos)
@@ -78,12 +94,10 @@ def find_tag_pair(pos):
         after_previous_tag = tag_end.next_char()
         try:
             while True:
-                next_tag_start = search(after_previous_tag, 'right', ['<'], [])
-                if next_tag_start is None:
-                    return None
+                next_tag = find_tag(after_previous_tag, 'right')
 
-                next_tag_start, next_tag_end = get_tag_bounds(next_tag_start)
-                next_tag_code = Range(next_tag_start, next_tag_end).text
+                next_tag_start, next_tag_end = next_tag
+                next_tag_code = Range(*next_tag).text
                 stack_size += get_tag_stack_level(next_tag_code)
 
                 if stack_size == 0:
@@ -104,11 +118,9 @@ def find_tag_pair(pos):
         before_prev_tag = tag_start.prev_char()
         try:
             while True:
-                prev_tag_start = search(before_prev_tag, 'left', ['>'], [])
-                if prev_tag_start is None:
-                    return None
+                prev_tag = find_tag(before_prev_tag, 'left')
 
-                prev_tag_start, prev_tag_end = get_tag_bounds(prev_tag_start)
+                prev_tag_start, prev_tag_end = prev_tag
                 prev_tag_code = Range(prev_tag_start, prev_tag_end).text
                 stack_size += get_tag_stack_level(prev_tag_code)
                 if stack_size == 0:
@@ -207,6 +219,26 @@ class TestGetBounds(unittest.TestCase):
         doc = MockDocument(["<li>"])
         self.assertEqual(get_tag_bounds(doc.make_cursor(0, 3)), ((0,0), (0,3)))
 
+    def test_with_comment(self):
+        pos = TC("<!-- Hello World {|}-->")
+        with self.assertRaises(NotInTag):
+            get_tag_bounds(pos)
+
+    def test_with_comment_support(self):
+        pos = TC("<!-- Hello World {|}-->")
+        self.assertEqual(Range(*get_tag_bounds(pos, True)).text,
+                        "<!-- Hello World -->")
+
+    def test_with_ie_comment_opening(self):
+        pos = TC("<!--[if {|}lt IE 9]>")
+        with self.assertRaises(NotInTag):
+            get_tag_bounds(pos)
+    
+    def test_with_ie_comment_closing(self):
+        pos = TC("<![endif]{|}-->")
+        with self.assertRaises(NotInTag):
+            get_tag_bounds(pos)
+
 class TestIsOpening(unittest.TestCase):
     def test_opening(self):
         self.assertFalse(is_closing_tag('<li class="foo">'))
@@ -266,7 +298,24 @@ class TestGetPairing(unittest.TestCase):
     def test_self_closing(self):
         pos = TC('<head><meta charset="UTF-8"{|}></head>')
         self.assertIsNone(find_tag_pair(pos))
+
+    def test_ie(self):
+        pos = TC("""
+        <head{|}>
+            <!--[if lt IE 9]>
+            <script src="lib/js/html5shiv.js"></script>
+            <![endif]-->
+	</head>""")
+        self.assertEqual(Range(*find_tag_pair(pos)).text, "</head>")
     
+    def test_ie2(self):
+        pos = TC("""
+        <head>
+            <!--[if lt IE 9]>
+            <script src="lib/js/html5shiv.js"></script>
+            <![endif]-->
+	</head{|}>""")
+        self.assertEqual(Range(*find_tag_pair(pos)).text, "<head>")
 
 class TestGetTagName(unittest.TestCase):
     def test_names(self):
@@ -288,6 +337,26 @@ class TestTagStackLevel(unittest.TestCase):
         self.assertEqual(get_tag_stack_level('<img>'), 0)
         self.assertEqual(get_tag_stack_level('<meta charset="UTF-8">'), 0)
     
+class TestFindTag(unittest.TestCase):
+    def test_tag_right(self):
+        pos = TC("<img>foo {|}bar<div>")
+        start, end = find_tag(pos, "right")
+        self.assertEqual((start.col, end.col), (12, 16))
+
+    def test_tag_left(self):
+        pos = TC("<img>foo {|}bar<div>")
+        start, end = find_tag(pos, "left")
+        self.assertEqual((start.col, end.col), (0, 4))
+
+    def test_tag_left_incomplete(self):
+        pos = TC("img>foo {|}bar<div>")
+        with self.assertRaises(HitDocumentBounds):
+            find_tag(pos, "left")
+
+    def test_tag_right_incomplete(self):
+        pos = TC("<img>foo {|}bar<div")
+        with self.assertRaises(HitDocumentBounds):
+            find_tag(pos, "right")
 
 if __name__ == "__main__":
     unittest.main()
