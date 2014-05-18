@@ -43,8 +43,10 @@ class VimDocument(object):
         vim.current.window.cursor = (cursor.line + 1, cursor.col)
     
     
-def jump_to_pairing():
+def jump_to_pairing(mode):
     document = VimDocument()
+    if mode == "v":
+        vim.command("normal! gv")
 
     pos = document.get_caret()
     if cursor_in_tag(pos):
