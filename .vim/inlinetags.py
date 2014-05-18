@@ -131,6 +131,43 @@ def find_tag_pair(pos):
         except HitDocumentBounds:
             return None #exhausted entire document without empting the stack
 
+def expand_cursor(cursor):
+    try:
+        if cursor_in_tag(cursor):
+            this_tag = get_tag_bounds(cursor)
+
+            if get_tag_stack_level(Range(*this_tag).text) == 0:
+                # Self closing tag, select only itself
+                return Range(*this_tag)
+            else:
+                # This tag should have a pairing, find it
+                other_tag = find_tag_pair(cursor)
+                if not other_tag:
+                    # Invalid (e.g. insufficient) markup, just return
+                    return
+
+                # This tag has a pair, select from opening to closing tag
+                if this_tag < other_tag:
+                    opening_tag = this_tag
+                    closing_tag = other_tag
+                else:
+                    opening_tag = other_tag
+                    closing_tag = this_tag
+
+                # from first char of opening tag to last char of closing tag
+                return Range(opening_tag[0], closing_tag[1])
+        else:
+            _, tag_left = find_tag(cursor, "left")
+            tag_right, _ = find_tag(cursor, "right")
+
+            # Select the text within the nearer tags.
+            return Range(tag_left.next_char(), tag_right.prev_char())
+    except HitDocumentBounds:
+        return None
+
+def expand_selection(sel):
+    pass
+
 import unittest
 from conversion import pos_to_xy
 
@@ -145,6 +182,19 @@ def TC(code, pos=None):
     line, col = pos_to_xy(doc.lines, pos)
 
     return doc.make_cursor(line, col)
+
+def TR(code):
+    """Test range"""
+    doc = MockDocument(code.replace("{|","").replace("|}","").split("\n"))
+
+    sel_start_chars = code.find("{|")
+    sel_end_chars = code.replace("{|", "").find("|}") - 1
+
+    sel_start = pos_to_xy(doc.lines, sel_start_chars)
+    sel_end = pos_to_xy(doc.lines, sel_end_chars)
+
+    return Range(doc.make_cursor(*sel_start),
+                 doc.make_cursor(*sel_end))
 
 class TestTC(unittest.TestCase):
     def test_tc(self):
@@ -163,6 +213,16 @@ class TestTC(unittest.TestCase):
         cursor = TC("foo\nbar{|}\nmiau")
         self.assertEqual(cursor.document.lines, ["foo", "bar", "miau"])
         self.assertEqual((cursor.line, cursor.col), (1, 3))
+
+class TestTR(unittest.TestCase):
+    def test_tc(self):
+        self.assertEqual(TR("<div>{|Hello World|}</div>").text, "Hello World")
+
+    def test_borders(self):
+        self.assertEqual(TR("{|Hello World|}").text, "Hello World")
+
+    def test_empty(self):
+        self.assertEqual(TR("<div>{||}</div>").text, "")
 
 def cut(string, start, end):
     if end >= start:
@@ -239,12 +299,12 @@ class TestGetBounds(unittest.TestCase):
         with self.assertRaises(NotInTag):
             get_tag_bounds(pos)
 
-class TestIsOpening(unittest.TestCase):
+class TestIsClosing(unittest.TestCase):
     def test_opening(self):
         self.assertFalse(is_closing_tag('<li class="foo">'))
         self.assertFalse(is_closing_tag('< li  class="foo" >'))
 
-    def test_opening(self):
+    def test_closing(self):
         self.assertTrue(is_closing_tag('</li>'))
         self.assertTrue(is_closing_tag('</ li>'))
         self.assertTrue(is_closing_tag('< / li>'))
@@ -317,6 +377,18 @@ class TestGetPairing(unittest.TestCase):
 	</head{|}>""")
         self.assertEqual(Range(*find_tag_pair(pos)).text, "<head>")
 
+    def test_not_in_tag(self):
+        pos = TC('<body>Hello {|}World</body>')
+        self.assertIsNone(find_tag_pair(pos))
+
+    def test_exhaust_right(self):
+        pos = TC('<body{|}>Hello World</body')
+        self.assertIsNone(find_tag_pair(pos))
+
+    def test_exhaust_left(self):
+        pos = TC('Hello World</body{|}>')
+        self.assertIsNone(find_tag_pair(pos))
+
 class TestGetTagName(unittest.TestCase):
     def test_names(self):
         self.assertEqual(get_tag_name('<li>'), 'li')
@@ -357,6 +429,33 @@ class TestFindTag(unittest.TestCase):
         pos = TC("<img>foo {|}bar<div")
         with self.assertRaises(HitDocumentBounds):
             find_tag(pos, "right")
+
+class TestExpandCursor(unittest.TestCase):
+    def test_in_text(self):
+        pos = TC("<div>foo {|}bar<div>")
+        self.assertEqual(expand_cursor(pos).text, "foo bar")
+
+    def test_tag(self):
+        pos = TC("<div{|}>foo bar</div>")
+        self.assertEqual(expand_cursor(pos).text, "<div>foo bar</div>")
+
+    def test_self_closing(self):
+        pos = TC('<img{|} src="">')
+        self.assertEqual(expand_cursor(pos).text, '<img src="">')
+
+    def test_invalid(self):
+        pos = TC("<div{|}>foo bar<div")
+        self.assertIsNone(expand_cursor(pos))
+
+    def test_several_lines(self):
+        pos = TC("""<div>\n  Hello {|}World\n</div>""")
+        sel = expand_cursor(pos)
+        self.assertEqual(sel.text, "\n  Hello World\n")
+        self.assertEqual(sel.start, (0, 5))
+        self.assertTrue(sel.start.is_eol)
+        self.assertEqual(sel.end.line, 1)
+        self.assertTrue(sel.end.is_eol)
+    
 
 if __name__ == "__main__":
     unittest.main()

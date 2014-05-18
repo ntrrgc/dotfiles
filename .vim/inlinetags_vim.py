@@ -1,7 +1,7 @@
 import sys
 import vim
 from mock import Cursor
-from inlinetags import find_tag_pair, cursor_in_tag
+from inlinetags import find_tag_pair, cursor_in_tag, expand_cursor
 
 class VimLines(object):
     def __init__(self, buffer):
@@ -60,3 +60,15 @@ def jump_to_pairing(mode):
     else:
         # Fallback to vim's %
         vim.command("normal! %")
+
+def vim_expand_tag(mode):
+    document = VimDocument()
+    if mode != "v":
+        pos = document.get_caret()
+        sel = expand_cursor(pos)
+        document.set_caret(sel.start)
+        # FIXME Does not work with line endings
+        vim.command("normal! m<")
+        document.set_caret(sel.end)
+        vim.command("normal! m>")
+        vim.command("normal! gv")
