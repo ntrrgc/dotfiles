@@ -23,6 +23,10 @@ class BadSyntax(Exception):
     pass
 
 def get_tag_bounds(pos):
+    """
+    Given a cursor, if the cursor is within the bounds of a tag, returns two
+    cursors to the bounds of that tag. In other case, returns None.
+    """
     # Search for '>' to the right
     end_tag_right = search(pos, 'right', ['>'], ['<'])
     # Search for '<' to the left
@@ -114,7 +118,6 @@ def find_tag_pair(pos):
                     before_prev_tag = prev_tag_start.prev_char()
         except HitDocumentBounds:
             return None #exhausted entire document without empting the stack
-
 
 import unittest
 from conversion import pos_to_xy
