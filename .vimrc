@@ -55,6 +55,23 @@ command! W w !sudo tee >/dev/null %
 noremap <C-s> :w<CR>
 noremap <F2> @q
 
+" http://vimcasts.org/episodes/tidying-whitespace/
+function! <SID>StripTrailingWhitespaces()
+  " Preparation: save last search, and cursor position.
+  let _s=@/
+  let l = line(".")
+  let c = col(".")
+  " Do the business:
+  %s/\s\+$//e
+  " Clean up: restore previous search history, and cursor position
+  let @/=_s
+  call cursor(l, c)
+endfunction
+
+augroup vimrc
+  autocmd BufWritePre *.py,*.js :call <SID>StripTrailingWhitespaces()
+augroup END
+
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
