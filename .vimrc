@@ -1,6 +1,7 @@
 set nocompatible
 set linebreak ts=4 sw=4 expandtab
 set number relativenumber
+let mapleader='`'
 filetype off
 
 if has('unnamedplus')
@@ -80,7 +81,14 @@ Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-pyref'
 
 " Emmet
-let g:user_emmet_expandabbr_key='<c-space>'
+let g:user_emmet_install_global = 0
+if has('gui_running')
+  let g:user_emmet_expandabbr_key='<c-space>'
+endif
+let g:user_emmet_balancetagoutward_key='<c-d>'
+let g:user_emmet_balancetaginward_key='<c-e>'
+inoremap <C-@> <C-Space>
+autocmd FileType html,css EmmetInstall
 Bundle 'mattn/emmet-vim'
 
 " UltiSnips
@@ -102,8 +110,19 @@ Bundle 'vim-scripts/DrawIt'
 " Javascript
 Bundle 'pangloss/vim-javascript'
 
+" Better JSON
+Bundle 'jakar/vim-json'
+
 " Ansible
 Bundle 'chase/vim-ansible-yaml'
+
+" AutoPairs
+let g:AutoPairsFlyMode = 0
+let g:AutoPairsShortcutFastWrap = '<C-e>'
+Bundle 'jiangmiao/auto-pairs'
+
+" vim-fugitive (git integration)
+Bundle 'tpope/vim-fugitive'
 
 filetype plugin indent on
 syntax on
