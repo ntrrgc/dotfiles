@@ -1,11 +1,11 @@
 [user]
-	name = Juan Luis Boya García
-	email = ntrrgc@gmail.com
-	signingkey = 33FFBF58
+    name = Juan Luis Boya García
+    email = ntrrgc@gmail.com
+    signingkey = 33FFBF58
 [push]
-	default = simple
+    default = simple
 [core]
-	excludesfile = /home/ntrrgc/.gitignore_global
+    excludesfile = /home/ntrrgc/.gitignore_global
 [alias]
     co = checkout
     br = branch
