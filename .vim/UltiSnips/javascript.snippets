@@ -1,0 +1,91 @@
+snippet f "anonymous function" w
+function(${1}) {
+  ${2}
+}${3}
+endsnippet
+
+snippet l "lambda" w
+function(${1}) { return ${2:code}; }${3}
+endsnippet
+
+snippet mod "application" b
+angular.module("${1:app}", [${2:}])
+  ${3}
+endsnippet
+
+snippet ctrl "controller" w
+.controller("${1:name}", function($scope${2:}) {
+  ${3:}
+})
+endsnippet
+
+snippet ctrl; "controller" w
+.controller("${1:Ctrl}", function($scope${2:}) {
+  ${3:}
+});
+endsnippet
+
+snippet s "scope" w
+$scope.
+endsnippet
+
+snippet se "scope set" i
+$scope.${1} = ${2};
+endsnippet
+
+snippet pr1 "promise" !b
+var deferred = $q.defer();
+
+${1}
+
+return deferred.promise;
+endsnippet
+snippet rs1 "resolve" !b
+deferred.resolve(${1});
+endsnippet
+
+snippet pr "promise" !b
+var q = $q.defer();
+
+${1}
+
+return q.promise;
+endsnippet
+snippet rs "resolve" !b
+q.resolve(${1});
+endsnippet
+
+snippet ser "service" !b
+.service("${1}", function(${2}) {
+  ${3}
+})${4}
+endsnippet
+
+snippet fi "filter" !b
+.filter("${1}", function(${2}) {
+  return function(${3}) {
+    ${4}
+  };
+})${5}
+endsnippet
+
+snippet r "return" !b
+return ${1};${2}
+endsnippet
+
+snippet lc "toLowerCase" w
+toLowerCase()
+endsnippet
+snippet uc "toUpperCase" w
+toUpperCase()
+endsnippet
+
+snippet met "method" !b
+this.${1} = function(${2}) {
+  ${3};
+};${4}
+endsnippet
+
+snippet log "console.log" !b
+console.log(${1});
+endsnippet

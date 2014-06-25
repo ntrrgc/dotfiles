@@ -8,4 +8,6 @@ import inlinetags_vim
 EOF
 
 autocmd FileType html nnoremap <buffer> <silent> % 
-        \<Esc>:python inlinetags_vim.jump_to_pairing()<CR>
+        \<Esc>:python inlinetags_vim.jump_to_pairing("n")<CR>
+autocmd FileType html vnoremap <buffer> <silent> % 
+        \<Esc>:python inlinetags_vim.jump_to_pairing("v")<CR>
