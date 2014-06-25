@@ -141,5 +141,8 @@ Bundle 'jiangmiao/auto-pairs'
 " vim-fugitive (git integration)
 Bundle 'tpope/vim-fugitive'
 
+" CoffeeScript
+Bundle 'kchmck/vim-coffee-script'
+
 filetype plugin indent on
 syntax on
