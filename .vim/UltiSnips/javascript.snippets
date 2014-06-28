@@ -89,3 +89,30 @@ endsnippet
 snippet log "console.log" !b
 console.log(${1});
 endsnippet
+
+snippet desc "describe" !b
+describe("${1}", function() {
+  ${2}
+});
+endsnippet
+
+snippet it "it" !b
+it("${1}", function() {
+  ${2}
+});
+endsnippet
+
+snippet us "use strict" !b
+"use strict";
+
+
+endsnippet
+
+snippet ns "namespace" !b
+(function(${1}) {
+  "use strict";
+
+  ${3}
+
+}(${2}));
+endsnippet

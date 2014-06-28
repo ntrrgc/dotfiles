@@ -116,3 +116,7 @@ snippet t "test" !b
 def test_${1}(self${2}):
     ${3:pass}
 endsnippet
+
+snippet /(^|(?<=\W))\./ "self." r
+self.
+endsnippet
