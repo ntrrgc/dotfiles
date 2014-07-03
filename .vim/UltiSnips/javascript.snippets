@@ -29,7 +29,7 @@ snippet s "scope" w
 $scope.
 endsnippet
 
-snippet se "scope set" i
+snippet se "scope set" w
 $scope.${1} = ${2};
 endsnippet
 
@@ -88,4 +88,15 @@ endsnippet
 
 snippet log "console.log" !b
 console.log(${1});
+endsnippet
+
+snippet /(^|(?<=\W))\./ "this" r
+this.
+endsnippet
+
+snippet m "method" !b
+${1:}.prototype.${2:} = function(${3:}) {
+  ${4:}
+};
+
 endsnippet
