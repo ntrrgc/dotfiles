@@ -123,7 +123,7 @@ shopt -s autocd
 shopt -s histappend
 export DROPBOX="$HOME/Dropbox"
 
-if which ack-grep; then
+if which ack-grep > /dev/null; then
   alias ack='ack-grep'
 fi
 
