@@ -178,5 +178,8 @@ function! s:my_cr_function()
   return neocomplete#smart_close_popup() . "\<CR>"
 endfunction
 Bundle 'mfukar/robotframework-vim'
+
+Bundle 'tpope/vim-surround'
+
 filetype plugin indent on
 syntax on
