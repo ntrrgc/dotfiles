@@ -179,6 +179,11 @@ inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
   return neocomplete#smart_close_popup() . "\<CR>"
 endfunction
+
+Bundle 'junegunn/vader.vim'
+
+Bundle 'alfredodeza/pytest.vim'
+
 Bundle 'mfukar/robotframework-vim'
 
 Bundle 'tpope/vim-surround'
