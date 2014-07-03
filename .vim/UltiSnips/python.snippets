@@ -10,10 +10,10 @@ from ${1:module} import ${2:thing}
 endsnippet
 
 snippet ut "Unit test" b
-import unittest
+from unittest import TestCase
 
 
-class Test${1:Name}(unittest.TestCase):
+class Test${1:Name}(TestCase):
     def setUp(self):
         ${2:pass}
 
@@ -115,4 +115,23 @@ endsnippet
 snippet t "test" !b
 def test_${1}(self${2}):
     ${3:pass}
+endsnippet
+
+snippet rp "rpc command" !b
+@rpc_command
+def ${1:do}(self, req${2:}):
+    ${3:pass}
+
+endsnippet
+
+snippet trc "test rpc call" !b
+data = self.rpcCall(${1:self.service}, ${2:self.client},
+                    "${3:command}"${4:})
+self.assertEqual(data, ${5:None})
+endsnippet
+
+snippet tre "test rpc error" !b
+msg = self.rpcExpectError(${1:self.service}, ${2:self.client},
+                          "${3:command}"${4:})
+self.assertEqual(msg, "${5}")
 endsnippet
