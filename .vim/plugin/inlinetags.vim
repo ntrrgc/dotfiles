@@ -11,3 +11,6 @@ autocmd FileType html nnoremap <buffer> <silent> %
         \<Esc>:python inlinetags_vim.jump_to_pairing("n")<CR>
 autocmd FileType html vnoremap <buffer> <silent> % 
         \<Esc>:python inlinetags_vim.jump_to_pairing("v")<CR>
+
+autocmd FileType html nnoremap <buffer> <silent> <C-e> 
+        \<Esc>:python inlinetags_vim.vim_expand_tag("n")<CR>
