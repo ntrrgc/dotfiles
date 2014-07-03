@@ -9,3 +9,7 @@
 [alias]
     co = checkout
     br = branch
+[url "git://anongit.kde.org/"]
+    insteadOf = kde:
+[url "ssh://git@git.kde.org/"]
+    pushInsteadOf = kde:
