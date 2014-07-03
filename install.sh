@@ -7,3 +7,7 @@ for entity in ${ENTITIES[@]}; do
     ln -s "$DIR/$entity" "$HOME/$entity"
   fi
 done
+
+if [ ! -L "$HOME/.vim/spell" ]; then
+  ln -s "$HOME/Dropbox/vim-spell" "$HOME/.vim/spell"
+fi
