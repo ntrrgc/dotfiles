@@ -118,6 +118,7 @@ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 Bundle 'SirVer/ultisnips'
 
 " vim-pasta
+let g:pasta_disabled_filetypes = ['robot', 'text']
 Bundle 'sickill/vim-pasta'
 
 " vim-angry
