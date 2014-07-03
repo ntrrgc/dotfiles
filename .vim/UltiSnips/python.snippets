@@ -135,3 +135,7 @@ msg = self.rpcExpectError(${1:self.service}, ${2:self.client},
                           "${3:command}"${4:})
 self.assertEqual(msg, "${5}")
 endsnippet
+
+snippet /(^|(?<=\W))\./ "self." r
+self.
+endsnippet

@@ -187,6 +187,13 @@ Bundle 'alfredodeza/pytest.vim'
 Bundle 'mfukar/robotframework-vim'
 
 Bundle 'tpope/vim-surround'
+"
+" CoffeeScript
+Bundle 'kchmck/vim-coffee-script'
+
+if filereadable(expand("~/.vimrc_local"))
+  source ~/.vimrc_local
+endif
 
 filetype plugin indent on
 syntax on

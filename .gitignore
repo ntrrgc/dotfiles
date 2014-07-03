@@ -1,3 +1,4 @@
 .vim/bundle
+*.pyc
 *.swp
 tags
