@@ -141,6 +141,15 @@ Bundle 'jiangmiao/auto-pairs'
 " vim-fugitive (git integration)
 Bundle 'tpope/vim-fugitive'
 
+if !exists('g:neocomplete#sources#omni#functions')
+  let g:neocomplete#sources#omni#functions = {}
+endif
+let g:neocomplete#sources#omni#functions.robot = 'CompleteWordSets'
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.robot = '.*'
 Bundle 'Shougo/neocomplete.vim'
 
 " Disable AutoComplPop.
@@ -165,5 +174,6 @@ inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
   return neocomplete#smart_close_popup() . "\<CR>"
 endfunction
+Bundle 'mfukar/robotframework-vim'
 filetype plugin indent on
 syntax on
