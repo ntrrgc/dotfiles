@@ -31,6 +31,7 @@ let system_name = SystemName()
 
 if has('gui_running')
     set guioptions-=T
+    set guioptions-=m
     colorscheme django
 
     set guifont=Ubuntu\ Mono\ 12
