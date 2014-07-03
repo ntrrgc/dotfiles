@@ -139,6 +139,8 @@ Bundle 'chase/vim-ansible-yaml'
 " AutoPairs
 let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutFastWrap = '<C-e>'
+let g:AutoPairsMapBS = 0
+let g:TypeOnBackSpace = "\<C-R>=AutoPairsDelete()\<CR>"
 Bundle 'jiangmiao/auto-pairs'
 
 " vim-fugitive (git integration)
