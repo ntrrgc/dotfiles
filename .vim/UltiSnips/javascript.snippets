@@ -5,12 +5,20 @@ function(${1}) {
 endsnippet
 
 snippet l "lambda" w
-function(${1}) { return ${2:code}; }${3}
+function(${1}) {
+  return ${2:};
+}${3}
 endsnippet
 
-snippet mod "application" b
-angular.module("${1:app}", [${2:}])
+snippet mod "module" b
+angular.module("${1:mod}", [${2:}])
   ${3}
+endsnippet
+
+snippet conf "config" w
+.config(function(${1:}) {
+  ${2:}
+})
 endsnippet
 
 snippet ctrl "controller" w
@@ -98,6 +106,7 @@ snippet m "method" !b
 ${1:}.prototype.${2:} = function(${3:}) {
   ${4:}
 };
+endsnippet
 
 snippet desc "describe" !b
 describe("${1}", function() {
@@ -124,4 +133,31 @@ snippet ns "namespace" !b
   ${3}
 
 }(${2}));
+
+snippet neq "expect not to equal" !b
+expect(${1}).not.toEqual(${2});
+endsnippet
+
+snippet nbe "expect not to be" !b
+expect(${1}).not.toBe(${2});
+endsnippet
+
+snippet eq "expect to equal" !b
+expect(${1}).toEqual(${2});
+endsnippet
+
+snippet be "expect to be" !b
+expect(${1}).toBe(${2});
+endsnippet
+
+snippet bef "beforeEach" !b
+beforeEach(function() {
+  ${2}
+});
+endsnippet
+
+snippet aft "afterEach" !b
+afterEach(function() {
+  ${2}
+});
 endsnippet
