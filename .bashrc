@@ -106,13 +106,27 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+function __try_paths() {
+  for path in "$@"; do
+    if [ -e "$path" ]; then
+      echo "$path"
+      return
+    fi
+  done
+}
+
 alias s='sudo'
 alias pas='sudo apt-get install'
 alias pass='sudo apt-cache search'
 alias pai='apt-cache show'
 alias par='sudo apt-get purge'
 alias ll='ls -lh'
-export DJANGO="/usr/local/lib/python2.7/dist-packages/django"
+export DJANGO=$(__try_paths \
+  /usr/local/lib/python2.7/site-packages/django \
+  /usr/local/lib/python2.7/dist-packages/django \
+  /usr/lib/python2.7/site-packages/django \
+  /usr/lib/python2.7/dist-packages/django \
+)
 function cmkdir() {
     mkdir "$1" && cd "$1"
 }
