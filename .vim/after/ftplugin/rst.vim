@@ -1,6 +1,7 @@
 setlocal linebreak sw=4 autoindent
 setlocal cc=
 setlocal scrolloff=5
+setlocal spell
 
 noremap <buffer> k gk
 noremap <buffer> j gj
