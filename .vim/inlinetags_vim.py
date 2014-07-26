@@ -1,12 +1,12 @@
 import sys
 import vim
-from mock import Cursor
+from vim_mock import Cursor
 from inlinetags import find_tag_pair, cursor_in_tag, expand_cursor
 
 class VimLines(object):
     def __init__(self, buffer):
         self.buffer = buffer
-    
+
     def __getitem__(self, index):
         return self.buffer[index]
 
@@ -15,7 +15,7 @@ class VimLines(object):
 
     def __len__(self):
         return len(self.buffer)
-    
+
 
 class VimDocument(object):
     def __init__(self, buffer=None):
@@ -31,18 +31,18 @@ class VimDocument(object):
 
     def insert_line_after(self, line, text):
         self.buffer.append(text, line + 1)
-    
+
     def make_cursor(self, line, col):
         return Cursor(self, line, col)
 
     def get_caret(self):
         line, col = vim.current.window.cursor
         return Cursor(self, line - 1, col)
-    
+
     def set_caret(self, cursor):
         vim.current.window.cursor = (cursor.line + 1, cursor.col)
-    
-    
+
+
 def jump_to_pairing(mode):
     document = VimDocument()
     if mode == "v":

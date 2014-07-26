@@ -1,5 +1,5 @@
 import re
-from mock import MockDocument, Cursor, Range, HitDocumentBounds
+from vim_mock import MockDocument, Cursor, Range, HitDocumentBounds
 
 self_closing_tags = {
     "area", "base", "br", "col", "command", "embed", "hr", "img", "input",
@@ -110,7 +110,7 @@ def find_tag_pair(pos):
 
     elif get_tag_stack_level(tag_code) == 0:
         # This tag can't have a pairing! (eg. <img>)
-        return None 
+        return None
 
     else:
         # Closing tag, search backwards
@@ -263,7 +263,7 @@ class TestGetBounds(unittest.TestCase):
 
         start, end = get_tag_bounds(pos)
         self.assertEqual(Range(start, end).text, '<li class="foo">')
-    
+
     def test_with_closing(self):
         pos = TC('<ul><li class="foo">A precious item</{|}li><li>An unrelated item</li></ul>')
 
@@ -293,7 +293,7 @@ class TestGetBounds(unittest.TestCase):
         pos = TC("<!--[if {|}lt IE 9]>")
         with self.assertRaises(NotInTag):
             get_tag_bounds(pos)
-    
+
     def test_with_ie_comment_closing(self):
         pos = TC("<![endif]{|}-->")
         with self.assertRaises(NotInTag):
@@ -367,7 +367,7 @@ class TestGetPairing(unittest.TestCase):
             <![endif]-->
 	</head>""")
         self.assertEqual(Range(*find_tag_pair(pos)).text, "</head>")
-    
+
     def test_ie2(self):
         pos = TC("""
         <head>
@@ -408,7 +408,7 @@ class TestTagStackLevel(unittest.TestCase):
         self.assertEqual(get_tag_stack_level('</li>'), -1)
         self.assertEqual(get_tag_stack_level('<img>'), 0)
         self.assertEqual(get_tag_stack_level('<meta charset="UTF-8">'), 0)
-    
+
 class TestFindTag(unittest.TestCase):
     def test_tag_right(self):
         pos = TC("<img>foo {|}bar<div>")
@@ -455,7 +455,7 @@ class TestExpandCursor(unittest.TestCase):
         self.assertTrue(sel.start.is_eol)
         self.assertEqual(sel.end.line, 1)
         self.assertTrue(sel.end.is_eol)
-    
+
 
 if __name__ == "__main__":
     unittest.main()
