@@ -126,9 +126,9 @@ def ${1:do}(self, req${2:}):
 endsnippet
 
 snippet trc "test rpc call" !b
-data = self.rpcCall(${1:self.service}, ${2:self.client},
-                    "${3:command}"${4:})
-self.assertEqual(data, ${5:None})
+response = self.rpcCall(${1:self.service}, ${2:self.client},
+                        "${3:command}"${4:})
+self.assertEqual(response, ${5:None})
 endsnippet
 
 snippet tre "test rpc error" !b
