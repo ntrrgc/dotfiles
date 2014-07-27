@@ -140,3 +140,34 @@ endsnippet
 snippet /(^|(?<=\W))\./ "self." r
 self.
 endsnippet
+
+snippet argp "argparse" b
+from argparse import ArgumentParser
+
+parser = ArgumentParser(description=
+		"${1}")
+${2}
+
+args = parser.parse_args()
+${3}
+endsnippet
+
+snippet flag "argument flag" b
+parser.add_argument("${1}", dest="${2}", action="store_true")
+endsnippet
+
+snippet astr "argument string" b
+parser.add_argument("${1}", dest="${2}", default="${3}", type=${4:str})
+endsnippet
+
+snippet aint "argument integer" b
+parser.add_argument("${1}", dest="${2}", default=${3}, type=${4:int})
+endsnippet
+
+snippet par "postional argument" b
+parser.add_argument("${1}", type=${2:str})
+endsnippet
+
+snippet pars "postional arguments" b
+parser.add_argument("${1}", nargs=${2:"+"}, type=${3:str})
+endsnippet
