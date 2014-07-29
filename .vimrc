@@ -141,7 +141,7 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutFastWrap = '<C-e>'
 let g:AutoPairsMapBS = 0
 let g:TypeOnBackSpace = "\<C-R>=AutoPairsDelete()\<CR>"
-Bundle 'jiangmiao/auto-pairs'
+Bundle 'yukunlin/auto-pairs'
 
 " vim-fugitive (git integration)
 Bundle 'tpope/vim-fugitive'
