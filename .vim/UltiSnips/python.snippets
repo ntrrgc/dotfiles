@@ -90,11 +90,23 @@ class ${1}(${2:object}):
 endsnippet
 
 snippet eq "equal" !b
-self.assertEqual(${1}, ${2})
+self.assertEqual(${1})
 endsnippet
 
-snippet no "equal" !b
+snippet is "is" b
+self.assertIs(${1})
+endsnippet
+
+snippet no "is none" !b
 self.assertIsNone(${1})
+endsnippet
+
+snippet nno "not none" !b
+self.assertIsNotNone(${1})
+endsnippet
+
+snippet nin "not in" b
+self.assertNotIn(${1})
 endsnippet
 
 snippet ex "exception" !b
@@ -174,4 +186,8 @@ endsnippet
 
 snippet sp "spy" b
 self.${1} = Mock()
+endsnippet
+
+snippet * "*arg" w
+*args, **kwargs
 endsnippet
