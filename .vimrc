@@ -196,6 +196,10 @@ Bundle 'kchmck/vim-coffee-script'
 
 Bundle 'groenewege/vim-less'
 
+" Git hot keys
+map <C-M-s> :Gwrite<CR>:Gstatus<CR>:res +15<CR><C-n>
+map <C-M-c> :Gcommit<CR>i
+
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
