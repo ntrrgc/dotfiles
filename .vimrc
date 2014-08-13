@@ -71,7 +71,7 @@ function! <SID>StripTrailingWhitespaces()
 endfunction
 
 augroup vimrc
-  autocmd BufWritePre *.py,*.js :call <SID>StripTrailingWhitespaces()
+  autocmd BufWritePre *.py,*.js,*.coffee :call <SID>StripTrailingWhitespaces()
 augroup END
 
 set rtp+=~/.vim/bundle/vundle/
@@ -193,6 +193,8 @@ Bundle 'tpope/vim-surround'
 "
 " CoffeeScript
 Bundle 'kchmck/vim-coffee-script'
+
+Bundle 'groenewege/vim-less'
 
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local

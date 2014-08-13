@@ -1,0 +1,51 @@
+snippet log "log" b
+console.log ${1}
+endsnippet
+
+snippet r "return" b
+return 
+endsnippet
+
+snippet kse "kse module" b
+angular.module "${1:kseditor}"
+  ${2}
+endsnippet
+
+snippet mo "module (no deps)" b
+angular.module "${1}"
+  ${2}
+endsnippet
+
+snippet fac "factory" b
+.factory "${1}", (${2}) ->
+  ${3}
+endsnippet
+
+snippet ctrl "controller" b
+.controller "${1}", ($scope${2}) ->
+  ${3}
+  return
+endsnippet
+
+snippet conf "config" b
+.config (${1}) ->
+  ${2}
+  return
+endsnippet
+
+snippet run "run" b
+.run (${1}) ->
+  ${2}
+  return
+endsnippet
+
+snippet se "scope set" b
+$scope.${1} = ${2}
+endsnippet
+
+snippet tim "timeout" b
+$timeout ${1}->
+  ${2}
+  return
+, ${3:0}
+endsnippet

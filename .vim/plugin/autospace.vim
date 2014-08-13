@@ -172,14 +172,14 @@ function! InsertOperator(op)
     let compositeOperators = [
           \ '===', '!==', '==', '!=', '<>', '&&', '||', '<=', '>=', '=~',
           \ '-=', '+=', '*=', '/=', '%=', '&=', '|=', '^=', '!~', 
-          \ '--', '++', '<<', '>>', '//'
+          \ '--', '++', '<<', '>>', '//', '->', '=>'
           \ ]
 
+    let prevOps = PreviousChars(getline("."), col("."))
     if &ft == "python"
       let compositeOperators = add(compositeOperators, "**")
 
       if a:op == "="
-        let prevOps = PreviousChars(getline("."), col("."))
         if prevOps[1] != "=" && InPythonFunctionCall(line("."), col("."))
           " No spaces
           call feedkeys("a" . a:op, "n")
@@ -189,6 +189,14 @@ function! InsertOperator(op)
         if StarIsArgsInterpolation(line("."), col("."))
           " No spaces
           call feedkeys("a" . a:op, "n")
+          return
+        endif
+      endif
+    else
+      if a:op == "/"
+        if prevOps[0] == "" && prevOps[1] == ""
+          " No spaces, but reset indentation
+          call feedkeys("a" . a:op . "\<Esc>==a", "n")
           return
         endif
       endif
@@ -217,7 +225,7 @@ function! InsertOperator(op)
     " Dictionary keys
     if a:op == ":"
       let spaceBefore = ""
-      if InBraces(line("."), col("."))
+      if InBraces(line("."), col(".")) || &ft == "coffee"
         let spaceAfter = " "
       else
         let spaceAfter = ""
@@ -293,6 +301,12 @@ function! HandleCompositeOperator(op)
     let opWithSpaces = " ".op." "
   endif
 
+  if &ft != "python" && a:op == "//"
+    " C-Style comments
+    call feedkeys("a/ ", "n")
+    return
+  endif
+
   " Find the old operator string and replace it with the new operator,
   " surrounded with spaces
   let colBefore = col(".")
@@ -340,7 +354,7 @@ function! DeleteCharacter()
   return keys
 endfunction
 
-autocmd FileType python,javascript call EnableAutoSpaces()
+autocmd FileType python,javascript,coffee call EnableAutoSpaces()
 set cc=80
 
 function! AutoSemiColon()
@@ -359,6 +373,6 @@ function! AutoSemiColon()
   inoremap <buffer> <silent> <Esc> <Esc>:call MakeBlankIfOnlySemicolon()<CR>
 endfunction
 
-autocmd FileType javascript call AutoSemiColon()
+"autocmd FileType javascript call AutoSemiColon()
 
 autocmd FileType python iabbr <buffer> ! not
