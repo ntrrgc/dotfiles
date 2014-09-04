@@ -161,3 +161,38 @@ afterEach(function() {
   ${2}
 });
 endsnippet
+
+snippet c "class" b
+var ${1} =
+new Class(${2}{
+  ${3}
+});
+endsnippet
+
+snippet ctor "constructor" b
+constructor: function(${1}) {
+  ${2}
+}
+endsnippet
+
+snippet nun "not undefined" b
+expect(${1}).not.toBe(undefined);
+endsnippet
+
+snippet un "undefined" b
+expect(${1}).toBe(undefined);
+endsnippet
+
+snippet tr "to be true" b
+expect(${1}).toBe(true);
+endsnippet
+
+snippet itp "itP" b
+itP("${1}", function() {
+  ${2}
+});
+endsnippet
+
+snippet thb "toHaveBeenCalledWith" b
+expect(${1}).toHaveBeenCalledWith(${2});
+endsnippet
