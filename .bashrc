@@ -115,7 +115,13 @@ function __try_paths() {
   done
 }
 
-alias s='sudo'
+function s() {
+  if [ $# -eq 0 ]; then
+    exec sudo -s
+  else
+    sudo "$@"
+  fi
+}
 if [ -x /bin/pacman ]; then
   alias pas='sudo pacman -S'
   alias pass='sudo pacman -Ss'
