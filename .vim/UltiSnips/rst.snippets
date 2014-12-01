@@ -1,0 +1,103 @@
+snippet c "class" w
+:py:class:\`${1}\`
+endsnippet
+
+snippet f "func" w
+:py:func:\`${1}\`
+endsnippet
+
+snippet a "attribute" b
+.. autoattribute:: ${1}
+
+	${2}
+
+endsnippet
+
+snippet ja "js attr" b
+.. js:attribute:: ${1}
+
+	${2}
+
+endsnippet
+
+snippet jf "js function" b
+.. js:function:: ${1}
+
+	${2}
+
+endsnippet
+
+snippet li "literalinclude" b
+.. literalinclude:: /examples/${1}
+endsnippet
+
+snippet js "code-block: js" b
+.. code-block:: javascript
+
+	${1}
+
+endsnippet
+
+snippet jc "js class" b
+.. js:class:: ${1}
+
+	${2}
+
+endsnippet
+
+snippet pa "py attr" b
+.. py:attribute: ${1}
+
+	${2}
+
+endsnippet
+
+snippet pf "py func" b
+.. py:function:: ${2}(${3})
+
+	${3}
+
+endsnippet
+
+snippet num "num figure" w
+:num:\`${1}\`${2}
+
+.. _`!p
+snip.rv = t[1]
+`:
+
+.. figure:: /_images/`!p
+snip.rv = t[1]
+`.*
+
+	${3}
+endsnippet
+
+snippet py "python" b
+.. code-block:: python
+
+	${1}
+endsnippet
+
+snippet ba "bash" b
+.. code-block:: bash
+
+	${1}
+endsnippet
+
+snippet todo "todo" b
+.. todo::
+
+	${1}
+endsnippet
+
+snippet fig "num figure" w
+.. _${1}:
+
+.. figure:: /_images/`!p
+snip.rv = t[1]
+`.*
+
+	${2}
+endsnippet
+
