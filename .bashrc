@@ -116,11 +116,25 @@ function __try_paths() {
 }
 
 alias s='sudo'
-alias pas='sudo apt-get install'
-alias pass='sudo apt-cache search'
-alias pai='apt-cache show'
-alias par='sudo apt-get purge'
-alias ll='ls -lh'
+if [ -x /bin/pacman ]; then
+  alias pas='sudo pacman -S'
+  alias pass='sudo pacman -Ss'
+  alias pai='pacman -iQ'
+  alias yas='yaourt -S --noconfirm'
+  alias yass='yaourt -Ss'
+  alias yolo='sudo pacman -Syu'
+else
+  alias pas='sudo apt-get install'
+  alias pass='sudo apt-cache search'
+  alias pai='apt-cache show'
+  alias par='sudo apt-get purge'
+  alias ll='ls -lh'
+fi
+
+alias pgr='ps aux | grep'
+alias sys='sudo systemctl'
+alias clip='xclip -selection clipboard'
+
 export DJANGO=$(__try_paths \
   /usr/local/lib/python2.7/site-packages/django \
   /usr/local/lib/python2.7/dist-packages/django \
