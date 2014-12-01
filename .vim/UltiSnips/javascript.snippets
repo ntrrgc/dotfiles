@@ -94,6 +94,10 @@ this.${1} = function(${2}) {
 };${4}
 endsnippet
 
+snippet dir "console.dir" !b
+console.dir(${1});
+endsnippet
+
 snippet log "console.log" !b
 console.log(${1});
 endsnippet
@@ -195,4 +199,75 @@ endsnippet
 
 snippet thb "toHaveBeenCalledWith" b
 expect(${1}).toHaveBeenCalledWith(${2});
+endsnippet
+
+snippet ani "animations" b
+{ time: 500, animations: []
+  ${1}
+},
+endsnippet
+
+snippet hdc "umlCall" b
+.concat(hideUmlCall("${1}"))
+endsnippet
+
+snippet hdr "umlReturn" b
+.concat(hideUmlReturn("${1}"))
+endsnippet
+
+snippet dc "umlCall" b
+.concat(showUmlCall("${1}"))
+endsnippet
+
+snippet dr "umlReturn" b
+.concat(showUmlReturn("${1}"))
+endsnippet
+
+snippet sh "show" b
+.concat(ani("${1}", {opacity: 1}))
+endsnippet
+
+snippet hi "hide" b
+.concat(ani("${1}", {opacity: 0}))
+endsnippet
+
+snippet req "require" b
+var ${1} = require('${2:`!p
+default_names = {
+    "concat": "concat-stream",
+	"combine": "stream-combiner",
+	"AWS": "aws-sdk",
+}
+snip.rv = default_names.get(t[1]) or t[1]
+`}');
+endsnippet
+
+snippet nc "node callback" w
+function(err, data) {
+  ${2}
+}${3}
+endsnippet
+
+snippet av "argv" w
+process.argv[${1}]
+endsnippet
+
+snippet server "HTTP server" b
+var server = http.createServer(function(req, res) {
+  ${1}
+});
+
+server.listen(process.argv[2]);
+endsnippet
+
+snippet stdin "stdin" w
+process.stdin
+endsnippet
+
+snippet stdout "stdout" w
+process.stdout
+endsnippet
+
+snippet stderr "stderr" w
+process.stderr
 endsnippet
