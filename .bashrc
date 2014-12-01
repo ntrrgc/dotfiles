@@ -126,6 +126,7 @@ if [ -x /bin/pacman ]; then
   alias pas='sudo pacman -S'
   alias pass='sudo pacman -Ss'
   alias pai='pacman -iQ'
+  alias par='sudo pacman -R'
   alias yas='yaourt -S --noconfirm'
   alias yass='yaourt -Ss'
   alias yolo='sudo pacman -Syu'
