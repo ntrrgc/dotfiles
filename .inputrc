@@ -1,0 +1,6 @@
+## arrow up
+"\e[A":history-search-backward
+## arrow down
+"\e[B":history-search-forward
+# http://stackoverflow.com/a/3163960/1777162
+set show-all-if-ambiguous on
