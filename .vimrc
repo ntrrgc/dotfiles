@@ -1,7 +1,7 @@
 set nocompatible
 set linebreak ts=4 sw=4 expandtab
 set number relativenumber
-let mapleader='`'
+let mapleader='\'
 set completeopt=menuone
 filetype off
 
