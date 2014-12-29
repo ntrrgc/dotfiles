@@ -203,3 +203,7 @@ ${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
 }
 
 PROMPT_COMMAND='__prompt_command'
+
+if [ -f ~/.bashrc.local ]; then
+  source ~/.bashrc.local
+fi
