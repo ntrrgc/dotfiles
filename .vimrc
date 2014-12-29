@@ -196,6 +196,8 @@ Bundle 'kchmck/vim-coffee-script'
 
 Bundle 'groenewege/vim-less'
 
+Bundle 'vim-scripts/spec.vim'
+
 " Git hot keys
 map <C-M-s> :Gwrite<CR>:Gstatus<CR>:res +15<CR><C-n>
 map <C-M-c> :Gcommit<CR>i
