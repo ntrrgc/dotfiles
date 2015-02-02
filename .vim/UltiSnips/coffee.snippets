@@ -62,7 +62,14 @@ default_names = {
 	"AWS": "aws-sdk",
 	"_": "lodash",
 	"Q": "q",
+	"es": "event-stream",
+	"Promise": "bluebird",
 }
 snip.rv = default_names.get(t[1]) or t[1]
 `}')
+endsnippet
+
+snippet arg "argument" b
+parser.addArgument ['-${1}', '--${2}'],
+  help: '${3}'
 endsnippet
