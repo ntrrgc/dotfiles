@@ -76,8 +76,6 @@ function! <SID>StripTrailingWhitespaces()
 endfunction
 
 augroup vimrc
-  autocmd BufWritePre *.py,*.js,*.coffee :call <SID>StripTrailingWhitespaces()
-augroup END
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
