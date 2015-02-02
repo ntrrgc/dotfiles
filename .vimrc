@@ -35,8 +35,13 @@ if has('gui_running')
     set guioptions-=m
     colorscheme django
 
-    set guifont=Ubuntu\ Mono\ 12
-    colorscheme jellybeans
+    if system_name == 'Ubuntu'
+      set guifont=Ubuntu\ Mono\ 12
+      colorscheme jellybeans
+    else
+      set guifont=DejaVu\ Sans\ Mono\ 11
+      colorscheme nuvola
+    endif
 
     " Vim 7.3 mouse bug workaround
     set nomousehide
