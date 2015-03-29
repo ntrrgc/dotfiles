@@ -197,3 +197,7 @@ PROMPT_COMMAND='__prompt_command'
 
 PS1="${PS_TIME} ${PS_PWD}
 ${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
+
+if [ -f "$HOME/.bashrc_local" ]; then
+  . "$HOME/.bashrc_local"
+fi
