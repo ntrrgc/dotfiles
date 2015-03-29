@@ -33,14 +33,13 @@ let system_name = SystemName()
 if has('gui_running')
     set guioptions-=T
     set guioptions-=m
-    colorscheme django
 
     if system_name == 'Ubuntu'
       set guifont=Ubuntu\ Mono\ 12
       colorscheme jellybeans
     else
       set guifont=DejaVu\ Sans\ Mono\ 11
-      colorscheme nuvola
+      colorscheme jellybeans
     endif
 
     " Vim 7.3 mouse bug workaround
@@ -76,6 +75,8 @@ function! <SID>StripTrailingWhitespaces()
 endfunction
 
 augroup vimrc
+  autocmd BufWritePre *.py,*.js,*.coffee,*.rst :call <SID>StripTrailingWhitespaces()
+augroup END
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -149,6 +150,13 @@ Bundle 'yukunlin/auto-pairs'
 " vim-fugitive (git integration)
 Bundle 'tpope/vim-fugitive'
 
+
+Bundle 'wting/rust.vim'
+Bundle 'phildawes/racer'
+set hidden
+let g:racer_cmd = "/home/ntrrgc/Programas/racer/target/release/racer"
+let $RUST_SRC_PATH="/home/ntrrgc/Programas/rust/src"
+
 if !exists('g:neocomplete#sources#omni#functions')
   let g:neocomplete#sources#omni#functions = {}
 endif
@@ -206,6 +214,8 @@ map <C-M-c> :Gcommit<CR>i
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
+
+Bundle 'kien/ctrlp.vim'
 
 filetype plugin indent on
 syntax on
