@@ -201,8 +201,10 @@ function __prompt_command() {
   PS1="${PS_TIME} ${mode_string}${PS_PWD}
 ${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
 }
-
 PROMPT_COMMAND='__prompt_command'
+
+DOTFILES_DIR=$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )
+export PATH="$PATH:$DOTFILES_DIR/bin"
 
 if [ -f ~/.bashrc.local ]; then
   source ~/.bashrc.local
