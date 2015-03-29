@@ -16,7 +16,6 @@ call ActivateAutomaticTitle()
 "inoremap <buffer> <Tab> <Esc>{{d}}jo<CR>
 
 iabbrev ws WebSocket
-iabbrev js JavaScript
 iabbrev nt notificación
 iabbrev nts notificaciones
 iabbrev sb suscripción
@@ -24,3 +23,5 @@ iabbrev sbs subscripciones
 iabbrev sv servidor
 iabbrev svs servidores
 iabbrev bd base de datos
+
+setlocal spelllang=es

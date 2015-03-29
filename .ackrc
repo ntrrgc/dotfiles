@@ -1,0 +1,13 @@
+# Make ack Node friendly :)
+# Credit to https://coderwall.com/p/xivurg/make-ack-node-aware
+--ignore-dir=node_modules
+--type-set=coffee=.coffee
+--type-set=jade=.jade
+--type-set=json=.json
+
+# Ignore annoying jquery files
+--type-set=jquery:match:/jquery.*/
+--nojquery
+# Ignore build directories
+--ignore-dir=build
+--ignore-dir=_build

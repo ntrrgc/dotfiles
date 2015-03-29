@@ -1,7 +1,7 @@
 set nocompatible
 set linebreak ts=4 sw=4 expandtab
 set number relativenumber
-let mapleader='`'
+let mapleader='\'
 set completeopt=menuone
 filetype off
 
@@ -206,6 +206,8 @@ Bundle 'tpope/vim-surround'
 Bundle 'kchmck/vim-coffee-script'
 
 Bundle 'groenewege/vim-less'
+
+Bundle 'vim-scripts/spec.vim'
 
 " Git hot keys
 map <C-M-s> :Gwrite<CR>:Gstatus<CR>:res +15<CR><C-n>

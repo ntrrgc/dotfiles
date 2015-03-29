@@ -73,3 +73,8 @@ snippet arg "argument" b
 parser.addArgument ['-${1}', '--${2}'],
   help: '${3}'
 endsnippet
+
+snippet prom "Promise" w
+new Promise (resolve, reject) ->
+  ${1}
+endsnippet

@@ -175,7 +175,7 @@ COLOR_CYAN="\[\e[38;5;$((29+124))m\]"
 PS_TIME="${COLOR_GREEN}[\$(date +%k:%M:%S)]${COLOR_RESET}"
 PS_PWD="${COLOR_BLUE}\w${COLOR_RESET}"
 PS_USER="${COLOR_YELLOW}\u@\h${COLOR_RESET}"
-PS_STAR="${COLOR_ORANGE}$(echo -ne '\xe2\x9b\xa4')${COLOR_RESET}"
+PS_STAR="${COLOR_ORANGE}$(echo -ne '\xe2\x98\x85')${COLOR_RESET}"
 PS_SNOW="${COLOR_CYAN}$(echo -ne '\xe2\x9d\x85')${COLOR_RESET}"
 
 PS_FIRST_TIME=true
@@ -192,11 +192,22 @@ function __prompt_command() {
     # Print always a newline except if it's the first line
     echo
   fi
+
+  local mode_string=""
+  if [ ! -z "$SHELL_MODE" ]; then
+    mode_string="${COLOR_CYAN}(${SHELL_MODE}) "
+  fi
+
+  PS1="${PS_TIME} ${mode_string}${PS_PWD}
+${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
 }
 PROMPT_COMMAND='__prompt_command'
 
 PS1="${PS_TIME} ${PS_PWD}
 ${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
+
+DOTFILES_DIR=$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )
+export PATH="$PATH:$DOTFILES_DIR/bin"
 
 if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
