@@ -142,6 +142,18 @@ fi
 alias pgr='ps aux | grep'
 alias sys='sudo systemctl'
 alias clip='xclip -selection clipboard'
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit -m'
+alias gp='git push'
+alias dif='git diff'
+alias grebase='git fetch && git rebase'
+alias greset='git checkout --'
+if [ -x /usr/bin/journalctl ]; then
+  alias logf='sudo journalctl -fl'
+else
+  alias logf='sudo tail -f /var/log/messages'
+fi
 
 export DJANGO=$(__try_paths \
   /usr/local/lib/python2.7/site-packages/django \
