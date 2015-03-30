@@ -1,0 +1,1 @@
+../../watchd/plugin/watchd.vim

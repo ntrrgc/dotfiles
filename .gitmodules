@@ -1,3 +1,6 @@
 [submodule ".vim/bundle/vundle"]
 	path = .vim/bundle/vundle
 	url = https://github.com/gmarik/Vundle.vim
+[submodule "watchd"]
+	path = watchd
+	url = git@github.com:ntrrgc/watchd.git
