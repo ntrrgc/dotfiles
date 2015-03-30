@@ -1,0 +1,4 @@
+#!/usr/bin/python2
+import sys
+for arg in sys.argv:
+    print('>' + arg)
