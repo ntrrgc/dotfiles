@@ -1,13 +1,70 @@
 #!/usr/bin/python3 -u
+'''
+A little script to find the probably most relevant bit in an error trace.
+
+It will highlight lines containing paths within the current working directory,
+excluding known library paths.
+
+It will also highlight known error message patterns.
+Tested with node.js and Python.
+'''
 import sys
 import os
 
 cwd = os.getcwd()
+strip_cwd = '--no-strip-cwd' not in sys.argv
+colorize_indented = '--no-colorize-indented' not in sys.argv
+entry_indent = None
 
-while True:
-    line = sys.stdin.readline()
-    if line == '':
-        sys.exit(0)
-    if cwd in line and not 'node_modules' in line:
-        line = '\033[32m\033[1m' + line + '\033[0m'
-    sys.stdout.write(line)
+def indent_level(line):
+    count = 0
+    for c in line:
+        if c == ' ':
+            count += 1
+        elif c == '\t':
+            count += 4
+        else:
+            break
+    return count
+
+bold_green = '\033[32m\033[1m'
+green = '\033[32m'
+bold_yellow = '\033[33m\033[1m'
+
+def colorize(line, color):
+    return color + line + '\033[0m'
+
+try:
+    while True:
+        line = sys.stdin.readline()
+        if line == '':
+            sys.exit(0)
+
+        colorized = False
+
+        if cwd in line or './' in line:
+            if strip_cwd:
+                # Show relative paths
+                line = line.replace(cwd + '/', '')
+            if not 'node_modules' in line:
+                # Interesting error line
+                entry_indent = indent_level(line)
+                line = colorize(line, bold_green)
+                colorized = True
+        elif entry_indent is not None:
+            if indent_level(line) > entry_indent:
+                # Line is indented within error block
+                if colorize_indented:
+                    line = colorize(line, green)
+                    colorized = True
+            else:
+                # End of error block
+                entry_indent = None
+        if not colorized and 'Error' in line:
+            # Color error description in yellow
+            line = colorize(line, bold_yellow)
+            colorized = True
+
+        sys.stdout.write(line)
+except KeyboardInterrupt:
+    pass
