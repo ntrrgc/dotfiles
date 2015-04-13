@@ -1,0 +1,15 @@
+#!/usr/bin/python
+import subprocess
+output = subprocess.check_output(['xrandr', '-q']).decode()
+
+def monitor_tuple(line):
+    fields = line.split(' ')
+    geometry = [f for f in fields if '+' in f][0]
+    return (int(geometry.split('+')[-2]), fields[0])
+
+monitors = sorted(
+    monitor_tuple(line)
+    for line in output.split('\n')
+    if ' connected ' in line)
+
+print(','.join(m[1] for m in monitors))

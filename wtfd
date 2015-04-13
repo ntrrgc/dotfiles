@@ -1,0 +1,200 @@
+#!/usr/bin/python3
+import tornado.ioloop
+import subprocess
+import fcntl
+import os
+import sys
+import datetime
+
+# Be unbuffered
+sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 1)
+
+io_loop = tornado.ioloop.IOLoop.instance()
+
+monitor_order = None
+def load_monitor_order():
+    monitors = subprocess.check_output(['monitor-order']).decode().strip().split(',')
+
+    global monitor_order
+    monitor_order = {
+        name: index
+        for (index, name) in enumerate(monitors)
+    }
+load_monitor_order()
+
+class LineBuffer(object):
+    def __init__(self):
+        self.buffer = b''
+    
+    def read_lines(self, input):
+        while b'\n' in input:
+            before, after = input.split(b'\n', 1)
+            yield self.buffer + before
+
+            self.buffer = b''
+            input = after
+        self.buffer += input
+    
+
+class ProcessReactor(object):
+    def __init__(self, *args, **kwargs):
+        kwargs['stdout'] = subprocess.PIPE
+        self.process = subprocess.Popen(*args, **kwargs)
+
+        self.fd = self.process.stdout.fileno()
+        fl = fcntl.fcntl(self.fd, fcntl.F_GETFL)
+        fcntl.fcntl(self.fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+
+        io_loop.add_handler(self.process.stdout, 
+                            self.can_read, io_loop.READ)
+        self.line_buffer = LineBuffer()
+
+    def can_read(self, fd, events):
+        data = self.process.stdout.read(1024)
+        if len(data) > 0:
+            self.on_data(data)
+        else:
+            print('Lost connection to subprocess')
+            sys.exit(1)
+
+    def on_data(self, data):
+        for line in self.line_buffer.read_lines(data):
+            self.on_line(line.decode('UTF-8'))
+    
+    def on_line(self, line):
+        pass
+    
+
+class XTitleReactor(ProcessReactor):
+    def __init__(self):
+        super().__init__(['xtitle', '-s'])
+    
+    def on_line(self, line):
+        bar.window_title = line
+        bar.update()
+
+
+class BspcReactor(ProcessReactor):
+    def __init__(self):
+        super().__init__(['bspc', 'control', '--subscribe'])
+    
+    def on_line(self, line):
+        line = line[1:] #remove leading 'W'
+        fields = line.split(':')
+
+        monitors = []
+        monitor = None
+        layout = 'unkwown'
+
+        for field in fields:
+            label, value = field[0], field[1:]
+            if label in ('M', 'm'):
+                if monitor is not None:
+                    monitors.append(monitor)
+
+                monitor = {
+                    'name': value, 
+                    'active': label == 'M', 
+                    'desktops': [], 
+                }
+            elif label in ('O', 'F', 'U', 'o', 'f', 'u'):
+                # o -> ocuppied
+                # f -> free
+                # u -> urgent
+                # UPPERCASE -> focused
+                desktop = {
+                    'name': value, 
+                    'focused': label.isupper(), 
+                    'status': label.lower()
+                }
+                monitor['desktops'].append(desktop)
+            elif label == 'L':
+                layout = value
+        monitors.append(monitor)
+
+        bar.monitors = monitors
+        bar.layout = layout
+        bar.update()
+
+class Bar(object):
+    def __init__(self):
+        self.window_title = ''
+        self.time = ''
+        self.monitors = None
+        self.layout = 'unkwown'
+        self.last_update = None
+
+    def render_desktop(self, desktop, idesktop):
+        link = '%{{A:bspc desktop --focus ^{idesktop}:}}{content}%{{A}}'
+        text = '  %s  ' % desktop['name']
+        if desktop['status'] == 'u': # urgent
+            content = '%{{U#FF0000}}%{{+u}}{0}%{{-u}}'.format(text)
+        elif desktop['focused']:
+            content = '%{{U#00FF00}}%{{+u}}{0}%{{-u}}'.format(text)
+        else:
+            content = text
+        return link.format(idesktop=idesktop, 
+                           content=content)
+
+    def render_desktops(self, monitor):
+        return '  '.join(
+            self.render_desktop(desktop, idesktop)
+            for idesktop, desktop in enumerate(monitor['desktops'], 1)
+        )
+
+    def render_layout(self):
+        return '%{F#FFCE88}' + self.layout + '%{F-}'
+    
+
+    def render_monitor(self, monitor, imonitor):
+        return '%{{l}}{margin}{desktops}' \
+               '%{{c}}{title}' \
+               '%{{r}}{layout}   {time}{margin}'.format(**{
+            'margin': ' ' * 4, 
+            'desktops': self.render_desktops(monitor), 
+            'title': self.window_title, 
+            'time': self.time, 
+            'layout': self.render_layout(), 
+        })
+
+    def bar_monitor_number(self, imonitor):
+        # The monitor numbers used by bar do not always coincide with bspwm
+        # This only works for my desktop computer
+        return 1 if imonitor == 0 else 0
+
+    def render(self):
+        if self.monitors is None:
+            return None # skip for now
+
+        if len(self.monitors) > 0:
+            buf = ''
+
+            for imonitor, monitor in enumerate(self.monitors):
+                buf += '%{{S{0}}}{1}'.format(
+                    monitor_order[monitor['name']], 
+                    self.render_monitor(monitor, imonitor))
+            return buf
+
+    
+    def update(self):
+        new_update = self.render()
+        if new_update is not None and new_update != self.last_update:
+            print(new_update)
+            self.last_update = new_update
+    
+
+def update_time():
+    now = datetime.datetime.now()
+    time = now.strftime('%{U#00FF00}%{+u}%Y-%m-%d   %H:%M%{-u}')
+    bar.time = time
+    bar.update()
+
+    seconds_to_next_min = 60 - now.second
+    io_loop.call_later(seconds_to_next_min, update_time)
+
+bar = Bar()
+xtitle = XTitleReactor()
+bspc = BspcReactor()
+update_time()
+
+io_loop.start()
