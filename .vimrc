@@ -218,6 +218,7 @@ if filereadable(expand("~/.vimrc_local"))
 endif
 
 Bundle 'kien/ctrlp.vim'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
 filetype plugin indent on
 syntax on
