@@ -1,0 +1,50 @@
+#!/usr/bin/python3
+ingredients_raw = '''
+terminology Terminal emulator
+sshot Screenshot script
+maim Screenshot software
+bspwm Window manager
+sxhkd Key binding manager
+lemonbar X11 panel
+dmenu Simple menu
+trayer Systray
+nitrogen Wallpaper manager
+copyq Clipboard manager
+compton Compositor
+feh Image viewer
+xsetroot Sets default X11 cursor
+kupfer FreeDesktop-compliant launcher
+xtitle Notifies each time X11 selection changes
+xdotool X11 automation
+
+# Personal ingredients
+lasana Upload images
+logout-menu My logout menu
+monitor-order Prints monitor names ordered left to right
+'''
+
+import shutil
+
+ingredients = (
+    tuple(line_filtered.split(' ', 1)) # (name, desc)
+    for line_filtered in (
+        line.split('#')[0].strip()
+        for line in ingredients_raw.strip().split('\n')
+    )
+    if line_filtered != ''
+)
+
+missing_ingredients = [
+    (name, desc)
+    for (name, desc) in ingredients
+    if shutil.which(name) is None
+]
+
+print(
+    '\n'.join(
+        '\033[1m\033[32m%16s\033[0m %s' % ingredient
+        for ingredient in missing_ingredients
+    )
+    if missing_ingredients 
+    else 'You already have all the igredients.'
+)
