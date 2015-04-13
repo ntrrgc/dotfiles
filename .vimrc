@@ -220,5 +220,9 @@ endif
 Bundle 'kien/ctrlp.vim'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
+augroup sxhkdrc
+autocmd BufWritePost sxhkdrc silent !pkill -x -USR1 sxhkd
+augroup END
+
 filetype plugin indent on
 syntax on
