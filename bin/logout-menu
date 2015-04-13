@@ -1,0 +1,22 @@
+#!/bin/bash
+options=(shutdown reboot logout top windows)
+option=$(printf '%s\n' "${options[@]}" | dmenu)
+
+shutdown() {
+  sudo poweroff
+}
+reboot() {
+  sudo reboot
+}
+logout() {
+  pkill -x bspwm
+}
+top() {
+  terminology -e htop
+}
+windows() {
+  sudo efibootmgr -n 0
+  sudo reboot
+}
+
+eval "$option"
