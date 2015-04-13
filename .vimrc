@@ -111,7 +111,7 @@ endif
 "let g:user_emmet_balancetagoutward_key='<c-d>'
 "let g:user_emmet_balancetaginward_key='<c-e>'
 inoremap <C-@> <C-Space>
-autocmd FileType html,css EmmetInstall
+autocmd FileType html,htmldjango,css EmmetInstall
 Bundle 'mattn/emmet-vim'
 
 " UltiSnips
