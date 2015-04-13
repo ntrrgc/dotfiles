@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ ! -f /tmp/.numbers ]; then
+    xset led named 'Scroll Lock'
+    setxkbmap 'es(dvpn)'
+    touch /tmp/.numbers
+else
+    xset -led named 'Scroll Lock'
+    setxkbmap 'es(dvp)'
+    rm /tmp/.numbers
+fi
