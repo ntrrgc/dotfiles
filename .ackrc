@@ -11,3 +11,5 @@
 # Ignore build directories
 --ignore-dir=build
 --ignore-dir=_build
+# Ignore my virtualenvs
+--ignore-dir=env
