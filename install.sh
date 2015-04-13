@@ -13,6 +13,11 @@ for entity in ${ENTITIES[@]}; do
   fi
 done
 
+mkdir -p "$HOME/.config/bspwm/"
+ln -s "$DIR/bspwmrc" "$HOME/.config/bspwm/bspwmrc"
+mkdir -p "$HOME/.config/sxhkd/"
+ln -s "$DIR/sxhkdrc" "$HOME/.config/sxhkd/sxhkdrc"
+
 if [ ! -L "$HOME/.vim/spell" ]; then
   ln -s "$HOME/Dropbox/vim-spell" "$HOME/.vim/spell"
 fi
