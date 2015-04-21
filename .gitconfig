@@ -10,6 +10,7 @@
 	co = checkout
 	br = branch
 	undo-commit = reset --soft HEAD^
+	unstage = reset HEAD
 [url "git://anongit.kde.org/"]
 	insteadOf = kde:
 [url "ssh://git@git.kde.org/"]
