@@ -1,16 +1,18 @@
 [user]
-    name = Juan Luis Boya García
-    email = ntrrgc@gmail.com
-    signingkey = 33FFBF58
+	name = Juan Luis Boya García
+	email = ntrrgc@gmail.com
+	signingkey = 33FFBF58
 [push]
-    default = simple
+	default = simple
 [core]
-    excludesfile = /home/ntrrgc/.gitignore_global
+	excludesfile = /home/ntrrgc/.gitignore_global
 [alias]
-    co = checkout
-    br = branch
+	co = checkout
+	br = branch
 	undo-commit = reset --soft HEAD^
 [url "git://anongit.kde.org/"]
-    insteadOf = kde:
+	insteadOf = kde:
 [url "ssh://git@git.kde.org/"]
-    pushInsteadOf = kde:
+	pushInsteadOf = kde:
+
+# vi: set noexpandtab:
