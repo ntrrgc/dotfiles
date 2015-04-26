@@ -150,13 +150,6 @@ Bundle 'yukunlin/auto-pairs'
 " vim-fugitive (git integration)
 Bundle 'tpope/vim-fugitive'
 
-
-Bundle 'wting/rust.vim'
-Bundle 'phildawes/racer'
-set hidden
-let g:racer_cmd = "/home/ntrrgc/Programas/racer/target/release/racer"
-let $RUST_SRC_PATH="/home/ntrrgc/Programas/rust/src"
-
 if !exists('g:neocomplete#sources#omni#functions')
   let g:neocomplete#sources#omni#functions = {}
 endif
