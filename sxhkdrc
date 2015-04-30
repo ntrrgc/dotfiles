@@ -150,3 +150,6 @@ Scroll_Lock
 
 ctrl + alt + Delete
     logout-menu
+
+super + n
+    watchd-notify
