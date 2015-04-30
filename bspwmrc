@@ -47,3 +47,5 @@ trayer_after_bar &
 
 compton --vsync opengl &
 nm-applet &
+dropboxd &
+thunderbird &
