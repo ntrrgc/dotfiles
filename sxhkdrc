@@ -73,6 +73,9 @@ super + ctrl + {1-9}
 #super + {_,shift + }{5-8,1-4}
 #    bspc {desktop --focus,window --to-desktop} ^{1-8}
 
+super + {_,shift + }{F5,F6,F7,F8,F1,F2,F3,F4}
+    bspc {desktop --focus,window --to-desktop} ^{1-8}
+
 super + {_,shift + }{equal,asterisk,parenright,plus,bracketleft,braceleft,braceright,parenleft}
     bspc {desktop --focus,window --to-desktop} ^{1-8}
 
