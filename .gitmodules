@@ -3,4 +3,4 @@
 	url = https://github.com/gmarik/Vundle.vim
 [submodule "watchd"]
 	path = watchd
-	url = git@github.com:ntrrgc/watchd.git
+	url = https://github.com/ntrrgc/watchd.git
