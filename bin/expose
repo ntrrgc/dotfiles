@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -R $1:localhost:$1 rufian.eu

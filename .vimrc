@@ -217,5 +217,7 @@ augroup sxhkdrc
 autocmd BufWritePost sxhkdrc silent !pkill -x -USR1 sxhkd
 augroup END
 
+Bundle 'scrooloose/nerdcommenter'
+
 filetype plugin indent on
 syntax on

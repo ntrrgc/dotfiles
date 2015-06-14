@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+#Shows the path of something... and copies it to the clipboard
+
+import os, sys, subprocess
+path = os.path.join(os.getcwd(), sys.argv[1])
+print(path)
+
+p = subprocess.Popen(['xclip', '-selection', 'clipboard'], stdin=subprocess.PIPE)
+p.stdin.write(path.encode())
+p.stdin.close()
+p.wait()

@@ -9,6 +9,9 @@ import datetime
 # Be unbuffered
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 1)
 
+def debug(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 io_loop = tornado.ioloop.IOLoop.instance()
 
 monitor_order = None
@@ -124,7 +127,8 @@ class Bar(object):
         self.layout = 'unkwown'
         self.last_update = None
 
-    def render_desktop(self, desktop, idesktop):
+    def render_desktop(self, monitor, imonitor, desktop, idesktop):
+        idesktop_all_screens = idesktop + imonitor * 4
         link = '%{{A:bspc desktop --focus ^{idesktop}:}}{content}%{{A}}'
         text = '  %s  ' % desktop['name']
         if desktop['status'] == 'u': # urgent
@@ -133,12 +137,12 @@ class Bar(object):
             content = '%{{U#00FF00}}%{{+u}}{0}%{{-u}}'.format(text)
         else:
             content = text
-        return link.format(idesktop=idesktop, 
+        return link.format(idesktop=idesktop_all_screens, 
                            content=content)
 
-    def render_desktops(self, monitor):
+    def render_desktops(self, monitor, imonitor):
         return '  '.join(
-            self.render_desktop(desktop, idesktop)
+            self.render_desktop(monitor, imonitor, desktop, idesktop)
             for idesktop, desktop in enumerate(monitor['desktops'], 1)
         )
 
@@ -151,7 +155,7 @@ class Bar(object):
                '%{{c}}{title}' \
                '%{{r}}{layout}   {time}{margin}'.format(**{
             'margin': ' ' * 4, 
-            'desktops': self.render_desktops(monitor), 
+            'desktops': self.render_desktops(monitor, imonitor), 
             'title': self.window_title, 
             'time': self.time, 
             'layout': self.render_layout(), 
