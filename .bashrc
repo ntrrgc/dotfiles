@@ -174,6 +174,10 @@ function cmkdir() {
 function gvim() {
     (/usr/bin/gvim -f "$@" &)
 }
+function ppa() {
+  sudo apt-add-repository "$1"
+  sudo apt-get update
+}
 shopt -s autocd
 shopt -s histappend
 export DROPBOX="$HOME/Dropbox"
