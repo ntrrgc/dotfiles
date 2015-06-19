@@ -217,6 +217,7 @@ augroup sxhkdrc
 autocmd BufWritePost sxhkdrc silent !pkill -x -USR1 sxhkd
 augroup END
 
+Bundle 'vim-ruby/vim-ruby'
 Bundle 'scrooloose/nerdcommenter'
 
 filetype plugin indent on
