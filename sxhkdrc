@@ -162,3 +162,6 @@ super + n
 
 super + u
     bspc window -f next.urgent
+
+super + shift + x
+    close-email-notification
