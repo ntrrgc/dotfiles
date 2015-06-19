@@ -15,6 +15,8 @@ bspc monitor DVI-I-1 -d V VI VII VIII
 #bspc rule -a Gimp desktop=^8 follow=on floating=on
 #bspc rule -a Chromium desktop=^2
 bspc rule -a mplayer2 floating=on
+bspc rule -a ffplay floating=on
+bspc rule -a kruler floating=on
 bspc rule -a Kupfer.py focus=on border=off
 bspc rule -a Screenkey manage=off
 
@@ -24,6 +26,7 @@ wmname LG3D
 sxhkd &
 nitrogen --restore &
 copyq &
+/usr/lib/kde4/libexec/kdeconnectd &
 
 ~/dotfiles/wtfd | ~/dotfiles/launch_bar.sh &
 trayer_after_bar() {
