@@ -211,7 +211,7 @@ if filereadable(expand("~/.vimrc_local"))
 endif
 
 Bundle 'kien/ctrlp.vim'
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|env)|(\.(swp|ico|git|svn|DS_Store|pyc|pyo))$'
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|env|output)|(\.(swp|ico|git|svn|DS_Store|pyc|pyo))$'
 
 augroup sxhkdrc
 autocmd BufWritePost sxhkdrc silent !pkill -x -USR1 sxhkd
