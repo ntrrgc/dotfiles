@@ -271,3 +271,10 @@ endsnippet
 snippet stderr "stderr" w
 process.stderr
 endsnippet
+
+snippet for "for" b
+for (var ${1:i} = 0; $1 < ${2}.length; $1++) {
+	var ${3:element} = $2[$1];
+	$4
+}
+endsnippet
