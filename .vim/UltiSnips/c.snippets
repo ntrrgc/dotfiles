@@ -1,0 +1,27 @@
+snippet Inc "include" b
+#include <${0}.h>
+endsnippet
+snippet inc "include" b
+#include "${0}.h"
+endsnippet
+
+snippet main "main" b
+int main(int argc, char** argv) {
+	${0}
+	return 0;
+}
+endsnippet
+
+snippet /(^|(?<=\W))\./ "self." r
+self->
+endsnippet
+
+snippet r "return" b
+return ${0};
+endsnippet
+
+snippet for "for loop (for)"
+for (${2:i} = 0; $2 < ${1:count}; ${3:++$2}) {
+	${VISUAL}${0}
+}
+endsnippet
