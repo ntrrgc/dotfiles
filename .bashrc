@@ -178,6 +178,9 @@ function ppa() {
   sudo apt-add-repository "$1"
   sudo apt-get update
 }
+function ts-install() {
+    tsd query "$1" --action install --save
+}
 shopt -s autocd
 shopt -s histappend
 export DROPBOX="$HOME/Dropbox"
