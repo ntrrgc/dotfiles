@@ -124,6 +124,9 @@ super + Escape
 ctrl + alt + t
     terminology
 
+super + control + c
+    chromium
+
 super + f
     firefox
 
@@ -156,3 +159,6 @@ ctrl + alt + Delete
 
 super + n
     watchd-notify
+
+super + u
+    bspc window -f next.urgent
