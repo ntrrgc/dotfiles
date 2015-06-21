@@ -15,15 +15,15 @@ endfunction
 function! EnableAutoSpaces()
   for op in split(g:operators, '\zs')
     if op == "-"
-      execute 'inoremap <buffer> <silent> ' . op . ' <Esc>:call InsertMinus()<CR>'
+      execute 'inoremap <expr> <buffer> <silent> ' . op . ' InsertMinus()'
     else
-      execute 'inoremap <buffer> <silent> ' . EscapeKey(op) .
-            \ ' <Esc>:call InsertOperator("' . EscapeKey(op) .'")<CR>'
+      execute 'inoremap <expr> <buffer> <silent> ' . EscapeKey(op) .
+            \ ' InsertOperator("' . EscapeKey(op) .'")'
     endif
   endfor
 
   for sep in split(g:separators, '\zs')
-    execute 'inoremap <buffer> <silent> ' . sep . ' <Esc>:call InsertSeparator("' . sep .'")<CR>'
+    execute 'inoremap <expr> <buffer> <silent> ' . sep . ' InsertSeparator("' . sep .'")'
   endfor
 
   inoremap <buffer> <silent> <BS> <C-R>=DeleteCharacter()<CR>
@@ -35,13 +35,13 @@ function! InsertSeparator(sep)
     let spaceAfter = matchstr(getline("."), '\%' . (col(".") + 1) . 'c.') 
           \ != " " ? " " : ""
 
-    call feedkeys("a" . a:sep . spaceAfter, "n")
+    return a:sep . spaceAfter
     if spaceAfter == ""
       " There was already an space, advance to it
-      call feedkeys("\<Esc>la", "n")
+      return "\<Esc>la"
     endif
   else
-    call feedkeys("a" . a:sep, "n")
+    return a:sep
   endif
 endfunction
 
@@ -167,6 +167,13 @@ else:
 EOF
 endfunction
 
+"let g:debugvar = '...'
+"function! GDebug()
+    "return g:debugvar
+"endfunction
+
+"set statusline=%{GDebug()}
+
 function! InsertOperator(op)
   if !InString()
     let compositeOperators = [
@@ -175,42 +182,38 @@ function! InsertOperator(op)
           \ '--', '++', '<<', '>>', '//', '->', '=>'
           \ ]
 
-    let prevOps = PreviousChars(getline("."), col("."))
+    let prevOps = PreviousChars(getline("."), col(".") - 1)
+
     if &ft == "python"
       let compositeOperators = add(compositeOperators, "**")
 
       if a:op == "="
-        if prevOps[1] != "=" && InPythonFunctionCall(line("."), col("."))
+        if prevOps[1] != "=" && InPythonFunctionCall(line("."), col(".") - 1)
           " No spaces
-          call feedkeys("a" . a:op, "n")
-          return
+          return a:op
         endif
       elseif a:op == "*"
-        if StarIsArgsInterpolation(line("."), col("."))
+        if StarIsArgsInterpolation(line("."), col(".") - 1)
           " No spaces
-          call feedkeys("a" . a:op, "n")
-          return
+          return a:op
         endif
       endif
     else
       if a:op == "/"
         if prevOps[0] == "" && prevOps[1] == ""
           " No spaces, but reset indentation
-          call feedkeys("a" . a:op . "\<Esc>==a", "n")
-          return
+          return a:op . "\<Esc>==a"
         endif
       endif
     endif
 
-    let prevOps = PreviousChars(getline("."), col("."))
     if !empty(prevOps)
       let potentialCompOp = prevOps[0] . prevOps[1] . a:op
 
       for compOp in compositeOperators
         " if potentialCompOp.endswith(compOn)
         if match(potentialCompOp, '\V' . escape(compOp, '\/') . '\$') != -1
-          call HandleCompositeOperator(compOp)
-          return
+          return HandleCompositeOperator(compOp)
         endif
       endfor
     endif
@@ -238,19 +241,20 @@ function! InsertOperator(op)
       " It's unary if it's after an operator or (
       if match(prevOps[1], '\v[=+-/*<>|&%\^(~]') != -1
         " Do not envelop unary operators with spaces
-        let spaceBefore = (prevOps == "=" ? " " : "")
+        let spaceBefore = (prevOps[1] == "=" ? " " : "")
         let spaceAfter = ""
         let unary = 1
       endif
     endif
 
-    call feedkeys("a" . spaceBefore . a:op . spaceAfter, "n")
+    let ret = spaceBefore . a:op . spaceAfter
     if spaceAfter == "" && !unary && a:op != ":"
       " There was already an space, advance to it
-      call feedkeys("\<Esc>la", "n")
+      ret = ret . "\<Esc>la"
     endif
+    return ret
   else
-    call feedkeys("a" . a:op, "n")
+    return a:op
   endif
 endfunction
 
@@ -260,10 +264,10 @@ function! InsertMinus()
   if stridx(g:operators, previous) != -1 && previous != "-"
     " It was an operator, this will be a negative number
     " Do not write space
-    call feedkeys("a-", "n")
+    return '-'
   else
     " It was another thing, this will be an operator
-    call InsertOperator("-")
+    return InsertOperator("-")
   endif
 endfunction
 
@@ -281,8 +285,8 @@ endfunction
 function! HandleCompositeOperator(op)
   " count of operators to replace (length of the desired operator minus the
   " character yet to write)
-  let numOps = strlen(a:op) - 1
   let op = a:op
+  let numOps = strlen(op) - 1
 
   " Abbreviation: in Python convert &&, || to and, or
   if &ft == "python"
@@ -301,22 +305,22 @@ function! HandleCompositeOperator(op)
     let opWithSpaces = " ".op." "
   endif
 
-  if &ft != "python" && a:op == "//"
+  if &ft != "python" && op == "//"
     " C-Style comments
-    call feedkeys("a/ ", "n")
-    return
+    let opWithSpaces = " // "
   endif
 
   " Find the old operator string and replace it with the new operator,
   " surrounded with spaces
-  let colBefore = col(".")
-  let lenBefore = strlen(getline("."))
-  execute 's/\v(\s*\S){'.numOps.'}\s*%'.(col(".")+1).'c/'.escape(opWithSpaces, '&/\').'/'
-  let lenAfter = strlen(getline("."))
+  let numCharsToErase = strlen(matchstr(getline('.'), '\v(\s*\S){'.numOps.'}\s*%'.(col(".")).'c'))
 
-  " Position the cursor after the new operator
-  call setpos(".", [0, line("."), colBefore + (lenAfter - lenBefore), 0])
-  call feedkeys("a", "n")
+  let ret = ""
+  while numCharsToErase > 0
+    let ret = ret . "\<BS>"
+    let numCharsToErase = numCharsToErase - 1
+  endwhile
+  let ret = ret . opWithSpaces
+  return ret
 endfunction
 
 function! CharByPos(str, pos)
@@ -354,7 +358,7 @@ function! DeleteCharacter()
   return keys
 endfunction
 
-autocmd FileType python,javascript,coffee call EnableAutoSpaces()
+autocmd FileType python,javascript,coffee,lua call EnableAutoSpaces()
 set cc=80
 
 function! AutoSemiColon()
