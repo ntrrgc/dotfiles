@@ -167,12 +167,12 @@ else:
 EOF
 endfunction
 
-"let g:debugvar = '...'
-"function! GDebug()
-    "return g:debugvar
-"endfunction
+let g:debugvar = '...'
+function! GDebug()
+    return g:debugvar
+endfunction
 
-"set statusline=%{GDebug()}
+set statusline=%{GDebug()}
 
 function! InsertOperator(op)
   if !InString()
@@ -271,11 +271,34 @@ function! InsertMinus()
   endif
 endfunction
 
+function! GetPreviousCharacterPosition()
+  " Returns the position of the previous character in the document, as a list
+  " [line, col, found]
+  if col('.') > 0
+    return [line('.'), col('.') - 1, 1]
+  elseif line('.') > 1
+    let prevLineNum = line('.') - 1
+    let prevLine = getline(prevLineNum)
+    return [prevLineNum, strlen(prevLine) - 1, 1]
+  else
+    " This is the first character in the document... No character found.
+    return [0, 0, 0]
+  endif
+endfunction
+
 function! InString()
-  let tokens = synstack(line("."), col("."))
-  if !empty(tokens)
-    let tokenName = synIDattr(tokens[-1], "name")
-    return stridx(tolower(tokenName), "string") != -1
+  " We need to check the syntax tree for the previous character, since the
+  " current one may not be analyzed yet.
+  let [line, col, found] = GetPreviousCharacterPosition()
+  if found
+    let tokens = synstack(line, col)
+    if !empty(tokens)
+      let tokenName = synIDattr(tokens[-1], "name")
+      return stridx(tolower(tokenName), "string") != -1
+            \ || stridx(tolower(tokenName), "comment") != -1
+    else
+      return 0
+    endif
   else
     return 0
   endif
