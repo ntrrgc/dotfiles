@@ -272,8 +272,7 @@ function! InsertMinus()
 endfunction
 
 function! InString()
-  " col + 1 because <Esc> goes one character back
-  let tokens = synstack(line("."), col(".") + 1)
+  let tokens = synstack(line("."), col("."))
   if !empty(tokens)
     let tokenName = synIDattr(tokens[-1], "name")
     return stridx(tolower(tokenName), "string") != -1
