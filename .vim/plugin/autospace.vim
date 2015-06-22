@@ -179,7 +179,7 @@ function! InsertOperator(op)
     let compositeOperators = [
           \ '===', '!==', '==', '!=', '<>', '&&', '||', '<=', '>=', '=~',
           \ '-=', '+=', '*=', '/=', '%=', '&=', '|=', '^=', '!~', 
-          \ '--', '++', '<<', '>>', '//', '->', '=>'
+          \ '--', '++', '<<', '>>', '//', '->', '=>', '/*'
           \ ]
 
     let prevOps = PreviousChars(getline("."), col(".") - 1)
@@ -212,7 +212,7 @@ function! InsertOperator(op)
 
       for compOp in compositeOperators
         " if potentialCompOp.endswith(compOn)
-        if match(potentialCompOp, '\V' . escape(compOp, '\/') . '\$') != -1
+        if match(potentialCompOp, '\V' . escape(compOp, '\\') . '\$') != -1
           return HandleCompositeOperator(compOp)
         endif
       endfor
