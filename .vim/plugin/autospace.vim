@@ -167,12 +167,12 @@ else:
 EOF
 endfunction
 
-let g:debugvar = '...'
-function! GDebug()
-    return g:debugvar
-endfunction
+"let g:debugvar = '...'
+"function! GDebug()
+    "return g:debugvar
+"endfunction
 
-set statusline=%{GDebug()}
+"set statusline=%{GDebug()}
 
 function! InsertOperator(op)
   if !InString()
@@ -321,15 +321,20 @@ function! HandleCompositeOperator(op)
   if op == "--" || op == "++"
     " Do not put spaces to pre/post increment/decrement operators
     let opWithSpaces = op
-  elseif op == "//" && &ft != "python"
-    let opWithSpaces = op." "
   else
     let opWithSpaces = " ".op." "
   endif
 
   if &ft != "python" && op == "//"
     " C-Style comments
-    let opWithSpaces = " // "
+    " Prepend a space if there is text before the comment symbol
+    let startOperatorCol = col('.') - numOps
+    let thereIsTextBeforeSymbol = (match(getline('.'), '\v[^\s].*%'.startOperatorCol.'c') != -1)
+    if thereIsTextBeforeSymbol
+      let opWithSpaces = " // "
+    else
+      let opWithSpaces = "// "
+    endif
   endif
 
   " Find the old operator string and replace it with the new operator,
