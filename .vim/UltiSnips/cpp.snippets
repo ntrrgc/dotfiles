@@ -1,0 +1,14 @@
+snippet li "local include" b
+#include "${1}.h"
+endsnippet
+
+snippet gi "global include" b
+#include <${1}>
+endsnippet
+
+snippet main "main function" 
+int main(int argc, char **argv) {
+	${1}
+	return 0;
+}
+endsnippet
