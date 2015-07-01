@@ -1,0 +1,10 @@
+#!/bin/bash
+list_file_count() {
+  IFS="$(echo -en '\n\b')"
+  for name in $(ls -1 "$1"); do
+    n=$(find "$1/$name" | wc -l)
+    printf '%-7d %s\n' $n "$name"
+  done
+}
+
+list_file_count "${1:-.}" | sort -n
