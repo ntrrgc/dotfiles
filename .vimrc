@@ -92,9 +92,17 @@ Bundle 'scrooloose/nerdtree'
 "let g:syntastic_always_populate_loc_list=1
 "Bundle 'scrooloose/syntastic'
 
-" Pydiction
-"let g:pydiction_location = '/home/ntrrgc/.vim/bundle/Pydiction/complete-dict'
-"Bundle 'vim-scripts/Pydiction'
+Plugin 'Valloric/YouCompleteMe'
+let g:ycm_extra_conf_globlist = [
+            \ '/hdd/home/ntrrgc/Documentos/Dropbox/*', 
+            \ '/hdd/home/ntrrgc/Documentos/Programas/*', 
+            \ ]
+
+" Always show the sign columns
+autocmd BufEnter * sign define dummy
+autocmd BufEnter * execute 'sign place 99999 line=1 name=dummy buffer=' . bufnr('')
+
+Plugin 'rdnetto/YCM-Generator'
 
 " pyref
 let g:pyref_mapping = 'K'
@@ -150,42 +158,8 @@ Bundle 'yukunlin/auto-pairs'
 " vim-fugitive (git integration)
 Bundle 'tpope/vim-fugitive'
 
-if !exists('g:neocomplete#sources#omni#functions')
-  let g:neocomplete#sources#omni#functions = {}
-endif
-let g:neocomplete#sources#omni#functions.robot = 'CompleteWordSets'
-
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.robot = '.*'
-
 " No artifacts
 set lazyredraw
-Bundle 'Shougo/neocomplete.vim'
-
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" http://stackoverflow.com/a/18937785/1777162
-" <CR>: close popup and open a new line.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#smart_close_popup() . "\<CR>"
-endfunction
 
 Bundle 'junegunn/vader.vim'
 
