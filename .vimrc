@@ -197,5 +197,8 @@ Plugin 'dag/vim-fish'
 if &shell =~# 'fish$'
     set shell=bash
 endif
+
+set incsearch hlsearch
+
 filetype plugin indent on
 syntax on
