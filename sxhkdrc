@@ -139,17 +139,17 @@ super + g
 super + a
     spotify
 
-super + {F5, F6, F7, F8}
+XF86Audio{Prev,Play,Stop,Next}
     mpris2 {Previous, PlayPause, Stop, Next}
 
 super + Pause
     gvim ~/.config/sxhkd/sxhkdrc
 
 super + Prior
-    bspc desktop --rotate 90
+    bspc desktop --flip horizontal
 
 super + Next
-    bspc desktop --rotate -90
+    bspc desktop --flip vertical
 
 Scroll_Lock
     toggle_numbers
