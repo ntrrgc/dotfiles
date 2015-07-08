@@ -1,0 +1,23 @@
+#!/bin/bash
+case "$1" in
+  close)
+    eval $(xdotool getmouselocation --shell)
+    xdotool mousemove 1900 1060
+    xdotool click 3
+    xdotool mousemove_relative 0 -110 
+    sleep 0.1s
+    xdotool click 1 
+    xdotool mousemove $X $Y
+    ;;
+
+  open)
+    eval $(xdotool getmouselocation --shell)
+    xdotool mousemove 1900 1060
+    xdotool click 1
+    xdotool mousemove $X $Y
+    ;;
+
+  *)
+    echo 'Unknown command'
+    exit 1
+esac
