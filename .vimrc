@@ -193,6 +193,9 @@ augroup END
 
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'scrooloose/nerdcommenter'
-
+Plugin 'dag/vim-fish'
+if &shell =~# 'fish$'
+    set shell=bash
+endif
 filetype plugin indent on
 syntax on
