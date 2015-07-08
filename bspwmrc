@@ -21,9 +21,9 @@ bspc rule -a Kupfer.py focus=on border=off
 bspc rule -a Screenkey manage=off
 
 setxkbmap 'es(dvp)' -option caps:swapescape
+SXHKD_SHELL=/bin/bash sxhkd &
 xsetroot -cursor_name left_ptr
 wmname LG3D
-sxhkd &
 nitrogen --restore &
 copyq &
 /usr/lib/kde4/libexec/kdeconnectd &
