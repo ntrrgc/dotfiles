@@ -1,3 +1,9 @@
+snippet fu "named function" w
+function ${1}(${2}) {
+  ${3}
+}${4}
+endsnippet
+
 snippet f "anonymous function" w
 function(${1}) {
   ${2}
@@ -104,6 +110,10 @@ endsnippet
 
 snippet /(^|(?<=\W))\./ "this" r
 this.
+endsnippet
+
+snippet /(^|(?<=\W))s\./ "self" r
+self.
 endsnippet
 
 snippet m "method" !b
@@ -276,5 +286,10 @@ snippet for "for" b
 for (var ${1:i} = 0; $1 < ${2}.length; $1++) {
 	var ${3:element} = $2[$1];
 	$4
+endsnippet
+
+snippet d "d3 callback" w
+function(d,i) {
+  return ${1};
 }
 endsnippet
