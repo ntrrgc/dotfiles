@@ -147,6 +147,7 @@ alias ga='git add'
 alias gp='git push'
 alias dif='git diff'
 alias grebase='git fetch && git rebase'
+alias pull='git pull'
 alias greset='git checkout --'
 if [ -x /usr/bin/journalctl ]; then
   alias logf='sudo journalctl -fl'
