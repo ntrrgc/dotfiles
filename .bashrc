@@ -162,6 +162,9 @@ function gc() {
     git commit -m "$@"
   fi
 }
+function fin() {
+  find . -iname '*'"$1"'*'
+}
 
 export DJANGO=$(__try_paths \
   /usr/local/lib/python2.7/site-packages/django \
