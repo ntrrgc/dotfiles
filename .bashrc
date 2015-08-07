@@ -185,6 +185,12 @@ function ppa() {
 function ts-install() {
     tsd query "$1" --action install --save
 }
+function cmbuild() {
+  mkdir -p "$1"
+  PROJECT_DIR="$PWD"
+  cd "$1"
+  cmake "${@:2}" ..
+}
 shopt -s autocd
 shopt -s histappend
 export DROPBOX="$HOME/Dropbox"
