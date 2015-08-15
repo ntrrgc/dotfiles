@@ -123,6 +123,9 @@ function s() {
     sudo "$@"
   fi
 }
+function fname() {
+  find . -iname '*'"$1"'*' "${@:2}"
+}
 if [ -x /bin/pacman ]; then
   alias pas='sudo pacman -S'
   alias pass='sudo pacman -Ss'
@@ -161,9 +164,6 @@ function gc() {
   else
     git commit -m "$@"
   fi
-}
-function fin() {
-  find . -iname '*'"$1"'*'
 }
 
 export DJANGO=$(__try_paths \
