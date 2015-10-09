@@ -1,0 +1,15 @@
+snippet bg "bg" b
+image bg $1 = "images/bg_$1.png"
+endsnippet
+snippet img "" b
+image $1 $2 = "images/$1_$2.png"
+endsnippet
+snippet fin "Description" b
+call final("$1")
+endsnippet
+snippet p "Description" b
+show $1 normal
+with dissolve
+$2 "$3"
+hide $1 with dissolve
+endsnippet
