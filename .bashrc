@@ -192,6 +192,9 @@ function cmbuild() {
   cd "$1"
   cmake "${@:2}" ..
 }
+function download_time() {
+  qalc "($1Byte) / (${2:-120 k}Byte/s) to hours"
+}
 shopt -s autocd
 shopt -s histappend
 export DROPBOX="$HOME/Dropbox"
