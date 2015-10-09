@@ -130,7 +130,7 @@ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 Bundle 'SirVer/ultisnips'
 
 " vim-pasta
-let g:pasta_disabled_filetypes = ['robot', 'text']
+let g:pasta_disabled_filetypes = ['robot', 'text', 'renpy']
 Bundle 'sickill/vim-pasta'
 
 " vim-angry
@@ -197,6 +197,8 @@ Plugin 'dag/vim-fish'
 if &shell =~# 'fish$'
     set shell=bash
 endif
+
+Plugin 'chaimleib/vim-renpy'
 
 set incsearch hlsearch
 
