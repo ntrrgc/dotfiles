@@ -3,3 +3,82 @@ function ${1}(${2})
 	${3}
 end
 endsnippet
+
+snippet p "print" w
+print($1)
+endsnippet
+
+snippet d "pretty dump" b
+pretty.dump($1)
+endsnippet
+
+snippet for "for" b
+for $1 in $2 do
+	$3
+end
+endsnippet
+
+snippet i "if" b
+if $1 then
+    $2
+end
+endsnippet
+
+snippet ei "elseif" b
+elseif $1 then
+	$2
+endsnippet
+
+snippet fa "for pairs" b
+for ${1:i}, ${2:v} in ipairs($3) do
+	$4
+end
+endsnippet
+
+snippet /(^|(?<=\W))\./ "self." r
+self.
+endsnippet
+
+snippet r "return" b
+return $1
+endsnippet
+
+snippet ins "insert" b
+table.insert($1, $2)
+endsnippet
+
+snippet sc "subclass" b
+local $1 = class('$1', $2)
+
+function $1:initialize($3)
+	$2:initialize($4)
+	$5
+end
+$6
+return $1
+endsnippet
+
+snippet c "class" b
+local $1 = class('$1')
+
+function $1:initialize($2)
+	$3
+end
+$4
+return $1
+endsnippet
+
+snippet fram "import" b
+local $1 = require 'framework/$1'
+endsnippet
+snippet imp "import" b
+local $1 = require '$1'
+endsnippet
+
+snippet l "local" b
+local $1 = $2
+endsnippet
+
+snippet ann "assert not nil" b
+assert($1, "$1 is nil")
+endsnippet
