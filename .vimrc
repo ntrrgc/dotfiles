@@ -200,5 +200,8 @@ endif
 
 set incsearch hlsearch
 
+set ts=8
+noremap <F6> :YcmCompleter GoTo<CR>
+
 filetype plugin indent on
 syntax on
