@@ -181,6 +181,7 @@ function gvim() {
 function ppa() {
   sudo apt-add-repository "$1"
   sudo apt-get update
+  sudo apt-get install -y "$2"
 }
 function ts-install() {
     tsd query "$1" --action install --save
