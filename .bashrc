@@ -135,6 +135,7 @@ if [ -x /bin/pacman ]; then
   alias yass='yaourt -Ss'
   alias yolo='sudo pacman -Syu'
 else
+  alias yolo='sudo apt-get update && sudo apt-get upgrade'
   alias pas='sudo apt-get install'
   alias pass='sudo apt-cache search'
   alias pai='apt-cache show'
