@@ -52,3 +52,6 @@ compton --vsync opengl &
 nm-applet &
 dropboxd &
 thunderbird &
+autokey-gtk &
+
+xset r rate 320 20
