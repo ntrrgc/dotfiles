@@ -146,6 +146,7 @@ fi
 alias pgr='ps aux | grep'
 alias sys='sudo systemctl'
 alias clip='xclip -selection clipboard'
+alias clone='git clone'
 alias gs='git status'
 alias ga='git add'
 alias gp='git push'
