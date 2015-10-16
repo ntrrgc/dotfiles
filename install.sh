@@ -16,7 +16,6 @@ for entity in ${ENTITIES[@]}; do
     ln -r -s "$RELADIR/$entity" "$HOME/$entity"
   fi
 done
-exit
 
 mkdir -p "$HOME/.config/bspwm/"
 ln -r -s "$RELADIR/bspwmrc" "$HOME/.config/bspwm/bspwmrc"
