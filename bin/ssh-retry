@@ -1,0 +1,9 @@
+#!/bin/bash
+while true; do
+  time=$(date +%s)
+  nc -z -w 1 "$1" 22 && break
+  if [ $(date +%s) == $time ]; then
+    sleep 1s
+  fi
+done
+exec ssh "$@"
