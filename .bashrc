@@ -160,6 +160,7 @@ else
   alias logf='sudo tail -f /var/log/messages'
 fi
 alias plusx='chmod +x'
+alias wmon='watchd-monitor'
 function gc() {
   if [[ "$#" -eq 0 ]]; then
     git commit
