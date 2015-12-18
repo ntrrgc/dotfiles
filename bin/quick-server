@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import subprocess
 import os
 import sys
 from argparse import ArgumentParser
@@ -50,4 +49,4 @@ if __name__ == "__main__":
     conf_file.write(conf_content)
     conf_file.close()
 
-    subprocess.call(['lighttpd', '-f', conf_path, '-D'])
+    os.execvp('lighttpd', ['lighttpd', '-f', conf_path, '-D'])
