@@ -168,6 +168,12 @@ function gc() {
     git commit -m "$@"
   fi
 }
+function mangrep() {
+  if [ ! $# -eq 2 ]; then
+    echo "Example of usage: mangrep wget -r"
+  fi
+  man -P 'less -p "^       '"$2"'"' $1
+}
 
 export DJANGO=$(__try_paths \
   /usr/local/lib/python2.7/site-packages/django \
