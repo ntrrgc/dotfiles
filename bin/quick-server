@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     conf_path = '/tmp/quick-server-lighttpd.conf'
     conf_file = open(conf_path, 'w')
-    conf_file.write(conf_template)
+    conf_file.write(conf_content)
     conf_file.close()
 
     subprocess.call(['lighttpd', '-f', conf_path, '-D'])
