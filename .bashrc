@@ -172,6 +172,7 @@ function gc() {
 function mangrep() {
   if [ ! $# -eq 2 ]; then
     echo "Example of usage: mangrep wget -r"
+    return 1
   fi
   man -P 'less -p "^       '"$2"'"' $1
 }
