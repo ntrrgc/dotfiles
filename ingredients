@@ -16,6 +16,7 @@ xsetroot Sets default X11 cursor
 kupfer FreeDesktop-compliant launcher
 xtitle Notifies each time X11 selection changes
 xdotool X11 automation
+lighttpd Light web server
 
 # Personal ingredients
 lasana Upload images
