@@ -83,8 +83,9 @@ super + e
     bspc monitor --focus next
 
 super + m
+    last_window="$(bspc query -S | tail -n1)"; \
     bspc window --to-monitor next; \
-    bspc monitor next --focus
+    bspc window "$last_window" --focus
 
 {_,ctrl + }~button1
 	bspc pointer -g focus
