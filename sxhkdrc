@@ -6,10 +6,10 @@ super + alt + Escape
 	bspc quit
 
 alt + F4
-    bspc window -c
+    bspc node -c
 
 super + w
-	bspc window -c
+	bspc node -c
 
 super + t
 	bspc desktop -l next
@@ -18,74 +18,74 @@ super + b
 	bspc desktop -B
 
 super + s
-	bspc window -t floating
+	bspc node -t floating
 
 super + shift + f
-    bspc window -t fullscreen
+    bspc node -t fullscreen
 
 super + {grave,Tab}
-	bspc {window,desktop} -f last
+	bspc {node,desktop} -f last
 
 super + apostrophe
-	bspc window -s last
+	bspc node -s last
 
 super + {o,i}
 	bspc control --record-history off; \
-	bspc window {older,newer} -f; \
+	bspc node {older,newer} -f; \
 	bspc control --record-history on
 
 super + y
-	bspc window -w last.manual
+	bspc node -w last.manual
 
 #super + m
-	#bspc window -s biggest
+	#bspc node -s biggest
 
 super + {_,shift + }{h,j,k,l}
-	bspc window -{f,s} {left,down,up,right}
+	bspc node -{f,s} {west,south,north,east}
 
 super + {_,shift + }{Left,Down,Up,Right}
-    bspc window -{f,s} {left,down,up,right}
+    bspc node -{f,s} {west,south,north,east}
 
 super + {_,shift + }c
-	bspc window -f {next,prev}
+	bspc node -f {next,prev}
 
 super + {comma,period}
 	bspc desktop -C {backward,forward}
 
-#super + bracket{left,right}
+#super + bracket{west,east}
 	#bspc desktop -f {prev,next}
 
 super + ctrl + {h,j,k,l}
-	bspc window --presel {left,down,up,right}
+	bspc node --presel {west,south,north,east}
 
 super + ctrl + {_,shift + }space
-	bspc {window --presel cancel,desktop -c}
+	bspc {node --presel cancel,desktop -c}
 
 super + alt + {h,j,k,l}
-	bspc window -e {left -10,down +10,up -10,right +10}
+	bspc node -e {west -10,south +10,north -10,east +10}
 
 super + alt + shift + {h,j,k,l}
-	bspc window -e {right -10,up +10,down -10,left +10}
+	bspc node -e {east -10,north +10,south -10,west +10}
 
 super + ctrl + {1-9}
-	bspc window -r 0.{1-9}
+	bspc node -r 0.{1-9}
 
 #super + {_,shift + }{5-8,1-4}
-#    bspc {desktop --focus,window --to-desktop} ^{1-8}
+#    bspc {desktop --focus,node --to-desktop} ^{1-8}
 
 super + {_,shift + }{F5,F6,F7,F8,F1,F2,F3,F4}
-    bspc {desktop --focus,window --to-desktop} ^{1-8}
+    bspc {desktop --focus,node --to-desktop} ^{1-8}
 
 super + {_,shift + }{equal,asterisk,parenright,plus,bracketleft,braceleft,braceright,parenleft}
-    bspc {desktop --focus,window --to-desktop} ^{1-8}
+    bspc {desktop --focus,node --to-desktop} ^{1-8}
 
 super + e
     bspc monitor --focus next
 
 super + m
     last_window="$(bspc query -S | tail -n1)"; \
-    bspc window --to-monitor next; \
-    bspc window "$last_window" --focus
+    bspc node --to-monitor next; \
+    bspc node "$last_window" --focus
 
 {_,ctrl + }~button1
 	bspc pointer -g focus
@@ -162,7 +162,7 @@ super + n
     watchd-notify
 
 super + u
-    bspc window -f next.urgent
+    bspc node -f next.urgent
 
 super + shift + o
     email-notification open
