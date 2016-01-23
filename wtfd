@@ -79,7 +79,7 @@ class XTitleReactor(ProcessReactor):
 
 class BspcReactor(ProcessReactor):
     def __init__(self):
-        super().__init__(['bspc', 'control', '--subscribe'])
+        super().__init__(['bspc', 'subscribe'])
     
     def on_line(self, line):
         line = line[1:] #remove leading 'W'
