@@ -144,7 +144,7 @@ XF86Audio{Prev,Play,Stop,Next}
     mpris2 {Previous, PlayPause, Stop, Next}
 
 super + Pause
-    gvim ~/.config/sxhkd/sxhkdrc
+    gvim ~/dotfiles/sxhkdrc
 
 super + Prior
     bspc desktop --flip horizontal
