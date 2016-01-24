@@ -107,6 +107,7 @@ class BspcReactor(ProcessReactor):
                 # UPPERCASE -> focused
                 desktop = {
                     'name': value, 
+                    'ocuppied': (label.lower() != 'f'), 
                     'focused': label.isupper(), 
                     'status': label.lower()
                 }
@@ -129,16 +130,22 @@ class Bar(object):
 
     def render_desktop(self, monitor, imonitor, desktop, idesktop):
         idesktop_all_screens = idesktop + imonitor * 4
+        # The link switches to the clicked desktop
         link = '%{{A:bspc desktop --focus ^{idesktop}:}}{content}%{{A}}'
         text = '  %s  ' % desktop['name']
+
+        if desktop['ocuppied']:
+            text = '%{{B#4F6F4F}}{0}%{{B-}}'.format(text)
+
         if desktop['status'] == 'u': # urgent
-            content = '%{{U#FF0000}}%{{+u}}{0}%{{-u}}'.format(text)
+            # Use a red bar if the desktop has an urgent window
+            text = '%{{U#FF0000}}%{{+u}}{0}%{{-u}}'.format(text)
         elif desktop['focused']:
-            content = '%{{U#00FF00}}%{{+u}}{0}%{{-u}}'.format(text)
-        else:
-            content = text
+            # Use a green bar if the desktop is focused
+            text = '%{{U#00FF00}}%{{+u}}{0}%{{-u}}'.format(text)
+
         return link.format(idesktop=idesktop_all_screens, 
-                           content=content)
+                           content=text)
 
     def render_desktops(self, monitor, imonitor):
         return '  '.join(
