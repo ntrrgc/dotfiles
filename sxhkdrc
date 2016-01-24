@@ -147,10 +147,10 @@ super + Pause
     gvim ~/dotfiles/sxhkdrc
 
 super + Prior
-    bspc desktop --flip horizontal
+    bspc node '@/' --flip horizontal
 
 super + Next
-    bspc desktop --flip vertical
+    bspc node '@/' --flip vertical
 
 Scroll_Lock
     toggle_numbers
