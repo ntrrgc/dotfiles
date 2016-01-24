@@ -26,6 +26,9 @@ super + shift + f
 super + Tab
 	bspc node -f next
 
+super + shift + Tab
+        bspc node -f prev
+
 super + apostrophe
 	bspc node -s last
 
@@ -36,9 +39,6 @@ super + {o,i}
 
 super + y
 	bspc node -w last.manual
-
-#super + m
-	#bspc node -s biggest
 
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
