@@ -18,10 +18,10 @@ super + b
 	bspc desktop -B
 
 super + s
-	bspc node -t floating
+	bspc node --state '~floating'
 
 super + shift + f
-    bspc node -t fullscreen
+    bspc node --state '~fullscreen'
 
 super + {grave,Tab}
 	bspc {node,desktop} -f last
