@@ -169,3 +169,6 @@ super + shift + o
 
 super + shift + x
     email-notification close
+
+super + d
+    dolphin4
