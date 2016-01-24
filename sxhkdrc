@@ -12,7 +12,7 @@ super + w
 	bspc node -c
 
 super + t
-	bspc desktop -l next
+	bspc desktop --layout next
 
 super + b
 	bspc desktop -B
@@ -21,7 +21,7 @@ super + s
 	bspc node --state '~floating'
 
 super + shift + f
-    bspc node --state '~fullscreen'
+        bspc node --state '~fullscreen'
 
 super + {grave,Tab}
 	bspc {node,desktop} -f last
