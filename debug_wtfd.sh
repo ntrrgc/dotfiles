@@ -1,2 +1,2 @@
 #!/bin/bash
-./bin/inotifyrun ./wtfd | lemonbar
+watchd-monitor ./wtfd | ./launch_bar.sh
