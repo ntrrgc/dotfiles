@@ -41,10 +41,10 @@ super + y
 	bspc node -w last.manual
 
 super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
+	~/Dropbox/right-window/right-window.py -{f,s} {west,south,north,east}
 
 super + {_,shift + }{Left,Down,Up,Right}
-    bspc node -{f,s} {west,south,north,east}
+    ~/Dropbox/right-window/right-window.py node -{f,s} {west,south,north,east}
 
 super + {_,shift + }c
 	bspc node -f {next,prev}
@@ -87,7 +87,7 @@ super + m
     bspc node --to-monitor next; \
     bspc node "$last_window" --focus
 
-{_,ctrl + }~button1
+{_,ctrl + }~button{1,2,3}
 	bspc pointer -g focus
 
 super + button{1-3}
