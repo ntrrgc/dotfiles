@@ -83,7 +83,7 @@ super + e
     bspc monitor --focus next
 
 super + m
-    last_window="$(bspc query -S | tail -n1)"; \
+    last_window="$(bspc query --nodes --node focused)"; \
     bspc node --to-monitor next; \
     bspc node "$last_window" --focus
 
