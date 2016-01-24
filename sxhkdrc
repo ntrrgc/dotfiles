@@ -23,8 +23,8 @@ super + s
 super + shift + f
         bspc node --state '~fullscreen'
 
-super + {grave,Tab}
-	bspc {node,desktop} -f last
+super + Tab
+	bspc node -f next
 
 super + apostrophe
 	bspc node -s last
