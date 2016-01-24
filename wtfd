@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import tornado.ioloop
 import subprocess
+import json
 import fcntl
 import os
 import sys
@@ -125,12 +126,20 @@ class Bar(object):
         self.time = ''
         self.monitors = None
         self.last_update = None
+        self.apps_running = None
 
     def render_desktop(self, monitor, imonitor, desktop, idesktop):
         idesktop_all_screens = idesktop + imonitor * 4
         # The link switches to the clicked desktop
         link = '%{{A:bspc desktop --focus ^{idesktop}:}}{content}%{{A}}'
-        text = '  %s  ' % desktop['name']
+        icons = self.apps_running[monitor['name']][desktop['name']]
+        if len(icons) > 0:
+            icons = ' ' + ' '.join(icons) + ' '
+        else:
+            icons = ''
+
+        text = '  %s %s ' % (desktop['name'], icons)
+
 
         if desktop['ocuppied']:
             text = '%{{B#4F6F4F}}{0}%{{B-}}'.format(text)
@@ -175,6 +184,8 @@ class Bar(object):
         if self.monitors is None:
             return None # skip for now
 
+        self.apps_running = get_running_apps()
+
         if len(self.monitors) > 0:
             buf = ''
 
@@ -191,6 +202,95 @@ class Bar(object):
             print(new_update)
             self.last_update = new_update
     
+_class_map = {
+    ("chrome",
+     "google-chrome",
+     "google-chrome-stable", 
+     "google-chrome-unstable", 
+     "chromium"): 
+        "\uf268", 
+
+    "firefox": "\uf269", 
+
+    # yeah, I use all of those
+    ("jetbrains-pychar", 
+     "jetbrains-webstorm", 
+     "jetbrains-idea-c", 
+     "jetbrains-clion", 
+     "jetbrains-studi", 
+     "jetbrains-phpstorm", 
+     "emacs", 
+     "qtcreator"): 
+        "\uf121", 
+
+    "gvim": "\uf27d", 
+    "teamspeak 3": "\uf0c0", 
+    "steam": "\uf1b6", 
+    "": "\uf1bc", #spotify
+    ("dolphin", "dolphin4"): "\uf07c", 
+    "thunderbird": "\uf003", 
+    "skype": "\uf17e", 
+    "gajim": "\uf075", 
+    "clementine": "\uf001", 
+    ("gnome-terminal", 
+     "konsole", 
+     "xterm", 
+     "termite", 
+     "terminology", 
+     "urxvt"): 
+        "\uf120", 
+    "okular": "\uf02d", 
+    "gimp": "\uf1fc", 
+    "inkscape": "\uf040", 
+}
+def expand_to_list(item):
+    if isinstance(item, tuple):
+        return item
+    else:
+        return (item, )
+class_map = {}
+for keys, value in _class_map.items():
+    keys = expand_to_list(keys)
+    for key in keys:
+        assert key == "" or key.islower()
+        class_map[key] = value
+
+def get_running_apps():
+    wm_state = subprocess.check_output(['bspc', 'wm', '--dump-state']).decode()
+    wm_state = json.loads(wm_state)
+
+    def process_monitor(monitor):
+        return {
+            desktop["name"]: process_desktop(desktop)
+            for desktop in monitor["desktops"]
+        }
+
+    def process_desktop(desktop):
+        return process_node(desktop['root'])
+
+    def process_node(node):
+        if node is None:
+            return []
+        else:
+            if node['client']:
+                this_node_values = process_class(node['client']['className'])
+            else:
+                this_node_values = []
+            return this_node_values + \
+                    process_node(node['firstChild']) + \
+                    process_node(node['secondChild'])
+
+    def process_class(class_name):
+        icon = class_map.get(class_name.lower())
+        if icon:
+            return [icon]
+        else:
+            return []
+
+    return {
+        monitor['name']: process_monitor(monitor)
+        for monitor in wm_state['monitors']
+    }
 
 def update_time():
     now = datetime.datetime.now()
