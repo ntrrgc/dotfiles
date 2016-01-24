@@ -87,7 +87,6 @@ class BspcReactor(ProcessReactor):
 
         monitors = []
         monitor = None
-        layout = 'unkwown'
 
         for field in fields:
             label, value = field[0], field[1:]
@@ -99,6 +98,7 @@ class BspcReactor(ProcessReactor):
                     'name': value, 
                     'active': label == 'M', 
                     'desktops': [], 
+                    'layout': 'unknown', 
                 }
             elif label in ('O', 'F', 'U', 'o', 'f', 'u'):
                 # o -> ocuppied
@@ -113,11 +113,10 @@ class BspcReactor(ProcessReactor):
                 }
                 monitor['desktops'].append(desktop)
             elif label == 'L':
-                layout = value
+                monitor['layout'] = value
         monitors.append(monitor)
 
         bar.monitors = monitors
-        bar.layout = layout
         bar.update()
 
 class Bar(object):
@@ -125,7 +124,6 @@ class Bar(object):
         self.window_title = ''
         self.time = ''
         self.monitors = None
-        self.layout = 'unkwown'
         self.last_update = None
 
     def render_desktop(self, monitor, imonitor, desktop, idesktop):
@@ -153,8 +151,8 @@ class Bar(object):
             for idesktop, desktop in enumerate(monitor['desktops'], 1)
         )
 
-    def render_layout(self):
-        return '%{F#FFCE88}' + self.layout + '%{F-}'
+    def render_layout(self, monitor):
+        return '%{F#FFCE88}' + monitor['layout'] + '%{F-}'
     
 
     def render_monitor(self, monitor, imonitor):
@@ -165,7 +163,7 @@ class Bar(object):
             'desktops': self.render_desktops(monitor, imonitor), 
             'title': self.window_title, 
             'time': self.time, 
-            'layout': self.render_layout(), 
+            'layout': self.render_layout(monitor), 
         })
 
     def bar_monitor_number(self, imonitor):
