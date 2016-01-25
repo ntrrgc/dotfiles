@@ -138,21 +138,36 @@ class Bar(object):
         else:
             icons = ''
 
-        text = '  %s %s ' % (desktop['name'], icons)
+        content = '  %s %s ' % (desktop['name'], icons)
 
+
+        background_color = '-'
+        line_color = '-'
 
         if desktop['ocuppied']:
-            text = '%{{B#4F6F4F}}{0}%{{B-}}'.format(text)
+            background_color = '#4F6F4F' # green
 
         if desktop['status'] == 'u': # urgent
             # Use a red bar if the desktop has an urgent window
-            text = '%{{U#FF0000}}%{{+u}}{0}%{{-u}}'.format(text)
+            line_color = '#FF2020'
+            background_color = '#FF6F6F'
         elif desktop['focused']:
             # Use a green bar if the desktop is focused
-            text = '%{{U#00FF00}}%{{+u}}{0}%{{-u}}'.format(text)
+            line_color = '#00FF00'
 
+
+        # Wrap content with background
+        content = '%{{B{background}}}{0}%{{B-}}'.format(content, 
+                     background=background_color)
+
+        # Wrap content with underline
+        if line_color != '-':
+            content = '%{{U{line}}}%{{+u}}{0}%{{-u}}'.format(content, 
+                         line=line_color)
+
+        # Wrap content with link
         return link.format(idesktop=idesktop_all_screens, 
-                           content=text)
+                           content=content)
 
     def render_desktops(self, monitor, imonitor):
         return '  '.join(
