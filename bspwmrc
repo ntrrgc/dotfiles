@@ -7,51 +7,55 @@ bspc config borderless_monocle  true
 bspc config gapless_monocle     true
 bspc config focus_by_distance   true
 bspc config focused_border_color '#7ddb58'
-bspc config window_gap 4
+bspc config window_gap 0
 
 bspc monitor HDMI-0 -d I II III IV 
 bspc monitor DVI-I-1 -d V VI VII VIII
 
-#bspc rule -a Gimp desktop=^8 follow=on floating=on
+#bspc rule -a Gimp desktop=^8 follow=on state=floating
 #bspc rule -a Chromium desktop=^2
-bspc rule -a mplayer2 floating=on
-bspc rule -a ffplay floating=on
-bspc rule -a kruler floating=on
+bspc rule -a mplayer2 state=floating
+bspc rule -a ffplay state=floating
+bspc rule -a kruler state=floating
 bspc rule -a Kupfer.py focus=on border=off
 bspc rule -a Screenkey manage=off
 
 setxkbmap 'es(dvp)' -option caps:swapescape
 SXHKD_SHELL=/bin/bash sxhkd &
 xsetroot -cursor_name left_ptr
-wmname LG3D
+wmname LG3D # fix for some Java apps
 nitrogen --restore &
-copyq &
-/usr/lib/kde4/libexec/kdeconnectd &
 
 ~/dotfiles/wtfd | ~/dotfiles/launch_bar.sh &
-trayer_after_bar() {
-  until xdotool search --name bar > /dev/null; do
-    sleep 0.05
-  done
 
-  trayer \
-    --edge top \
-    --align right \
-    --transparent true \
-    --alpha 0 \
-    --tint 0x000000 \
-    --widthtype pixel \
-    --width 200 \
-    --height 20 \
-    --monitor 0 \
-    --margin 138
-}
-trayer_after_bar &
+# Wait for bar to show up, so the tray does not end behind bar.
+xdotool search --sync --name bar
+
+trayer \
+  --edge top \
+  --align right \
+  --transparent true \
+  --alpha 0 \
+  --tint 0x000000 \
+  --widthtype pixel \
+  --width 200 \
+  --height 20 \
+  --monitor 0 \
+  --margin 138 &
 
 compton --vsync opengl &
-nm-applet &
-dropboxd &
-thunderbird &
-autokey-gtk &
+xset r rate 320 20 &
 
-xset r rate 320 20
+# Wait for trayer to show up, so no tray icons are missing
+xdotool search --sync --classname trayer
+
+# Execute local startup script.
+
+# In that script you can launch applications like this:
+#   dropboxd &
+
+# Since trayer has already started up you can be sure no tray icons will be 
+# missing.
+if [ -f ~/.bspwmrc_local.sh ]; then
+  . ~/.bspwmrc_local.sh
+fi
