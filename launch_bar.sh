@@ -1,3 +1,4 @@
+#!/bin/bash
 PANEL_HEIGHT=22
 
 bspc config top_padding $PANEL_HEIGHT
