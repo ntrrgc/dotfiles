@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+from subprocess import Popen, PIPE, DEVNULL, call, check_output
+from shlex import split
+from time import sleep
+from signal import *
+
+p1 = Popen(['watchd-monitor', './wtfd'], stdout=PIPE)
+p2 = Popen(['./launch_bar.sh'], stdin=p1.stdout)
+
+# Wait for the panel to appear
+call(split('xdotool search --sync --name bar'), stdout=DEVNULL)
+
+window_ids = check_output(split('xdotool search trayer'), stderr=DEVNULL).split()
+
+for id in window_ids:
+    call(split('xdotool windowraise ' + id.decode()))
+
+def kill_everybody(signal, frame):
+    p1.send_signal(signal)
+    p2.send_signal(signal)
+
+signal(SIGINT, kill_everybody)
+p1.wait()
