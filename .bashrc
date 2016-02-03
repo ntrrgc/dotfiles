@@ -154,6 +154,9 @@ alias dif='git diff'
 alias grebase='git fetch && git rebase'
 alias pull='git pull'
 alias greset='git checkout --'
+# Just In Case, stash unstaged changes so I can run clean test on what I'm about to commit
+alias jic='git stash --keep-index --include-untracked'
+alias spop='git stash pop'
 if [ -x /usr/bin/journalctl ]; then
   alias logf='sudo journalctl -fl'
 else
