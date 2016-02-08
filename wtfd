@@ -205,9 +205,12 @@ class Bar(object):
             buf = ''
 
             for imonitor, monitor in enumerate(self.monitors):
-                buf += '%{{S{0}}}{1}'.format(
-                    monitor_order[monitor['name']], 
-                    self.render_monitor(monitor, imonitor))
+                # ignore removed monitors (those that were connected and
+                # therefore bspwm remembers them but they are no longer used)
+                if monitor['name'] in monitor_order.keys():
+                    buf += '%{{S{0}}}{1}'.format(
+                        monitor_order[monitor['name']],
+                        self.render_monitor(monitor, imonitor))
             return buf
 
     
