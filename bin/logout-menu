@@ -3,10 +3,10 @@ options=(shutdown reboot logout top windows)
 option=$(printf '%s\n' "${options[@]}" | dmenu)
 
 shutdown() {
-  sudo poweroff
+  systemctl poweroff
 }
 reboot() {
-  sudo reboot
+  systemctl reboot
 }
 logout() {
   pkill -x bspwm
@@ -16,7 +16,7 @@ top() {
 }
 windows() {
   sudo efibootmgr -n 0
-  sudo reboot
+  systemctl reboot
 }
 
 eval "$option"
