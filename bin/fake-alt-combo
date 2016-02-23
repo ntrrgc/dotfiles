@@ -1,0 +1,9 @@
+#!/bin/bash
+pkill -USR2 sxhkd
+sleep 0.15s
+
+xte 'keyup Alt_L'
+setxkbmap es
+xte 'keydown Alt_L' "key $1" 'keyup Alt_L'
+setxkbmap 'es(dvp)'
+pkill -USR2 sxhkd
