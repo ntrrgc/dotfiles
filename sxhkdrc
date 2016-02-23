@@ -41,10 +41,10 @@ super + y
 	bspc node -w last.manual
 
 super + {_,shift + }{h,j,k,l}
-	~/Dropbox/right-window/right-window.py -{f,s} {west,south,north,east}
+	/home/ntrrgc/Dropbox/right-window-cpp/build/right-window-bspwm -{f,s} {left,down,up,right}
 
 super + {_,shift + }{Left,Down,Up,Right}
-    ~/Dropbox/right-window/right-window.py node -{f,s} {west,south,north,east}
+    /home/ntrrgc/Dropbox/right-window-cpp/build/right-window-bspwm -{f,s} {left,down,up,right}
 
 super + {_,shift + }c
 	bspc node -f {next,prev}
