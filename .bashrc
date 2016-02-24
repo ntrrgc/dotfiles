@@ -165,6 +165,7 @@ fi
 alias plusx='chmod +x'
 alias wmon='watchd-monitor'
 alias wgetr='wget -rc --no-parent -nH'
+alias amend='git commit --amend'
 function gc() {
   if [[ "$#" -eq 0 ]]; then
     git commit
