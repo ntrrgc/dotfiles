@@ -180,6 +180,9 @@ function mangrep() {
   fi
   man -P 'less -p "^       '"$2"'"' $1
 }
+function topath() {
+  export PATH="$1:$PATH"
+}
 
 export DJANGO=$(__try_paths \
   /usr/local/lib/python2.7/site-packages/django \
