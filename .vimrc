@@ -199,6 +199,7 @@ if &shell =~# 'fish$'
 endif
 
 Plugin 'chaimleib/vim-renpy'
+Plugin 'leafgarland/typescript-vim'
 
 set incsearch hlsearch
 
