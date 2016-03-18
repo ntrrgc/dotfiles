@@ -271,3 +271,5 @@ export PATH="$PATH:$DOTFILES_DIR/bin"
 if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
 fi
+
+stty stop undef
