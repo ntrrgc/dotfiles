@@ -3,6 +3,11 @@ set linebreak ts=4 sw=4 expandtab
 set number relativenumber
 let mapleader='\'
 set completeopt=menuone
+
+" italics in gnome-terminal
+set t_ZH=[3m
+set t_ZR=[23m
+
 filetype off
 
 if has('unnamedplus')
