@@ -231,13 +231,16 @@ _class_map = {
     "firefox": "\uf269", 
 
     # yeah, I use all of those
+    # Check the classes with xprop |grep WM_CLASS
     ("jetbrains-pychar", 
      "jetbrains-webstorm", 
+     "jetbrains-idea", 
      "jetbrains-idea-c", 
      "jetbrains-clion", 
      "jetbrains-studi", 
      "jetbrains-phpstorm", 
      "emacs", 
+     "code", 
      "qtcreator"): 
         "\uf121", 
 
