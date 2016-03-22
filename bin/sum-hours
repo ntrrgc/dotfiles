@@ -1,0 +1,10 @@
+#!/bin/python3
+from math import floor
+total_minutes = 0
+try:
+    while True:
+        line = input()
+        hours, minutes = [int(x) for x in line.split(':')]
+        total_minutes += minutes + hours * 60
+except EOFError:
+    print('Total: %d:%#2d' % (floor(total_minutes / 60), total_minutes % 60))
