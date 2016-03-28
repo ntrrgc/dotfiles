@@ -273,3 +273,7 @@ if [ -f "$HOME/.bashrc_local" ]; then
 fi
 
 stty stop undef
+
+# Needed so that the current directory is preserved across windows and tabs in
+# some terminals.
+. /etc/profile.d/vte.sh
