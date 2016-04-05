@@ -91,7 +91,7 @@ super + {_,shift + }{F5,F6,F7,F8,F1,F2,F3,F4}
 super + {_,shift + }{equal,asterisk,parenright,plus,bracketleft,braceleft,braceright,parenleft}
     bspc {desktop --focus,node --to-desktop} ^{1-8}
 
-{mode_switch,super} + e
+super + e
     bspc monitor --focus next
 
 {mode_switch,super} + m
