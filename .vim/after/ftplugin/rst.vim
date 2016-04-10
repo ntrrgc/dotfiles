@@ -24,4 +24,8 @@ iabbrev sv servidor
 iabbrev svs servidores
 iabbrev bd base de datos
 
-setlocal spelllang=es
+if expand("%:p") =~ 'memoria'
+  setlocal spelllang=es
+else
+  setlocal spelllang=en
+endif
