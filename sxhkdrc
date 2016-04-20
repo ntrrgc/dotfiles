@@ -99,15 +99,6 @@ super + e
     bspc node --to-monitor next; \
     bspc node "$last_window" --focus
 
-{_,ctrl + }~button{1,2,3}
-	bspc pointer -g focus
-
-super + button{1-3}
-	; bspc pointer -g {move,resize_side,resize_corner}
-
-super + @button{1-3}
-	bspc pointer -u
-
 #
 # wm independent hotkeys
 #
