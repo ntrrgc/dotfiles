@@ -41,7 +41,7 @@ trayer \
   --width 200 \
   --height 20 \
   --monitor 0 \
-  --margin 138 &
+  --margin 158 &
 
 compton --vsync opengl &
 xset r rate 320 20 &
