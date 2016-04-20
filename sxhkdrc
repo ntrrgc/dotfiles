@@ -82,13 +82,13 @@ super + ctrl + {1-9}
 #super + {_,shift + }{5-8,1-4}
 #    bspc {desktop --focus,node --to-desktop} ^{1-8}
 
-mode_switch + {_,shift + }{F5,F6,F7,F8,F1,F2,F3,F4}
+mode_switch + {_,shift + }{F1,F2,F3,F4,F5,F6,F7,F8}
     bspc {desktop --focus,node --to-desktop} ^{1-8}
 
-super + {_,shift + }{F5,F6,F7,F8,F1,F2,F3,F4}
+super + {_,shift + }{F1,F2,F3,F4,F5,F6,F7,F8}
     bspc {desktop --focus,node --to-desktop} ^{1-8}
 
-super + {_,shift + }{equal,asterisk,parenright,plus,bracketleft,braceleft,braceright,parenleft}
+super + {_,shift + }{bracketleft,braceleft,braceright,parenleft,equal,asterisk,parenright,plus}
     bspc {desktop --focus,node --to-desktop} ^{1-8}
 
 super + e
