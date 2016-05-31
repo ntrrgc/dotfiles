@@ -276,4 +276,6 @@ stty stop undef
 
 # Needed so that the current directory is preserved across windows and tabs in
 # some terminals.
-. /etc/profile.d/vte.sh
+if [ -f /etc/profile.d/vte.sh ]; then
+  . /etc/profile.d/vte.sh
+fi
