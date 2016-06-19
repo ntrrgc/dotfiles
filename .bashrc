@@ -262,6 +262,9 @@ ${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
 }
 PROMPT_COMMAND='__prompt_command'
 
+# http://stackoverflow.com/a/23710535/1777162
+cl() { history -p '!!'|tr -d \\n|clip; }
+
 PS1="${PS_TIME} ${PS_PWD}
 ${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
 
