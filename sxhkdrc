@@ -21,7 +21,11 @@ super + b
 	bspc desktop -B
 
 {mode_switch,super} + s
-	bspc node --state '~floating'
+    if [ -z "$(bspc query -N -n focused.floating)" ]; then \
+        bspc node focused -t floating; \
+    else \
+        bspc node focused -t tiled; \
+    fi
 
 {mode_switch,super} + shift + f
         bspc node --state '~fullscreen'
