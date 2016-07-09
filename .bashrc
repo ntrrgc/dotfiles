@@ -124,7 +124,7 @@ function s() {
   fi
 }
 function fname() {
-  find . -iname '*'"$1"'*' "${@:2}"
+  find . -iname '*'"$1"'*' "${@:2}" 2> /dev/null
 }
 if [ -x /bin/pacman ]; then
   alias pas='sudo pacman -S'
