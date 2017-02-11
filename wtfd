@@ -6,6 +6,9 @@ import fcntl
 import os
 import sys
 import datetime
+import math
+
+audio_sink = 'analog'
 
 # Be unbuffered
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 1)
@@ -78,6 +81,16 @@ class XTitleReactor(ProcessReactor):
         bar.update()
 
 
+class VolumeReactor(ProcessReactor):
+    def __init__(self):
+        super().__init__(['pulse-volume-monitor', '--json',
+                          '--desired-sink', audio_sink])
+    
+    def on_line(self, line):
+        bar.volume = json.loads(line)
+        bar.update()
+
+
 class BspcReactor(ProcessReactor):
     def __init__(self):
         super().__init__(['bspc', 'subscribe'])
@@ -125,6 +138,7 @@ class Bar(object):
         self.window_title = ''
         self.time = ''
         self.monitors = None
+        self.volume = None
         self.last_update = None
         self.apps_running = None
 
@@ -180,15 +194,44 @@ class Bar(object):
     
 
     def render_monitor(self, monitor, imonitor):
-        return '%{{l}}{margin}{desktops}' \
+        out = '%{{l}}{margin}{desktops}' \
                '%{{c}}{title}' \
-               '%{{r}}{layout}   {time}{margin}'.format(**{
+               '%{{r}}{layout}   {volume}  {time}{margin}'.format(**{
             'margin': ' ' * 4, 
             'desktops': self.render_desktops(monitor, imonitor), 
             'title': self.window_title, 
+            'volume': self.render_volume(),
             'time': self.time, 
             'layout': self.render_layout(monitor), 
         })
+        return out
+
+    def render_volume(self):
+        if self.volume is None:
+            out = ""
+        else:
+            if self.volume['muted']:
+                speaker_icon = '\uf026'
+            else:
+                speaker_icon = '\uf028'
+
+            number_bars = 16
+            volume = min(self.volume['max_volume'], 1)
+
+            if not self.volume['muted']:
+                filled_bars = round(number_bars * volume) 
+            else:
+                filled_bars = 0
+            empty_bars = number_bars - filled_bars
+
+            filled_bar_icon = '%{F#FFFFFF}\uf402%{F-}'
+            empty_bar_icon = '%{F#7F7F7F}\uf402%{F-}'#'\u25af'
+
+            bars = (filled_bar_icon * filled_bars) + (empty_bar_icon * empty_bars)
+
+            out = "%s %s" % (speaker_icon, bars)
+        return out
+    
 
     def bar_monitor_number(self, imonitor):
         # The monitor numbers used by bar do not always coincide with bspwm
@@ -218,6 +261,7 @@ class Bar(object):
         new_update = self.render()
         if new_update is not None and new_update != self.last_update:
             print(new_update)
+            sys.stdout.flush()
             self.last_update = new_update
     
 _class_map = {
@@ -324,6 +368,7 @@ def update_time():
 
 bar = Bar()
 xtitle = XTitleReactor()
+volume = VolumeReactor()
 bspc = BspcReactor()
 update_time()
 
