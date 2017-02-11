@@ -206,6 +206,10 @@ endif
 Plugin 'chaimleib/vim-renpy'
 Plugin 'leafgarland/typescript-vim'
 
+Plugin 'MicahElliott/Rocannon' "ansible
+
+Plugin 'keith/swift.vim'
+
 set incsearch hlsearch
 
 set ts=8
