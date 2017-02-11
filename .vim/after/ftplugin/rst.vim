@@ -23,9 +23,12 @@ iabbrev sbs subscripciones
 iabbrev sv servidor
 iabbrev svs servidores
 iabbrev bd base de datos
+iabbrev sem Sin embargo,
 
 if expand("%:p") =~ 'memoria'
   setlocal spelllang=es
 else
   setlocal spelllang=en
 endif
+
+iabbrev :m :math:``
