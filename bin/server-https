@@ -1,0 +1,25 @@
+#!/bin/env python2
+import SocketServer
+import BaseHTTPServer
+import SimpleHTTPServer
+import ssl
+
+class ThreadingSimpleServer(SocketServer.ThreadingMixIn,
+                   BaseHTTPServer.HTTPServer):
+    pass
+
+import sys
+
+if sys.argv[1:]:
+    port = int(sys.argv[1])
+else:
+    port = 8000
+
+server = ThreadingSimpleServer(('', port), SimpleHTTPServer.SimpleHTTPRequestHandler)
+server.socket = ssl.wrap_socket(server.socket, keyfile='./server.key', certfile='./server.pem', server_side=True)
+try:
+    while 1:
+        sys.stdout.flush()
+        server.handle_request()
+except KeyboardInterrupt:
+    print "Finished"
