@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# For some reason, volume control lags in Spotify, but not when pavucontrol is 
+# executing.
+#
+# Other volume control apps, like gnome-control-center are not enough, it has 
+# to be pavucontrol.
+#
+# This is unfortunate, among other reasons, because pavucontrol uses quite a
+# few CPU resources while opened.
+#
+# Funny enough, it does not matter whether pavucontrol is actually doing 
+# anything at all! I can send a SIGSTOP to pavucontrol and volume control will
+# continue to work flawless in Spotify.
+#
+# So here is what I do: I start pavucontrol in a virtual X11 environment, so
+# that it is not visible and then I SIGSTOP it and leave it suspended forever
+# in background.
+#
+# I can still open another pavucontrol instance if I really need to use it, so
+# there is no problem. 
+#
+# Love the Linux desktop experience!
+
+xvfb-run pavucontrol
+PID=$!
+kill -STOP $PID
