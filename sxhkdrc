@@ -177,3 +177,5 @@ super + shift + x
 super + d
     dolphin4
 
+ctrl + super + @v
+    paste-typing

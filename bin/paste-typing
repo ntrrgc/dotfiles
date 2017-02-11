@@ -1,0 +1,20 @@
+#!/usr/bin/env python2
+#Used to paste many fields or operations at once into VisualParadigm UML diagrams
+
+import Tkinter
+root = Tkinter.Tk()
+root.withdraw() # Hide the main window
+text_in_clipboard = root.clipboard_get()
+print(text_in_clipboard)
+
+import subprocess
+import time
+
+# wait for key release
+time.sleep(1)
+
+lines = text_in_clipboard.split("\n")
+for line in lines:
+    subprocess.call(["xdotool", "key", "Ctrl+a"])
+    subprocess.call(["xdotool", "type", line.strip()])
+    subprocess.call(["xdotool", "key", "Return"])
