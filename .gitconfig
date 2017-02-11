@@ -6,6 +6,7 @@
 	default = simple
 [core]
 	excludesfile = /home/ntrrgc/.gitignore_global
+	autocrlf = input
 [alias]
 	co = checkout
 	br = branch
