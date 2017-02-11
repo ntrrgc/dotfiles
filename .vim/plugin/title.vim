@@ -1,10 +1,19 @@
 " Thanks to dhruvasagar https://gist.github.com/dhruvasagar/9131986 
 function! UpdateHeaderLine()
   let header_line = getline(line('.') + 1)
-  if header_line =~# '^[\-=~]\+$'
-    let line_char = matchstr(header_line, '^[\-=~]')
+  if header_line =~# '^[\-=~^#]\+$'
+    let line_char = matchstr(header_line, '^[\-=~^#]')
     let line_before = getline(line('.') + 1)
-    let line_after = substitute(getline(line('.')), '.', line_char, 'g')
+
+    " if the new title is not empty
+    if getline(line('.')) !=# ''
+      let line_after = substitute(getline(line('.')), '.', line_char, 'g')
+    else
+      " Default to a single line character to avoid the heading
+      " disappearing
+      let line_after = line_char
+    end
+
     if line_after != line_before
       call setline(line('.') + 1, line_after)
     endif
