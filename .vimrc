@@ -210,6 +210,8 @@ Plugin 'MicahElliott/Rocannon' "ansible
 
 Plugin 'keith/swift.vim'
 
+Plugin 'rust-lang/rust.vim'
+
 set incsearch hlsearch
 
 set ts=8
