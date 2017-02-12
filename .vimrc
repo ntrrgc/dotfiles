@@ -10,7 +10,7 @@ set t_ZR=[23m
 
 filetype off
 
-if has('unnamedplus')
+if has('unnamedplus') || has('nvim') " workaround https://github.com/neovim/neovim/issues/6103
     set clipboard=unnamedplus
 else
     set clipboard=unnamed
