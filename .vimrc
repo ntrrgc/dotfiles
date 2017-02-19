@@ -97,7 +97,8 @@ Bundle 'scrooloose/nerdtree'
 "let g:syntastic_always_populate_loc_list=1
 "Bundle 'scrooloose/syntastic'
 
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
+let g:ycm_rust_src_path = substitute(system('rustc --print sysroot'), '\n\+$', '', '') . '/lib/rustlib/src/rust/src'
 let g:ycm_extra_conf_globlist = [
             \ '/hdd/home/ntrrgc/Documentos/Dropbox/*', 
             \ '/hdd/home/ntrrgc/Documentos/Programas/*', 
