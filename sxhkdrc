@@ -31,10 +31,10 @@ super + b
         bspc node --state '~fullscreen'
 
 {mode_switch,super} + Tab
-	bspc node -f next
+	bspc node -f next.local
 
 {mode_switch,super} + shift + Tab
-        bspc node -f prev
+        bspc node -f prev.local
 
 super + apostrophe
 	bspc node -s last
