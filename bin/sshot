@@ -3,4 +3,4 @@ SSHOT_DIR="$HOME/Imágenes/screenshots"
 SSHOT_FILE="$SSHOT_DIR/$(date +%F-%T).png"
 
 mkdir -p "$SSHOT_DIR"
-maim "$@" "$SSHOT_FILE" && lasana "$SSHOT_FILE"
+maim "$@" "$SSHOT_FILE" && eog "$SSHOT_FILE"
