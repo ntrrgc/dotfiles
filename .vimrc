@@ -213,6 +213,8 @@ Plugin 'keith/swift.vim'
 
 Plugin 'rust-lang/rust.vim'
 
+Plugin 'udalov/kotlin-vim'
+
 set incsearch hlsearch
 
 set ts=8
