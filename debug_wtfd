@@ -4,7 +4,7 @@ from shlex import split
 from time import sleep
 from signal import *
 
-p1 = Popen(['watchd-monitor', './wtfd'], stdout=PIPE)
+p1 = Popen(['watchd-monitor', './wtfd.py'], stdout=PIPE)
 p2 = Popen(['./launch_bar.sh'], stdin=p1.stdout)
 
 # Wait for the panel to appear

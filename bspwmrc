@@ -27,7 +27,7 @@ xsetroot -cursor_name left_ptr
 wmname LG3D # fix for some Java apps
 nitrogen --restore &
 
-~/dotfiles/wtfd | ~/dotfiles/launch_bar.sh &
+~/dotfiles/wtfd.py | ~/dotfiles/launch_bar.sh &
 
 # Wait for bar to show up, so the tray does not end behind bar.
 xdotool search --sync --name bar
