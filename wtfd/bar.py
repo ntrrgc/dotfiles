@@ -6,14 +6,14 @@ from wtfd.monitor_order import monitor_order
 
 class Bar(object):
     def __init__(self):
-        self.window_title = ''
         self.time = ''
-        self.monitors = None
         self.last_update = None
-
-        # These fields are filled and updated by different reactors.
-        self.volume = None  # VolumeReactor
         self.apps_running = None
+
+        # These fields are filled and updated by different reactors and updaters
+        self.window_title = ''  # XTitleReactor
+        self.monitors = None  # BSPCReactor
+        self.volume = None  # VolumeReactor
 
     def render_desktop(self, monitor, imonitor, desktop, idesktop):
         idesktop_all_screens = idesktop + imonitor * 4
