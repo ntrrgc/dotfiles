@@ -1,6 +1,9 @@
 import os
 import sys
 
+from wtfd.wanikani_updater import start_wanikani_updater
+
+
 def main():
     from wtfd.io_loop import io_loop
     from wtfd.reactors.bspc_reactor import BspcReactor
@@ -16,5 +19,6 @@ def main():
     VolumeReactor(audio_sink='analog')
     BspcReactor()
     update_time()
+    start_wanikani_updater()
 
     io_loop.start()

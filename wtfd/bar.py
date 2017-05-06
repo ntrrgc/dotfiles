@@ -1,5 +1,6 @@
 import sys
 
+from wtfd.full_width import full_width
 from wtfd.get_running_apps import get_running_apps
 from wtfd.monitor_order import monitor_order
 
@@ -14,6 +15,7 @@ class Bar(object):
         self.window_title = ''  # XTitleReactor
         self.monitors = None  # BSPCReactor
         self.volume = None  # VolumeReactor
+        self.wanikani_reviews = None  # wanikani_updater.py
 
     def render_desktop(self, monitor, imonitor, desktop, idesktop):
         idesktop_all_screens = idesktop + imonitor * 4
@@ -64,17 +66,35 @@ class Bar(object):
         return '%{F#FFCE88}' + monitor['layout'] + '%{F-}'
 
     def render_monitor(self, monitor, imonitor):
-        out = '%{{l}}{margin}{desktops}' \
+        out = '%{{l}}{margin}{desktops}{wanikani}' \
               '%{{c}}{title}' \
               '%{{r}}{layout}   {volume}  {time}{margin}'.format(**{
             'margin': ' ' * 4,
             'desktops': self.render_desktops(monitor, imonitor),
+            'wanikani': self.render_wanikani(imonitor),
             'title': self.window_title,
             'volume': self.render_volume(),
             'time': self.time,
             'layout': self.render_layout(monitor),
         })
         return out
+
+    def render_wanikani(self, imonitor):
+        if imonitor != 0 or self.wanikani_reviews is None:
+            return ''
+        prefix = '  '
+
+        if self.wanikani_reviews["reviews_available"] > 0:
+            return '{prefix}%{{B{background}}}［{reviews}枚］%{{B-}}'.format(
+                prefix=prefix,
+                background='#a50d82',
+                reviews=full_width(str(self.wanikani_reviews["reviews_available"])))
+        else:
+            return '{prefix}%{{F{foreground}}}［ 鰐蟹 {hours}h {minutes:02}m ］%{{F-}}'.format(
+                prefix=prefix,
+                foreground='#7f7f7f',
+                hours=self.wanikani_reviews["hours_next_review"],
+                minutes=self.wanikani_reviews["minutes_next_review"])
 
     def render_volume(self):
         if self.volume is None:
