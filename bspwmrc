@@ -10,8 +10,8 @@ bspc config focused_border_color '#FF9E2F'
 bspc config window_gap 0
 bspc config click_to_focus true
 
-bspc monitor HDMI-0 -d I II III IV 
-bspc monitor DVI-I-1 -d V VI VII VIII
+bspc monitor DVI-I-1 -d I II III IV
+bspc monitor HDMI-0 -d V VI VII VIII
 
 #bspc rule -a Gimp desktop=^8 follow=on state=floating
 #bspc rule -a Chromium desktop=^2
