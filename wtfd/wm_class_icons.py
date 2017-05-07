@@ -16,12 +16,15 @@ _class_map = {
     # yeah, I use all of those
     # Check the classes with xprop |grep WM_CLASS
     ("jetbrains-pychar",
+     "jetbrains-pycharm-ce"
      "jetbrains-webstorm",
      "jetbrains-idea",
      "jetbrains-idea-c",
+     "jetbrains-idea-ce",
      "jetbrains-clion",
      "jetbrains-studi",
      "jetbrains-phpstorm",
+     "jetbrains-studio",  # Android Studio
      "emacs",
      "code",
      "qtcreator"):
@@ -30,7 +33,8 @@ _class_map = {
     "gvim": "\uf27d",
     "teamspeak 3": "\uf0c0",
     "steam": "\uf1b6",
-    "": "\uf1bc", #spotify
+    "": "\uf1bc", # spotify... but also some other misbehaving apps that don't
+                  # set class name or set it too late for bspwm to notice
     ("dolphin", "dolphin4"): "\uf07c",
     "thunderbird": "\uf003",
     "skype": "\uf17e",
@@ -44,7 +48,9 @@ _class_map = {
      "urxvt"):
         "\uf120",
     "okular": "\uf02d",
-    "gimp": "\uf1fc",
+    ("gimp",
+     "krita",
+     "mypaint"): "\uf1fc",
     "inkscape": "\uf040",
 }
 
