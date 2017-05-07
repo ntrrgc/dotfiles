@@ -20,11 +20,11 @@ Some highlights of this bar feeder:
  * Written in Python 3, using Tornado instead of Bash.
  * No threads.
 
-![](screenshot1.png)
+![](screenshot3.png)
 
 ![](screenshot2.png)
 
-![](screenshot3.png)
+![](screenshot1.png)
 
 Note: wtfd is not intended to be reusable so it has no configuration, just code, everything here; it's something I made just for my own use. That said, if you find some parts useful or inspiring, copy and change as much as you want.
 
