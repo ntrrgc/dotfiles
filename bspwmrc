@@ -27,7 +27,11 @@ xsetroot -cursor_name left_ptr
 wmname LG3D # fix for some Java apps
 nitrogen --restore &
 
-~/dotfiles/wtfd.py | ~/dotfiles/launch_bar.sh &
+# wtfd is piped to bar through a multiplexer, so that the wtfd process
+# can be replaced for another one without restarting bar.
+~/dotfiles/wtfd/socket_line_mux.py /tmp/wtfd-pub.sock /tmp/wtfd-sub.sock
+~/dotfiles/wtfd.py | nc -U /tmp/wtfd-pub.sock > /dev/null &
+nc -U -q -1 /tmp/wtfd-sub.sock < /dev/null | ~/dotfiles/launch_bar.sh &
 
 # Wait for bar to show up, so the tray does not end behind bar.
 xdotool search --sync --name bar
