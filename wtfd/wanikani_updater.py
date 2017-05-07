@@ -24,14 +24,14 @@ def read_cached_wanikani_queue():
         with open("/tmp/.wanikani-update", "r") as f:
             data = json.load(f)
             seconds_old = time() - data["time"]
-            if seconds_old < 100:
+            # Cache responses for 5 minutes
+            if seconds_old < 5 * 60:
                 return data["response"]
     except OSError:
         return None
 
 def write_cached_wanikani_queue(json_response):
     with open("/tmp/.wanikani-update", "w") as f:
-        debug(repr(json_response))
         json.dump({
             "time": time(),
             "response": json_response,
@@ -40,8 +40,7 @@ def write_cached_wanikani_queue(json_response):
 def request_update_wanikani():
     cached_response = read_cached_wanikani_queue()
     if cached_response:
-        IOLoop.instance().call_later(0, partial(switch_latest_study_queue.wrap(response_update_wanikani),
-                                                cached_response)),
+        response_update_wanikani(cached_response)
     else:
         http_client.fetch("https://www.wanikani.com/api/user/{api_key}/study-queue".format(api_key=api_key),
                           switch_latest_study_queue.wrap(response_save_cache_update_wanikani))
@@ -72,6 +71,6 @@ def start_wanikani_updater():
     # Send first request
     request_update_wanikani()
 
-    # Schedule a new request every now and then
-    periodic_callback = PeriodicCallback(request_update_wanikani, 2 * 60 * 1000)  # milliseconds
+    # Schedule a new update request every 30 seconds
+    periodic_callback = PeriodicCallback(request_update_wanikani, 30 * 1000)  # milliseconds
     periodic_callback.start()
