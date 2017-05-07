@@ -83,15 +83,18 @@ class Bar(object):
         if imonitor != 0 or self.wanikani_reviews is None:
             return ''
         prefix = '  '
+        link_command = 'gnome-open https://www.wanikani.com/review/'
 
         if self.wanikani_reviews["reviews_available"] > 0:
-            return '{prefix}%{{B{background}}}［{reviews}枚］%{{B-}}'.format(
+            return '{prefix}%{{A:{link_command}:}}%{{B{background}}}［{reviews}枚］%{{B-}}%{{A}}'.format(
                 prefix=prefix,
+                link_command=link_command.replace(':', '\\:'),
                 background='#a50d82',
                 reviews=full_width(str(self.wanikani_reviews["reviews_available"])))
         else:
-            return '{prefix}%{{F{foreground}}}［ 鰐蟹 {hours}h {minutes:02}m ］%{{F-}}'.format(
+            return '{prefix}%{{A:{link_command}:}}%{{F{foreground}}}［ 鰐蟹 {hours}h {minutes:02}m ］%{{F-}}%{{A}}'.format(
                 prefix=prefix,
+                link_command=link_command.replace(':', '\\:'),
                 foreground='#7f7f7f',
                 hours=self.wanikani_reviews["hours_next_review"],
                 minutes=self.wanikani_reviews["minutes_next_review"])
