@@ -62,8 +62,8 @@ def response_update_wanikani(json_response):
 
     bar.wanikani_reviews = {
         "reviews_available": data["reviews_available"],
-        "hours_next_review": seconds_next_review // (60 * 60),
-        "minutes_next_review": seconds_next_review % (60 * 60) // 60,
+        "hours_next_review": int(seconds_next_review // (60 * 60)),
+        "minutes_next_review": int(seconds_next_review % (60 * 60) // 60),
     }
     bar.update()
 
