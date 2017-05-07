@@ -2,6 +2,9 @@
 Implementation of ReactiveX switchLatest() operator with
 simple callbacks.
 """
+from functools import wraps
+
+
 class SwitchLatestOperator(object):
     def __init__(self):
         self.latest_index = 0
@@ -12,6 +15,7 @@ class SwitchLatestOperator(object):
     The returned callback only does something when executed if a 
     newer callback has not been wrapped since then.
     """
+    @wraps
     def wrap(self, callback):
         self.latest_index += 1
         returned_callback_index = self.latest_index
