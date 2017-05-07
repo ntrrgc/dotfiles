@@ -6,7 +6,7 @@ from wtfd.io_loop import io_loop
 """Feeds bar with the current time and schedules a new time check for the next minute."""
 def update_time():
     now = datetime.datetime.now()
-    time = now.strftime('%{U#00FF00}%{+u}%Y-%m-%d   %H:%M%{-u}')
+    time = now.strftime('%{U#00FF00}%{+u}%a %Y-%m-%d   %H:%M%{-u}')
     bar.time = time
     bar.update()
 
