@@ -16,7 +16,7 @@ _class_map = {
     # yeah, I use all of those
     # Check the classes with xprop |grep WM_CLASS
     ("jetbrains-pychar",
-     "jetbrains-pycharm-ce"
+     "jetbrains-pycharm-ce",
      "jetbrains-webstorm",
      "jetbrains-idea",
      "jetbrains-idea-c",
