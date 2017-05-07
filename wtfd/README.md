@@ -5,7 +5,7 @@ This is my [lemonbar](https://github.com/LemonBoy/bar) feeder, intended to be us
 
 It listens for changes in the desktop environment, such as windows opened or closed, changes in the focused window title and the system volume and updates accordingly.
 
-It has also a [Wanikani](https://www.wanikani.com/) widget to remember me to do my kanji reviews.
+It has also a [Wanikani](https://www.wanikani.com/) widget to remind me to do my kanji reviews.
 
 Some highlights of this bar feeder:
 
