@@ -1,0 +1,11 @@
+#!/bin/bash
+# Copies the current directory path to the clipboard
+
+# Strip leading and trailing white space (new line inclusive).
+# http://stackoverflow.com/a/43725798/1777162
+trim(){
+    [[ "$1" =~ ^[[:space:]]*(.*[^[:space:]])[[:space:]]*$ ]]
+    printf "%s" "${BASH_REMATCH[1]}"
+}
+
+echo -n "$(trim "$(pwd)")" | xclip -selection clipboard
