@@ -1,0 +1,8 @@
+#!/bin/sh
+# Synchronous dmenu_run alternative that does not start the child process
+# with SIGINT ignored, in order to workaround this IntelliJ bug:
+# https://youtrack.jetbrains.com/issue/IDEA-157989
+PROGRAM="$(dmenu_path | dmenu "$@")"
+if [ ! -z "$PROGRAM" ]; then
+  exec "$PROGRAM"
+fi

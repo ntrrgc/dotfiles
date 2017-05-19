@@ -111,7 +111,7 @@ super + Return
 	gnome-terminal
 
 super + space
-	dmenu_run
+	dmenu-run
 
 # make sxhkd reload its configuration files:
 super + Escape
