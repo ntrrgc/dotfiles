@@ -13,6 +13,7 @@ xsetwacom --set "Wacom Bamboo 16FG 6x8 Finger touch" touch off
 xsetwacom --set "Wacom Bamboo 16FG 6x8 Finger touch" gesture off
 
 xsetwacom --set "Wacom Bamboo 16FG 6x8 Pen stylus" MapToOutput HEAD-0
+xsetwacom --set "Wacom Bamboo 16FG 6x8 Pen eraser" MapToOutput HEAD-0
 
 xsetwacom --set "Wacom Bamboo 16FG 6x8 Pad pad" Button $PAD_3 "key y"
 xsetwacom --set "Wacom Bamboo 16FG 6x8 Pad pad" Button $PAD_4 "key z"
