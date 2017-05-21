@@ -21,4 +21,7 @@ def main():
     update_time()
     start_wanikani_updater()
 
-    io_loop.start()
+    try:
+        io_loop.start()
+    except KeyboardInterrupt:
+        pass
