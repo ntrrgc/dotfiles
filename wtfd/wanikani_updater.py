@@ -9,6 +9,7 @@ from tornado.ioloop import PeriodicCallback, IOLoop
 from wtfd.bar_singleton import bar
 from wtfd.debug import debug
 from wtfd.switch_latest_operator import SwitchLatestOperator
+from wtfd.wrap_traceback import wrap_traceback
 
 try:
     api_key = open(os.path.expanduser("~/Dropbox/.wanikani-api-key"), "r").read().strip()
@@ -72,5 +73,5 @@ def start_wanikani_updater():
     request_update_wanikani()
 
     # Schedule a new update request every 30 seconds
-    periodic_callback = PeriodicCallback(request_update_wanikani, 30 * 1000)  # milliseconds
+    periodic_callback = PeriodicCallback(wrap_traceback(request_update_wanikani), 30 * 1000)  # milliseconds
     periodic_callback.start()
