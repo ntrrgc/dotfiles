@@ -3,6 +3,10 @@ import SocketServer
 import BaseHTTPServer
 import SimpleHTTPServer
 import ssl
+import os
+import sys
+
+ssl_store = os.path.expanduser("~/Dropbox/local-ca/archive/" + os.environ["SSL_DOMAIN"] + "/")
 
 class ThreadingSimpleServer(SocketServer.ThreadingMixIn,
                    BaseHTTPServer.HTTPServer):
@@ -16,7 +20,10 @@ else:
     port = 8000
 
 server = ThreadingSimpleServer(('', port), SimpleHTTPServer.SimpleHTTPRequestHandler)
-server.socket = ssl.wrap_socket(server.socket, keyfile='./server.key', certfile='./server.pem', server_side=True)
+server.socket = ssl.wrap_socket(server.socket, 
+                                keyfile=os.path.join(ssl_store, 'server.key'), 
+                                certfile=os.path.join(ssl_store, 'server.crt'),
+                                server_side=True)
 try:
     while 1:
         sys.stdout.flush()
