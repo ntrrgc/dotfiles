@@ -44,9 +44,6 @@ super + {o,i}
 	bspc node {older,newer} -f; \
 	bspc control --record-history on
 
-super + y
-	bspc node -w last.manual
-
 mode_switch + {_,shift + }{h,j,k,l}
         /home/ntrrgc/Dropbox/right-window-cpp/build/Debug/right-window-bspwm -{f,s} {left,down,up,right}
 
@@ -112,6 +109,9 @@ super + Return
 
 super + space
 	dmenu-run
+
+super + y
+        telegram
 
 # make sxhkd reload its configuration files:
 super + Escape
@@ -179,3 +179,4 @@ super + d
 
 ctrl + super + @v
     paste-typing
+
