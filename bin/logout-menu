@@ -1,5 +1,5 @@
 #!/bin/bash
-options=(shutdown reboot logout top windows)
+options=(shutdown reboot logout top windows zleep)
 option=$(printf '%s\n' "${options[@]}" | dmenu)
 
 shutdown() {
@@ -17,6 +17,9 @@ top() {
 windows() {
   sudo efibootmgr -n 0
   systemctl reboot
+}
+zleep() {
+  systemctl suspend
 }
 
 eval "$option"
