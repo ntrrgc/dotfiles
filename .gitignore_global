@@ -19,3 +19,5 @@ Thumbs.db
 .gradle
 build
 **/.vscode/symbols.json
+*.autosave
+CMakeLists.txt.user
