@@ -107,6 +107,12 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+# Needed so that the current directory is preserved across windows and tabs in
+# some terminals.
+if [ -f /etc/profile.d/vte.sh ]; then
+  . /etc/profile.d/vte.sh
+fi
+
 function __try_paths() {
   for path in "$@"; do
     if [ -e "$path" ]; then
@@ -239,7 +245,16 @@ PS_SNOW="${COLOR_CYAN}$(echo -ne '\xe2\x9d\x85')${COLOR_RESET}"
 
 PS_FIRST_TIME=true
 function __prompt_command() {
+  # Save the return code of the program the user just run
   local ret=$?
+
+  # We may be overriding __vte_prompt_command, which is also set as 
+  # PROMPT_COMMAND and is responsible from informing the terminal emulator
+  # what directory we're in. If that's the case, invoke it here.
+  if type -t __vte_prompt_command 2> /dev/null > /dev/null; then
+    __vte_prompt_command
+  fi
+
   if $PS_FIRST_TIME; then
     PS_FIRST_TIME=false
   else
@@ -279,8 +294,3 @@ fi
 # I'd rather use it as a hotkey in Vim that have it suspend the terminal.
 stty stop undef
 
-# Needed so that the current directory is preserved across windows and tabs in
-# some terminals.
-if [ -f /etc/profile.d/vte.sh ]; then
-  . /etc/profile.d/vte.sh
-fi
