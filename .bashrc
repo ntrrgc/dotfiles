@@ -275,6 +275,8 @@ if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
 fi
 
+# Don't capture <C-S>
+# I'd rather use it as a hotkey in Vim that have it suspend the terminal.
 stty stop undef
 
 # Needed so that the current directory is preserved across windows and tabs in
