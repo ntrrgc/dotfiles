@@ -228,6 +228,11 @@ PS_USER="${COLOR_YELLOW}\u@\h${COLOR_RESET}"
 PS_STAR="${COLOR_ORANGE}$(echo -ne '\xe2\x98\x85')${COLOR_RESET}"
 PS_SNOW="${COLOR_CYAN}$(echo -ne '\xe2\x9d\x85')${COLOR_RESET}"
 
+function __update_ps1() {
+  PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}
+${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
+}
+
 PS_FIRST_TIME=true
 function __prompt_command() {
   # Save the return code of the program the user just run
@@ -252,21 +257,17 @@ function __prompt_command() {
     echo
   fi
 
-  local mode_string=""
-  if [ ! -z "$SHELL_MODE" ]; then
-    mode_string="${COLOR_CYAN}(${SHELL_MODE}) "
-  fi
-
-  PS1="${PS_CHROOT}${PS_TIME} ${mode_string}${PS_PWD}
-${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
+  __update_ps1
 }
+
+# Set the PS1 variable now
+__update_ps1
+
+# Update the PS1 variable after each command (and also shows exit codes)
 PROMPT_COMMAND='__prompt_command'
 
 # http://stackoverflow.com/a/23710535/1777162
 cl() { history -p '!!'|tr -d \\n|clip; }
-
-PS1="${PS_TIME} ${PS_PWD}
-${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
 
 DOTFILES_DIR=$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )
 export PATH="$PATH:$DOTFILES_DIR/bin"
