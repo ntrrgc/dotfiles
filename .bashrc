@@ -221,7 +221,7 @@ COLOR_RED_NO_PS="\e[38;5;$((196+7))m"
 COLOR_ORANGE="\[\e[38;5;$((196+12))m\]"
 COLOR_CYAN="\[\e[38;5;$((29+124))m\]"
 
-PS_CHROOT="${debian_chroot:+\e[38;5;209m($debian_chroot) }"
+PS_CHROOT="${debian_chroot:+${COLOR_ORANGE}(${debian_chroot}) }"
 PS_TIME="${COLOR_GREEN}[\$(date +%k:%M:%S)]${COLOR_RESET}"
 PS_PWD="${COLOR_BLUE}\w${COLOR_RESET}"
 PS_USER="${COLOR_YELLOW}\u@\h${COLOR_RESET}"
