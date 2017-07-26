@@ -124,15 +124,27 @@ if [ -x /bin/pacman ]; then
   alias yas='yaourt -S --noconfirm'
   alias yass='yaourt -Ss'
   alias yolo='sudo pacman -Syu'
-else
+elif [ -x /usr/bin/apt-get ]; then
   alias yolo='sudo apt-get update && sudo apt-get upgrade'
   alias pas='sudo apt-get install'
   alias pass='sudo apt-cache search'
   alias pai='apt-cache show'
   alias par='sudo apt-get purge'
-  alias ll='ls -lh'
+elif [ -x /usr/bin/dnf ]; then
+  alias yolo='sudo dnf upgrade -y'
+  alias pas='sudo dnf install -y'
+  alias pass='sudo dnf search'
+  alias pai='sudo dnf info'
+  alias par='sudo dnf remove'
+elif [ -x /usr/bin/yum ]; then
+  alias yolo='sudo yum upgrade -y'
+  alias pas='sudo yum install -y'
+  alias pass='sudo yum search'
+  alias pai='sudo yum info'
+  alias par='sudo yum remove'
 fi
 
+alias ll='ls -lh'
 alias pgr='ps aux | grep'
 alias sys='sudo systemctl'
 alias clip='xclip -selection clipboard'
