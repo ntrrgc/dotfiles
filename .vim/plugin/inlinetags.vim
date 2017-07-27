@@ -1,6 +1,6 @@
 let g:inlinetags_path = expand("<sfile>:h") . "/../"
 
-python << EOF
+python3 << EOF
 import sys
 import vim
 sys.path.append(vim.eval("g:inlinetags_path"))
