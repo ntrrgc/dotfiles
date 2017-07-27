@@ -28,3 +28,5 @@ ln -r -s "$RELADIR/fish/config.fish" "$HOME/.config/fish/config.fish"
 if [ ! -L "$HOME/.vim/spell" ]; then
   ln -s "$HOME/Dropbox/vim-spell" "$HOME/.vim/spell"
 fi
+
+vim +PluginInstall +qall
