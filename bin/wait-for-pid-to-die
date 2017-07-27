@@ -1,0 +1,17 @@
+#!/bin/bash
+#Wait polling until an specified process dies.
+set -eu
+
+if [ $# -ne 1 -o "$1" -lt 0 ]; then
+  echo "Usage: wait-for-pid-to-die <pid>"
+  exit 1
+fi
+
+while true; do
+  kill -0 "$1" 2> /dev/null
+  if [ $? -ne 0 ]; then
+    exit 0
+  fi
+
+  sleep 1s
+done
