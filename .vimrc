@@ -21,6 +21,10 @@ function! Strip(input_string)
 endfunction
 
 function! SystemName()
+  if !filereadable("/etc/lsb-release")
+    return "unknown"
+  endif
+
   let lsb = readfile("/etc/lsb-release")
   let lsb_data = {}
   for line in lsb
