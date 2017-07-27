@@ -1,6 +1,6 @@
 " Unset Caps Lock when leaving insert mode
 
-python3 << EOF
+pythonx << EOF
 
 import vim
 from ctypes import cdll, c_uint, c_void_p, c_char_p
@@ -29,4 +29,4 @@ def unset_caps_lock():
 
 EOF
 
-autocmd InsertLeave * python3 unset_caps_lock()
+autocmd InsertLeave * pythonx unset_caps_lock()
