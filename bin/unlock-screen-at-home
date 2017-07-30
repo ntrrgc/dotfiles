@@ -1,0 +1,187 @@
+#!/usr/bin/python3
+#
+# Script for gnome and NetworkManager that enables screen locking by screensaver
+# if and only if we are not connected to a home network (known by checking the
+# MAC address of the router).
+#
+# Note: requires passwordless sudo for the arping command
+#
+# MIT License
+# 
+# Copyright (c) 2017 Alicia Boya García
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+import subprocess
+from functools import partial
+from threading import Timer
+
+import dbus
+from dbus.mainloop.glib import DBusGMainLoop
+from gi.repository import Gio, GObject
+
+screensaver_settings = Gio.Settings.new("org.gnome.desktop.screensaver")
+
+
+def main():
+    update_screen_lock()
+    print("Waiting for network connectivity changes...")
+    keep_updating_on_network_connectivity_changes()
+
+
+def keep_updating_on_network_connectivity_changes():
+    loop = DBusGMainLoop(set_as_default=True)
+
+    bus = dbus.SystemBus(mainloop=loop)
+    network_manager = bus.get_object("org.freedesktop.NetworkManager",
+                                     "/org/freedesktop/NetworkManager")
+
+    # Changes may occur in bursts, but we only need to do something at the end
+    # of the burst.
+    debounced_update_screen_lock = debounce(wait=0.1)(update_screen_lock)
+    know_netifaces_by_path = {} # just for logging and debugging
+
+    def add_device(device_path):
+        device = bus.get_object("org.freedesktop.NetworkManager", device_path)
+        device_iface = dbus.Interface(device,
+                               dbus_interface="org.freedesktop.NetworkManager.Device")
+        device_props = dbus.Interface(device,
+                               dbus_interface="org.freedesktop.DBus.Properties")
+
+        # Save the device name
+        netiface_name = device_props.Get("org.freedesktop.NetworkManager.Device",
+                                         "Interface")
+        know_netifaces_by_path[device_path] = netiface_name
+
+        # When its connectivity status change, update the screen lock
+        device_iface.connect_to_signal("StateChanged",
+                                       partial(device_state_changed, device_path))
+
+
+    def device_added(device_path):
+        add_device(device_path)
+        netiface_name = know_netifaces_by_path[device_path]
+        print(f"{netiface_name}: Device added.")
+
+    def device_removed(device_path):
+        netiface_name = know_netifaces_by_path.pop(device_path)
+        print(f"{netiface_name}: Device removed.")
+        debounced_update_screen_lock()
+
+    def device_state_changed(device_path, new_state, old_state, reason):
+        netiface_name = know_netifaces_by_path[device_path]
+        # If you are curious about what the state numbers mean, see this:
+        # https://developer.gnome.org/NetworkManager/stable/nm-dbus-types.html#NMState
+        print(f"{netiface_name}: Deviced changed state: {old_state} -> {new_state}")
+        debounced_update_screen_lock()
+
+    iface = dbus.Interface(network_manager,
+                           dbus_interface="org.freedesktop.NetworkManager")
+    iface.connect_to_signal("DeviceAdded", device_added)
+    iface.connect_to_signal("DeviceRemoved", device_removed)
+
+    for device_path in iface.GetDevices():
+        add_device(device_path)
+
+    GObject.MainLoop().run()
+
+
+def update_screen_lock():
+    at_home = am_i_at_home_network()
+
+    if at_home:
+        screensaver_settings.set_boolean("lock-enabled", False)
+        print("Home connection detected, disabled screen lock.")
+    else:
+        screensaver_settings.set_boolean("lock-enabled", True)
+        print("Home connection not detected, enabled screen lock.")
+
+
+def read_home_mac_addresses():
+    try:
+        file_path = os.path.dirname(__file__) + "/home-mac-addresses"
+        with open(file_path, "r") as f:
+            return [
+                line.split("#", 1)[0].strip()
+                for line in f.readlines()
+                if line.split("#", 1)[0].strip() != ""
+            ]
+    except FileNotFoundError:
+        print(
+            "WARNING: Could not find " + file_path + ". Create it and write there the MAC address(es) of the router(s) of your trusted network(s).")
+        return []
+
+
+def am_i_at_home_network():
+    home_mac_addresses = read_home_mac_addresses()
+
+    # At this point should already have an IP address and default route, either
+    # by DHCP or a static IP configuration.
+
+    try:
+        # Find the default gateway IP and interface
+        default_route_text = subprocess.check_output(["ip", "route", "show", "match", "0/0"]).decode().strip()
+        if default_route_text:
+            ip = default_route_text.split()[2]
+            netiface = default_route_text.split()[4]
+
+            # Send an ARP question to get the MAC of the default gateway
+            arp_output = subprocess.check_output(["sudo", "arping", "-f", "-I", netiface, ip]).lower()
+        else:
+            arp_output = b""
+    except subprocess.CalledProcessError:
+        arp_output = b""
+
+    # Try to find any home MAC in the arping output
+    at_home = any(
+        any(
+            home_address in arp_line
+            for home_address in home_mac_addresses
+        )
+        for arp_line in arp_output.decode().split("\n")
+    )
+    return at_home
+
+
+def debounce(wait):
+    """ 
+    Decorator that will postpone a functions execution until after wait seconds
+    have elapsed since the last time it was invoked.
+    https://gist.github.com/walkermatt/2871026
+    """
+
+    def decorator(fn):
+        def debounced(*args, **kwargs):
+            def call_it():
+                fn(*args, **kwargs)
+
+            try:
+                debounced.t.cancel()
+            except(AttributeError):
+                pass
+            debounced.t = Timer(wait, call_it)
+            debounced.t.start()
+
+        return debounced
+
+    return decorator
+
+
+if __name__ == '__main__':
+    main()
