@@ -135,19 +135,21 @@ def am_i_at_home_network():
     # At this point should already have an IP address and default route, either
     # by DHCP or a static IP configuration.
 
-    try:
-        # Find the default gateway IP and interface
-        default_route_text = subprocess.check_output(["ip", "route", "show", "match", "0/0"]).decode().strip()
-        if default_route_text:
-            ip = default_route_text.split()[2]
-            netiface = default_route_text.split()[4]
+    arp_output = b""
+    # Find the default gateway(s) IP(s) and interface(s)
+    default_route_text = subprocess.check_output(
+        ["ip", "route", "show", "match", "0/0"]).decode().strip().split("\n")
 
-            # Send an ARP question to get the MAC of the default gateway
-            arp_output = subprocess.check_output(["sudo", "arping", "-f", "-I", netiface, ip]).lower()
-        else:
-            arp_output = b""
-    except subprocess.CalledProcessError:
-        arp_output = b""
+    for route_line in default_route_text:
+        ip = route_line.split()[2]
+        netiface = route_line.split()[4]
+
+        # Send an ARP question to get the MAC of the default gateway
+        try:
+            arp_output += subprocess.check_output(
+                ["sudo", "arping", "-f", "-I", netiface, ip]).lower() + b"\n"
+        except subprocess.CalledProcessError:
+            pass
 
     # Try to find any home MAC in the arping output
     at_home = any(
