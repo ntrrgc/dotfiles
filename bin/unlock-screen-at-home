@@ -32,6 +32,7 @@ import subprocess
 from functools import partial
 from threading import Timer
 
+import os
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import Gio, GObject
