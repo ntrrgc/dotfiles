@@ -116,7 +116,7 @@ def update_screen_lock():
 
 def read_home_mac_addresses():
     try:
-        file_path = os.path.dirname(__file__) + "/home-mac-addresses"
+        file_path = os.path.dirname(__file__) + "/../home-mac-addresses"
         with open(file_path, "r") as f:
             return [
                 line.split("#", 1)[0].strip()
