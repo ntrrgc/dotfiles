@@ -138,9 +138,13 @@ def am_i_at_home_network():
     arp_output = b""
     # Find the default gateway(s) IP(s) and interface(s)
     default_route_text = subprocess.check_output(
-        ["ip", "route", "show", "match", "0/0"]).decode().strip().split("\n")
+        ["ip", "route", "show", "match", "0/0"]).decode().strip()
+    if default_route_text != "":
+        default_route_lines = default_route_text.split("\n")
+    else:
+        default_route_lines = []
 
-    for route_line in default_route_text:
+    for route_line in default_route_lines:
         ip = route_line.split()[2]
         netiface = route_line.split()[4]
 
