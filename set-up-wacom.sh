@@ -9,8 +9,13 @@ PAD_4=3
 STYLUS_BOTTOM=2
 STYLUS_TOP=3
 
-xsetwacom --set "Wacom Bamboo 16FG 6x8 Finger touch" touch off
-xsetwacom --set "Wacom Bamboo 16FG 6x8 Finger touch" gesture off
+if xsetwacom --list devices | grep Finger > /dev/null; then
+  xsetwacom --set "Wacom Bamboo 16FG 6x8 Finger touch" touch off
+  xsetwacom --set "Wacom Bamboo 16FG 6x8 Finger touch" gesture off
+else
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1249089
+  xinput disable "Wacom Bamboo 16FG 6x8 Finger"
+fi
 
 if [ "$HOSTNAME" == "madoka.local" ]; then
   xsetwacom --set "Wacom Bamboo 16FG 6x8 Pen stylus" MapToOutput HEAD-0
