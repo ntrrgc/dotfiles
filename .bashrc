@@ -72,6 +72,11 @@ alias l='ls -CF'
 alias gvim='gvim 2> /dev/null' # ignore gtk errors
 alias vi='vim'
 
+# In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
+if which vimx > /dev/null 2>&1; then
+  alias vim='vimx'
+fi
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
