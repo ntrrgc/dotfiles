@@ -219,6 +219,8 @@ Plugin 'rust-lang/rust.vim'
 
 Plugin 'udalov/kotlin-vim'
 
+set laststatus=2
+
 set incsearch hlsearch
 
 set ts=8
