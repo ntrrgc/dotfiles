@@ -122,6 +122,10 @@ function s() {
 function fname() {
   find . -iname '*'"$1"'*' "${@:2}" 2> /dev/null
 }
+function fjsf() {
+  # Find JavaScript function definition
+  ag --js "function\\s+$1\\(|\\.$1\\s*=|['\"]$1['\"]\\s*\]" "${@:2}"
+}
 if [ -x /bin/pacman ]; then
   alias pas='sudo pacman -S'
   alias pass='sudo pacman -Ss'
