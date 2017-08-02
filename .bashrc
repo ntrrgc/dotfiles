@@ -127,7 +127,7 @@ function fjsf() {
   local expr="function\\s+$1\\(|\\.$1\\s*=|['\"]$1['\"]\\s*\]" 
   if [ "${2:-}" == "go" ]; then
     local IFS=$'\n'
-    VIM_ARGS=($(ag --js "${expr}" | python3 -c "$(cat <<'EOF'
+    VIM_ARGS=($(rg -n -tjs "${expr}" | python3 -c "$(cat <<'EOF'
 #!/usr/bin/env python
 import sys
 files=[]
@@ -140,7 +140,7 @@ EOF
 )"))
     vim "${VIM_ARGS[@]}"
   else
-    ag --js "${expr}" "${@:2}"
+    rg -tjs "${expr}" "${@:2}"
   fi
 }
 if [ -x /bin/pacman ]; then
