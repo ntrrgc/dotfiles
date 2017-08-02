@@ -124,7 +124,24 @@ function fname() {
 }
 function fjsf() {
   # Find JavaScript function definition
-  ag --js "function\\s+$1\\(|\\.$1\\s*=|['\"]$1['\"]\\s*\]" "${@:2}"
+  local expr="function\\s+$1\\(|\\.$1\\s*=|['\"]$1['\"]\\s*\]" 
+  if [ "${2:-}" == "go" ]; then
+    local IFS=$'\n'
+    VIM_ARGS=($(ag --js "${expr}" | python3 -c "$(cat <<'EOF'
+#!/usr/bin/env python
+import sys
+files=[]
+for line in sys.stdin:
+  file, line = line.split(":")[:2]
+  print(file)
+  print("+" + line)
+  sys.exit(0) # Vim does not support opening several files on several locations
+EOF
+)"))
+    vim "${VIM_ARGS[@]}"
+  else
+    ag --js "${expr}" "${@:2}"
+  fi
 }
 if [ -x /bin/pacman ]; then
   alias pas='sudo pacman -S'
