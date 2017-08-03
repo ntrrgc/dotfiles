@@ -169,7 +169,8 @@ Plugin 'yukunlin/auto-pairs'
 Plugin 'tpope/vim-fugitive'
 
 " No artifacts
-set lazyredraw
+" Disabled due to https://github.com/vim/vim/issues/1928 :(
+"set lazyredraw
 
 Plugin 'junegunn/vader.vim'
 
