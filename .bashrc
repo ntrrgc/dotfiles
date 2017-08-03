@@ -192,6 +192,7 @@ else
   alias logf='sudo tail -f /var/log/messages'
 fi
 alias plusx='chmod +x'
+alias rg='rg --colors path:style:bold --colors path:fg:green --colors line:style:bold --colors match:bg:yellow --colors match:style:nobold --colors match:fg:black'
 alias wmon='watchd-monitor'
 alias wgetr='wget -rc --no-parent -nH'
 alias amend='git commit --amend'
