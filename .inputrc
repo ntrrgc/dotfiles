@@ -1,6 +1,18 @@
-## arrow up
+# Arrow up: Search in history, backwards
 "\e[A":history-search-backward
-## arrow down
+
+# Arrow down: Search in history, forwards (undo previous command)
 "\e[B":history-search-forward
+
+# Ctrl+B: Move the cursor one argument to the left.
+# By default readline moves one character with this hotkey, but I never used that.
+"\x02":shell-backward-word
+
+# Ctrl+F: Move the cursor one argument to the right.
+# By default readline moves one character with this hotkey, but I never used that.
+"\x06":shell-forward-word
+
+# Don't require a second Tab press to show completion options when there are 
+# several candidates.
 # http://stackoverflow.com/a/3163960/1777162
 set show-all-if-ambiguous on
