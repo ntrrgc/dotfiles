@@ -89,17 +89,17 @@ augroup END
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/vundle'
 
 " NERDTree
 map <F3> :NERDTreeToggle<Return>
 let NERDTreeChDirMode=2
 let NERDTreeIgnore=['\.pyc$', '__pycache__', '\~$']
-Bundle 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdtree'
 
 " Syntastic
 "let g:syntastic_always_populate_loc_list=1
-"Bundle 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 
 "Plugin 'Valloric/YouCompleteMe'
 let g:ycm_rust_src_path = substitute(system('rustc --print sysroot'), '\n\+$', '', '') . '/lib/rustlib/src/rust/src'
@@ -118,8 +118,8 @@ Plugin 'rdnetto/YCM-Generator'
 let g:pyref_mapping = 'K'
 let g:pyref_python = '/opt/python-3.3.3-docs-html'
 let g:pyref_django = '/opt/django-1.6-docs-html'
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-pyref'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-pyref'
 
 " Emmet
 let g:user_emmet_install_global = 0
@@ -130,61 +130,61 @@ endif
 "let g:user_emmet_balancetaginward_key='<c-e>'
 inoremap <C-@> <C-Space>
 autocmd FileType html,htmldjango,css EmmetInstall
-Bundle 'mattn/emmet-vim'
+Plugin 'mattn/emmet-vim'
 
 " UltiSnips
 let g:UltiSnipsEditSplit="horizontal"
 let g:UltiSnipsExpandTrigger="<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<Tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
-Bundle 'SirVer/ultisnips'
+Plugin 'SirVer/ultisnips'
 
 " vim-pasta
 let g:pasta_disabled_filetypes = ['robot', 'text', 'renpy']
-Bundle 'sickill/vim-pasta'
+Plugin 'sickill/vim-pasta'
 
 " vim-angry
-Bundle 'b4winckler/vim-angry'
+Plugin 'b4winckler/vim-angry'
 
 " DrawIt
-Bundle 'vim-scripts/DrawIt'
+Plugin 'vim-scripts/DrawIt'
 
 " Javascript
-Bundle 'pangloss/vim-javascript'
+Plugin 'pangloss/vim-javascript'
 
 " Better JSON
-Bundle 'jakar/vim-json'
+Plugin 'jakar/vim-json'
 
 " Ansible
-Bundle 'chase/vim-ansible-yaml'
+Plugin 'chase/vim-ansible-yaml'
 
 " AutoPairs
 let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutFastWrap = '<C-e>'
 let g:AutoPairsMapBS = 0
 let g:TypeOnBackSpace = "\<C-R>=AutoPairsDelete()\<CR>"
-Bundle 'yukunlin/auto-pairs'
+Plugin 'yukunlin/auto-pairs'
 
 " vim-fugitive (git integration)
-Bundle 'tpope/vim-fugitive'
+Plugin 'tpope/vim-fugitive'
 
 " No artifacts
 set lazyredraw
 
-Bundle 'junegunn/vader.vim'
+Plugin 'junegunn/vader.vim'
 
-Bundle 'alfredodeza/pytest.vim'
+Plugin 'alfredodeza/pytest.vim'
 
-Bundle 'mfukar/robotframework-vim'
+Plugin 'mfukar/robotframework-vim'
 
-Bundle 'tpope/vim-surround'
+Plugin 'tpope/vim-surround'
 "
 " CoffeeScript
-Bundle 'kchmck/vim-coffee-script'
+Plugin 'kchmck/vim-coffee-script'
 
-Bundle 'groenewege/vim-less'
+Plugin 'groenewege/vim-less'
 
-Bundle 'vim-scripts/spec.vim'
+Plugin 'vim-scripts/spec.vim'
 
 " Git hot keys
 map <C-M-s> :Gwrite<CR>:Gstatus<CR>:res +15<CR><C-n>
@@ -194,15 +194,15 @@ if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
 
-Bundle 'kien/ctrlp.vim'
+Plugin 'kien/ctrlp.vim'
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|env|output)|(\.(swp|ico|git|svn|DS_Store|pyc|pyo))$'
 
 augroup sxhkdrc
 autocmd BufWritePost sxhkdrc silent !pkill -x -USR1 sxhkd
 augroup END
 
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'scrooloose/nerdcommenter'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'dag/vim-fish'
 if &shell =~# 'fish$'
     set shell=bash
