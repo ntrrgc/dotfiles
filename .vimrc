@@ -4,6 +4,8 @@ set number relativenumber
 let mapleader='\'
 set completeopt=menuone
 
+set nofixeol
+
 " italics in gnome-terminal
 set t_ZH=[3m
 set t_ZR=[23m
