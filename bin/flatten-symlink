@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+REAL_THING="$(realpath "$1")"
+rm "$1"
+rsync -r "$REAL_THING/" "$1/"
