@@ -25,11 +25,43 @@
       - Establecer nivel del logging
       - Compatible cpn Python 2.x y 3.x
       - Recursividad
-                                     """
+"""
+
+"""
+Modificaciones adicionales de ntrrgc:
+
+12/08/2017
+
+* Durante la exploración recursiva, los archivos se procesarán en orden 
+  alfabético, dependiente de locale.
+
+"""
 
 # Módulos requeridos
 import sys, re, zlib, os
 import logging
+import locale
+
+locale.setlocale(locale.LC_ALL, "")
+
+def cmp_to_key(mycmp):
+    'Convert a cmp= function into a key= function'
+    class K:
+        def __init__(self, obj, *args):
+            self.obj = obj
+        def __lt__(self, other):
+            return mycmp(self.obj, other.obj) < 0
+        def __gt__(self, other):
+            return mycmp(self.obj, other.obj) > 0
+        def __eq__(self, other):
+            return mycmp(self.obj, other.obj) == 0
+        def __le__(self, other):
+            return mycmp(self.obj, other.obj) <= 0
+        def __ge__(self, other):
+            return mycmp(self.obj, other.obj) >= 0
+        def __ne__(self, other):
+            return mycmp(self.obj, other.obj) != 0
+    return K
 
 try:
     import argparse
@@ -184,6 +216,8 @@ if __name__ == '__main__':
         file_list = []
         for rootdir in args.check:
             for root, subFolders, files in os.walk(rootdir):
+                files.sort(key=cmp_to_key(locale.strcoll))
+                subFolders.sort(key=cmp_to_key(locale.strcoll))
                 for file in files:
                     f = os.path.join(root, file)
                     file_list.append(f)
