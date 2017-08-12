@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+import sys
+
+def parse_hex(num_str):
+    return int(num_str, 16)
+
+from argparse import ArgumentParser
+
+parser = ArgumentParser(description=
+                        "Find the first non-zero byte inside a file and return its offset as an hexadecimal number. "
+                        "Returns 1 and prints nothing if it did not find any.")
+
+parser.add_argument("--seek", "-s", default=0, type=parse_hex, help="Start the search at a given hexadecimal offset.")
+
+parser.add_argument("file", type=str, help="File to search in.")
+
+args = parser.parse_args()
+
+with open(args.file, "rb") as f:
+    f.seek(args.seek)
+    while True:
+        byte = f.read(1)
+        if len(byte) == 0:
+            raise SystemExit(1)
+        
+        if byte != b"\0":
+            print(format(f.tell() - 1, "x"))
+            raise SystemExit(0)
