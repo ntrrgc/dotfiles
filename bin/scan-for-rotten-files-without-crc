@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# find big files
+find -size +1M |
+  # that have no CRC
+  perl -ne 'if (!m/\[[0-9A-F]{8}\]/) { print $_ }' |
+  # search for zeroed blocks within them, parallelizing the search,
+  # but without starving other processes
+  xargs -d"\n" -P20 -n4 ionice -c 2 -n 7 find-holes-in-file |
+  # log results to a file
+  tee bad-files-without-crc.txt
