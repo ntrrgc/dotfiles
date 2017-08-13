@@ -10,7 +10,7 @@ popd >/dev/null
 RELADIR="$( realpath --relative-to "$HOME" "$DIR" )"
 cd "$HOME"
 
-ENTITIES=(.vim .vimrc .gitignore_global .gitconfig .bashrc .inputrc .ackrc)
+ENTITIES=(.vim .vimrc .gitignore_global .gitconfig .bashrc .inputrc .ackrc .gdbinit)
 for entity in ${ENTITIES[@]}; do
   if [ ! -L "$HOME/$entity" ]; then
     ln -r -s "$RELADIR/$entity" "$HOME/$entity"
