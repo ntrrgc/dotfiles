@@ -81,9 +81,21 @@ void show_usage_and_exit() {
     exit(2);
 }
 
-void __attribute__ ((noinline)) report_hole(const char* file_name, size_t position, size_t hole_size) {
-    printf("%s: Found hole at 0x%lx of %lu bytes (0x%lx bytes, %g kiB)\n",
-            file_name, position, hole_size, hole_size, (double) hole_size / 1024.0);
+void __attribute__ ((noinline)) report_hole(const char* file_name,
+                                            size_t pos_hole_start, 
+                                            size_t hole_size, 
+                                            size_t file_size) 
+{
+    size_t pos_hole_end = pos_hole_start + hole_size;
+
+    printf("%s: Found hole at 0x%lx (%.2f%% until %.2f%%) of %lu bytes (0x%lx bytes, %g kiB)\n",
+            file_name, 
+            pos_hole_start, 
+            (100.0 * pos_hole_start) / file_size, 
+            (100.0 * pos_hole_end) / file_size, 
+            hole_size, 
+            hole_size, 
+            hole_size / 1024.0);
     fflush(stdout); /* immediate feedback when piped to tee */
 }
 
@@ -119,6 +131,10 @@ void find_holes_in_file(const char* file_name,
         return;
     }
 
+    fseek(fp, 0L, SEEK_END);
+    size_t file_size = ftell(fp);
+    fseek(fp, 0L, SEEK_SET);
+
     size_t pos = 0;
     ssize_t current_hole_start = -1; /* -1 if not currently in a hole. */
     int read_byte;
@@ -134,7 +150,7 @@ void find_holes_in_file(const char* file_name,
             if (unlikely(hole_size >= min_hole_size)) {
                 *found_holes = true;
                 size_t hole_start_pos = pos - hole_size;
-                report_hole(file_name, hole_start_pos, hole_size);
+                report_hole(file_name, hole_start_pos, hole_size, file_size);
             }
 
             /* return to "not in hole" state */
