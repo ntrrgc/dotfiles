@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+regexp="$1"
+exec perl -ne 'sub key { my $line = shift; $line =~ m/'"$regexp"'/; $1 } print sort {key($a) <=> key($b)} <>'
