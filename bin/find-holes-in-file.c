@@ -40,7 +40,7 @@
 #include <inttypes.h>
 
 #ifdef __GNUC__
-/* GCC is better at choosing branches that me. */
+/* GCC is better at choosing branches than me. */
 #define likely(x)       x
 #define unlikely(x)     x
 #else
