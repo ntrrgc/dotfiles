@@ -133,7 +133,8 @@ void find_holes_in_file(const char* file_name,
             size_t hole_size = pos - current_hole_start;
             if (unlikely(hole_size >= min_hole_size)) {
                 *found_holes = true;
-                report_hole(file_name, pos, hole_size);
+                size_t hole_start_pos = pos - hole_size;
+                report_hole(file_name, hole_start_pos, hole_size);
             }
 
             /* return to "not in hole" state */
