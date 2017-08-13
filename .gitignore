@@ -5,3 +5,4 @@
 tags
 .mypy_cache
 home-mac-addresses
+/bin/find-holes-in-file

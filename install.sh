@@ -6,6 +6,8 @@ git submodule init
 git submodule update
 popd >/dev/null
 
+gcc "$DIR/bin/find-holes-in-file.c" -o "$DIR/bin/find-holes-in-file" -Wall -pedantic -O2 -g
+
 # Get the path to dotfiles from $HOME
 RELADIR="$( realpath --relative-to "$HOME" "$DIR" )"
 cd "$HOME"
