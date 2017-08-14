@@ -1,11 +1,12 @@
 #!/bin/bash
-# Copies the current directory path to the clipboard
+# Copies the full path or the specified file -- or the current directory 
+# path if no arguments are passed, to the clipboard
 
-# Strip leading and trailing white space (new line inclusive).
-# http://stackoverflow.com/a/43725798/1777162
-trim(){
-    [[ "$1" =~ ^[[:space:]]*(.*[^[:space:]])[[:space:]]*$ ]]
-    printf "%s" "${BASH_REMATCH[1]}"
-}
-
-echo -n "$(trim "$(pwd)")" | xclip -selection clipboard
+python3 -c "$(cat <<EOF
+import sys, os
+path = os.getcwd()
+if len(sys.argv) > 1:
+    path = os.path.join(path, sys.argv[1])
+print(path, end="")
+EOF
+)" "$@" | xclip -selection clipboard
