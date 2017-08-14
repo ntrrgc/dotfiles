@@ -21,3 +21,4 @@ build
 **/.vscode/symbols.json
 *.autosave
 CMakeLists.txt.user
+.mypy_cache
