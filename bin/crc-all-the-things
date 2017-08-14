@@ -1,0 +1,47 @@
+#!/bin/bash
+
+show_help() {
+  cat <<EOF
+Usage: ${0##*/} [-h] [-x] [DIR]...
+Add missing CRC tags to files in the given directories.
+
+    -h		display this help and exit
+    -x		use xattr tags instead of renaming files
+EOF
+}
+
+extensions="zip|7z|tar.gz|tar.bz2|tar.xz|tgz|rar|bin|iso|mp3|flac|ogg|ogv|mpeg|mpg|avi|mp4|mkv|3gp|flv|mov|pdf|epub|png|jpg|jpeg|tiff|exe"
+
+use_xattr=false
+
+OPTIND=1
+
+while getopts hx opt; do
+  case $opt in
+    h)
+      show_help
+      exit 0
+      ;;
+    x) use_xattr=true
+      ;;
+    *)
+      show_help >&2
+      exit 1
+      ;;
+  esac
+done
+shift "$((OPTIND-1))"  # discard the options and sentinel --
+
+for root in "$@"; do
+  # find files of given types in directory
+  find_command=(find "$root" -regextype posix-extended \! \( -regex '.*/\.Trash-[0-9]+' -prune \) -a -regex ".*.($extensions)")
+
+  if $use_xattr; then
+    "${find_command[@]}" -exec crc --read-from xattr --write-to xattr -a '{}' +;
+  else
+    "${find_command[@]}" |
+      # only files without a CRC
+      perl -ne 'if (!m/\[[0-9A-F]{8}\]/) { print $_ }' |
+      xargs -d"\n" crc --read-from filename --write-to filename -a
+  fi
+done
