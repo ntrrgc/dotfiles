@@ -1,0 +1,6 @@
+#!/bin/bash
+#Like cat, but it shows the name of the files (useful with find -exec)
+for file in "$@"; do
+  echo -e "\e[43m${file}\e[49m"
+  cat "$file"
+done
