@@ -15,8 +15,8 @@ cd "$HOME"
 ENTITIES=(.vim .vimrc .gitignore_global .gitconfig .bashrc .inputrc .ackrc .gdbinit)
 for entity in ${ENTITIES[@]}; do
   if [ ! -L "$HOME/$entity" ]; then # If file in ~/ is not a symlink...
-    if [ -f "$HOME/$entity" ]; then
-      # Backup existing file first
+    if [ -e "$HOME/$entity" ]; then
+      # Backup existing file or folder first
       mv "$HOME/$entity" "$HOME/$entity.bak"
     fi
     ln -r -s "$RELADIR/$entity" "$HOME/$entity"
