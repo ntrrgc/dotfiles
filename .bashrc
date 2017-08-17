@@ -122,7 +122,7 @@ function s() {
 function fname() {
   find . -iname '*'"$1"'*' "${@:2}" 2> /dev/null
 }
-function fjsf() {
+function find-js-function() {
   # Find JavaScript function definition
   local expr="function\\s+$1\\(|\\.$1\\s*=|['\"]$1['\"]\\s*\]" 
   if [ "${2:-}" == "go" ]; then
