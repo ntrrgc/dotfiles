@@ -127,7 +127,7 @@ function find-js-function() {
   local expr="function\\s+$1\\(|\\.$1\\s*=|['\"]$1['\"]\\s*\]" 
   if [ "${2:-}" == "go" ]; then
     local IFS=$'\n'
-    VIM_ARGS=($(rg -n -tjs "${expr}" | python3 -c "$(cat <<'EOF'
+    VIM_ARGS=($(rg --glob "!**/*.min.*" -n -tjs "${expr}" | python3 -c "$(cat <<'EOF'
 #!/usr/bin/env python
 import sys
 files=[]
@@ -140,7 +140,7 @@ EOF
 )"))
     vim "${VIM_ARGS[@]}"
   else
-    rg -tjs "${expr}" "${@:2}"
+    rg --glob "!**/*.min.*" -tjs "${expr}" "${@:2}"
   fi
 }
 if [ -x /bin/pacman ]; then
@@ -192,7 +192,7 @@ else
   alias logf='sudo tail -f /var/log/messages'
 fi
 alias plusx='chmod +x'
-alias rg='rg --colors path:style:bold --colors path:fg:green --colors line:style:bold --colors match:bg:yellow --colors match:style:nobold --colors match:fg:black'
+alias rg='rg --colors path:style:bold --colors path:fg:green --colors line:style:bold --colors match:bg:yellow --colors match:style:nobold --colors match:fg:black --glob "!**/*.min.*"'
 alias wmon='watchd-monitor'
 alias wgetr='wget -rc --no-parent -nH'
 alias amend='git commit --amend'
