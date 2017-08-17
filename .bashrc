@@ -213,6 +213,9 @@ function mangrep() {
 function topath() {
   export PATH="$1:$PATH"
 }
+function implode { # array to string, joined with a given delimiter
+  local IFS="$1"; shift; echo "$*"; 
+}
 
 export DJANGO=$(__try_paths \
   /usr/local/lib/python2.7/site-packages/django \
