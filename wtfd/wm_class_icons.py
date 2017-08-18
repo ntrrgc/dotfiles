@@ -40,7 +40,7 @@ _class_map = {
     ("dolphin", "dolphin4"): "\uf07c",
     "thunderbird": "\uf003",
     "skype": "\uf17e",
-    "gajim": "\uf075",
+    ("gajim", "revolt"): "\uf075",
     "clementine": "\uf001",
     ("gnome-terminal",
      "konsole",
