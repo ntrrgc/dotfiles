@@ -13,6 +13,8 @@ _class_map = {
 
     "firefox": "\uf269",
 
+    ("epiphany", "minibrowser"): "\uf267",
+
     # yeah, I use all of those
     # Check the classes with xprop |grep WM_CLASS
     ("jetbrains-pychar",
