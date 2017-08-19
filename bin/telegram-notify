@@ -1,0 +1,159 @@
+#!/bin/bash
+#
+# Simple Telegram alert notifier. Useful to report errors in batch processes.
+#
+# (c) 2017 Alicia Boya García
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+set -eu
+
+bot_token_path="$HOME/.telegram-notify-bot-token"
+chat_id_path="$HOME/.telegram-notify-chat-id"
+
+which jq >/dev/null 2>&1 || (echo "telegram-notify: Please install jq."; exit 1)
+which curl >/dev/null 2>&1 || (echo "telegram-notify: Please install curl."; exit 1)
+
+show_usage() {
+  echo "$(cat <<EOF
+Simple Telegram alert notifier. Useful to report errors in batch processes.
+
+Before using this program you must register a bot with @BotFather and write
+its token to ~/.telegram-notify-bot-token
+
+Usage:
+
+telegram-notify link-chat
+
+  Link this program with a Telegram chat. The last user of group chat
+  that spoke to the bot is used.
+
+
+telegram-notify send [ MESSAGE ]
+
+  Send an alert with the provided message. If a message is not provided as an
+  argument it is read from standard input.
+
+
+telegram-notify run [ --always ] 
+		    [ --stderr | --stdout | --both | --no-capture ]
+                    COMMAND ARGS...
+
+  Run the given command. If it exits with non-zero return code, or the --always
+  flag is present, send an alert including the run command and the captured 
+  output. 
+
+  stderr is captured by default, but this can be changed with the flags
+  --stdout, --stderr, --both or --no-capture.
+
+  The program exits with the same code the specified command exited, regardless
+  of whether the alert was submitted successfully or not. A warning is printed
+  in the latter case.
+
+EOF
+)"
+  exit 1
+}
+
+trim() {
+  # https://stackoverflow.com/a/3352015
+  local var="$*"
+  # remove leading whitespace characters
+  var="${var#"${var%%[![:space:]]*}"}"
+  # remove trailing whitespace characters
+  var="${var%"${var##*[![:space:]]}"}"
+  echo -n "$var"
+}
+
+bot_token=$(cat "$bot_token_path" 2>/dev/null) || (echo "ERROR: You need to write your bot token to $bot_token_path" >&2; exit 1)
+
+bot_api="https://api.telegram.org/bot$bot_token"
+
+if [ $# -eq 1 ] && [ "$1" == "link-chat" ]; then
+  response=$(curl -s "$bot_api/getUpdates")
+  chat_id=$(echo "$response" |jq '.result[-1].message.chat.id')
+
+  if [ "$chat_id" == "null" ]; then
+    echo "telegram-notify: Could not find any chat. Please send a message to your bot." >&2
+    exit 1
+  fi
+
+  echo "$chat_id" > "$chat_id_path"
+  echo "telegram-notify: Linked chat id $chat_id"
+
+elif [ $# -eq 1 -o $# -eq 2 ] && [ "$1" == "send" ]; then
+  chat_id=$(cat "$chat_id_path" 2>/dev/null) || (echo "telegram-notify: No chat id linked. Please send any message to your bot and run `telegram-notify link-chat` first." >&2; exit 1)
+
+  if [ $# -eq 2 ]; then
+    # Message from argument
+    message="$2"
+  else
+    # Message from stdin
+    message="$(cat)"
+  fi
+
+  # Trim whitespace
+  message="$(trim "$message")"
+
+  if [ ${#message} -gt 4096 ]; then
+    echo "telegram-notify: Message too large. Maximum length: 4096, actual length: ${#message}." >&2
+    exit 1
+  elif [ ${#message} -eq 0 ]; then
+    echo "telegram-notify: Empty message provided." >&2
+    exit 1 # nothing to send
+  fi
+
+  response=$(curl -s --fail "$bot_api/sendMessage?chat_id=$chat_id" \
+    --data-urlencode text@<(echo -n "$message"))
+
+elif [ $# -ge 2 ] && [ "$1" == "run" ]; then
+  shift
+
+  capture="stderr"
+  always_send=false
+
+  while (( "$#" )); do
+    case "$1" in
+      --stderr) capture="stderr"; shift ;;
+      --stdout) capture="stdout"; shift ;;
+      --both) capture="both"; shift ;;
+      --none) capture="none"; shift ;;
+      --always) always_send=true; shift ;;
+      --) shift; break ;; # end of arguments parsing (for GNU compliance)
+      -*) show_usage ;; # non-existent flag
+      *) break ;; # begining of command
+    esac
+  done
+
+  output_file=$(mktemp --tmpdir telegram-notify.XXXXXXXXXX)
+  exit_code=0
+  case $capture in
+    stderr) "$@"      2> "$output_file" || exit_code=$? ;;
+    stdout) "$@"       > "$output_file" || exit_code=$? ;;
+    both)   "$@" 2>&1  > "$output_file" || exit_code=$? ;;
+    none)   "$@"                        || exit_code=$? ;;
+  esac
+
+  if $always_send || [ $exit_code -ne 0 ]; then
+    # Command failed, send alert
+    command_string="${@}"
+    $message="Command \`$(echo -n "$command_string" | head -c 100)\` exited with status $exit_code
+    
+$(cat "$output_file" | tail -c 3800)"
+
+    "$0" send "$message" || echo "telegram-notify: WARNING: Error sending the following alert:
+$message" >&2
+  fi
+
+  # Clean temporary files
+  rm "$output_file"
+
+  exit $exit_code
+
+else
+  show_usage
+  exit 1
+fi
+
