@@ -1,0 +1,64 @@
+#!/bin/bash
+# File: /root/bin/virt-shutdown.sh
+# Description: Shutdown active virtual machines
+# Author: Ed Heron <Ed@Heron-ent.com> 
+# Date: 2009.11.13 Copy placed on centos-virt@centos.org
+# Note: 2009.11.23 Bugfixes and hoovering by torkil 
+
+DEBUG=1 # Comment this out if you really want to use this script in production
+#FAKE=1  # Comment this out if you really want to use this script in production
+
+# Get list of active virtual machines
+vmList="`virsh list | (
+    while read vmID vmName vmStatus
+     do
+      if [ -n "$vmName" -a "$vmName" != "Name" -a "$vmName" != "Domain-0" ]
+       then
+        [ -z "$vmList" ] && vmList="$vmName" || vmList="$vmList $vmName"
+      fi
+    done
+    echo $vmList )`"
+
+# check there are some active VM's
+if [ -n "$vmList" ]
+then
+  # Shutdown VM's with verification
+  for vmName in $vmList
+  do
+    # Send initial request
+    [ -n "$DEBUG" ] && echo -n "Attempting to shutdown $vmName "
+    [ -z "$FAKE" ] && virsh shutdown $vmName
+
+    # wait a limited time for the VM to be not running
+    count=30
+    while ( virsh list | grep $vmName >/dev/null ) && [ $count -gt 0 ]
+    do
+      sleep 1
+      let count=count-1
+      [ -n "$DEBUG" ] && echo -n "."
+    done
+
+    # report current status
+    ( virsh list | grep $vmName >/dev/null ) && echo " failed!" || echo " down."
+
+    # if still running, destroy it
+    if ( virsh list | grep $vmName >/dev/null )
+    then
+      [ -n "$DEBUG" ] && echo -n "Attempting to destroy $vmName "
+      [ -z "$FAKE" ] && virsh destroy $vmName
+
+      # wait a limited time for the VM to be not running
+      count=60
+      while ( virsh list | grep $vmName >/dev/null ) && [ $count -gt 0 ]
+      do
+        sleep 1
+        let count=count-1
+        [ -n "$DEBUG" ] && echo -n "."
+      done
+
+      # report current status
+      ( virsh list | grep $vmName >/dev/null ) && echo " failed!" || echo " down."
+    fi
+  done
+fi
+
