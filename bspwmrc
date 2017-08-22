@@ -54,6 +54,8 @@ xset r rate 320 20 &
 # Wait for trayer to show up, so no tray icons are missing
 xdotool search --sync --classname trayer
 
+xscreensaver -nosplash &
+
 # Execute local startup script.
 
 # In that script you can launch applications like this:

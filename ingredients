@@ -17,6 +17,7 @@ kupfer FreeDesktop-compliant launcher
 xtitle Notifies each time X11 selection changes
 xdotool X11 automation
 lighttpd Light web server
+xscreensaver X11 screensaver
 
 # Personal ingredients
 lasana Upload images
