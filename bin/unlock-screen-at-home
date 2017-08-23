@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 #
-# Script for gnome and NetworkManager that enables screen locking by screensaver
-# if and only if we are not connected to a home network (known by checking the
-# MAC address of the router).
+# Script for gnome and NetworkManager that thightens or loosens screen locking
+# by screensaver depending on whether the computer is connected to a home
+# network (known by checking the MAC address of the router).
 #
 # Note: requires passwordless sudo for the arping command
 #
@@ -103,15 +103,22 @@ def keep_updating_on_network_connectivity_changes():
     GObject.MainLoop().run()
 
 
+def set_screen_lock_delay(at_home):
+    # Ensure screen locking is enabled
+    screensaver_settings.set_boolean("lock-enabled", True)
+
+    if at_home:
+        screensaver_settings.set_uint("lock-delay", 1800)
+        print("Home connection detected, loosened screen lock delay.")
+    else:
+        screensaver_settings.set_uint("lock-delay", 30)
+        print("Home connection not detected, tightened screen lock delay.")
+
+
 def update_screen_lock():
     at_home = am_i_at_home_network()
 
-    if at_home:
-        screensaver_settings.set_boolean("lock-enabled", False)
-        print("Home connection detected, disabled screen lock.")
-    else:
-        screensaver_settings.set_boolean("lock-enabled", True)
-        print("Home connection not detected, enabled screen lock.")
+    set_screen_lock_delay(at_home)
 
 
 def read_home_mac_addresses():
