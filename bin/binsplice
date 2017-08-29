@@ -1,0 +1,19 @@
+#!/bin/bash
+set -eu
+
+if [ $# -eq 0 ]; then
+    echo "Usage: binsplice <source file> <skip # bytes> <delete # bytes> <file to insert> <output file>"
+    exit 1
+fi
+
+source_file="$1"
+skip_n_bytes="$2"
+delete_n_bytes="$3"
+file_to_insert="$4"
+output_file="$5"
+
+cat \
+    <(dd iflag=count_bytes if="$source_file" count="$skip_n_bytes") \
+    "$file_to_insert" \
+    <(dd iflag=skip_bytes if="$source_file" skip=$(($skip_n_bytes + $delete_n_bytes))) \
+    > "$output_file"
