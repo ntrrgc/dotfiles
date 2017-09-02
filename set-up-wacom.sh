@@ -17,7 +17,7 @@ else
   xinput disable "Wacom Bamboo 16FG 6x8 Finger"
 fi
 
-if [ "$HOSTNAME" == "madoka.local" ]; then
+if [ "$HOSTNAME" == "madoka" ]; then
   xsetwacom --set "Wacom Bamboo 16FG 6x8 Pen stylus" MapToOutput HEAD-0
   xsetwacom --set "Wacom Bamboo 16FG 6x8 Pen eraser" MapToOutput HEAD-0
 fi
