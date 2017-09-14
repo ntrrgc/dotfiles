@@ -193,6 +193,24 @@ else
 fi
 alias plusx='chmod +x'
 alias rg='rg --colors path:style:bold --colors path:fg:green --colors line:style:bold --colors match:bg:yellow --colors match:style:nobold --colors match:fg:black --glob "!**/*.min.*"'
+function go() {
+  # Run the provided command (which should be ripgrep or a similar command
+  # printing file names and line numbers) and open the file in the specified
+  # line
+
+  # Optionally the first argument may specify the desired match number
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
+    line_number=$1
+    shift
+  else
+    line_number=1
+  fi
+
+  match_line="$("$@" -n | head -n$line_number |tail -n1)"
+  file_name="$(echo "$match_line" | cut -d: -f1)"
+  line_number="$(echo "$match_line" | cut -d: -f2)"
+  echo vim "$file_name" +$line_number
+}
 alias wmon='watchd-monitor'
 alias wgetr='wget -rc --no-parent -nH'
 alias amend='git commit --amend'
