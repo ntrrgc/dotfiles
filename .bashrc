@@ -209,7 +209,7 @@ function go() {
   match_line="$("$@" -n | head -n$line_number |tail -n1)"
   file_name="$(echo "$match_line" | cut -d: -f1)"
   line_number="$(echo "$match_line" | cut -d: -f2)"
-  echo vim "$file_name" +$line_number
+  vim "$file_name" +$line_number
 }
 alias wmon='watchd-monitor'
 alias wgetr='wget -rc --no-parent -nH'
