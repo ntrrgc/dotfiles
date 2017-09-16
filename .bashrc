@@ -282,16 +282,43 @@ COLOR_RED_NO_PS="\e[38;5;$((196+7))m"
 COLOR_ORANGE="\[\e[38;5;$((196+12))m\]"
 COLOR_CYAN="\[\e[38;5;$((29+124))m\]"
 
+case "${HOSTNAME/.*}" in
+  madoka)
+    COLOR_HOST="\[\e[38;5;213m\]"
+    ;;
+  sayaka)
+    COLOR_HOST="\[\e[38;5;75m\]"
+    ;;
+  homura)
+    COLOR_HOST="\[\e[38;5;249m\]"
+    ;;
+  kyouko)
+    COLOR_HOST="\[\e[38;5;161m\]"
+    ;;
+  mami)
+    COLOR_HOST="\[\e[38;5;184m\]"
+    ;;
+  raspberrypi)
+    COLOR_HOST="\[\e[38;5;133m\]"
+    ;;
+  rufian)
+    COLOR_HOST="\[\e[38;5;185m\]"
+    ;;
+  *)
+    COLOR_HOST="\[\e[38;5;37m\]"
+    ;;
+esac
+
 PS_CHROOT="${debian_chroot:+${COLOR_ORANGE}(${debian_chroot}) }"
 PS_TIME="${COLOR_GREEN}[\$(date +%k:%M:%S)]${COLOR_RESET}"
 PS_PWD="${COLOR_BLUE}\w${COLOR_RESET}"
-PS_USER="${COLOR_YELLOW}\u@\h${COLOR_RESET}"
+PS_USER="${COLOR_HOST}\u@\h${COLOR_RESET}"
 PS_STAR="${COLOR_ORANGE}$(echo -ne '\xe2\x98\x85')${COLOR_RESET}"
 PS_SNOW="${COLOR_CYAN}$(echo -ne '\xe2\x9d\x85')${COLOR_RESET}"
 
 function __update_ps1() {
   PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}
-${PS_USER}${COLOR_BLUE}❯ ${COLOR_RESET}"
+${PS_USER}${COLOR_HOST}❯ ${COLOR_RESET}"
 }
 
 PS_FIRST_TIME=true
