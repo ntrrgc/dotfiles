@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# gh-link
+#
+# Show the URL of a file or repository on GitHub.
+#
+# (c) 2017 Alicia Boya García
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+set -eu
+
+remote_name="$(git config branch.`git name-rev --name-only HEAD`.remote)"
+repo_url="$(git remote -v |grep "^$remote_name\\s" |cut -f2 |head -n1 |sed 's/ (.*)$//')"
+commit_hash="$(git show --format="%h" --no-patch)"
+repo_root="$(git rev-parse --show-toplevel)"
+
+# Use known mirrors
+case "$repo_url" in
+  "git://git.webkit.org/WebKit.git")
+    repo_url=https://github.com/webkit/webkit
+    ;;
+esac
+
+# Replace ssh to https
+repo_url="$(echo "$repo_url" |sed 's|^git@github.com:\(.*\)/\(.*\).git$|https://github.com/\1/\2|')"
+
+if ! echo "$repo_url" | grep -q "^https://github.com/"; then
+  echo "This remote is not tracked on GitHub: $repo_url" >&2
+  exit 1
+fi
+
+if [[ $# -eq 0 ]]; then
+  # Just print the URL of the repo
+  ret_url="$repo_url"
+elif [[ $# -eq 1 || $# -eq 2 || $# -eq 3 ]]; then
+  # Print the URL of a file
+
+  file_path_in_repo="$(realpath --relative-to="$repo_root" "$1")"
+
+  ret_url="$repo_url/blob/$commit_hash/$file_path_in_repo"
+
+  if [[ $# -eq 2 ]]; then
+    # Add single line number
+    ret_url="$ret_url#L$2"
+  elif [[ $# -eq 3 ]]; then
+    # Line range
+    ret_url="$ret_url#L$2-L$3"
+  fi
+else
+  echo "Usage: gh-link [ <file> [ <line> [ <line-end> ] ] ]" >&2
+  echo "Show the URL of a file or repository on GitHub." >&2
+  exit 1
+fi
+
+echo "$ret_url"
+echo -n "$ret_url" | xclip -selection clipboard
