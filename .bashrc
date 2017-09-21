@@ -71,6 +71,9 @@ alias la='ls -A'
 alias l='ls -CF'
 alias gvim='gvim 2> /dev/null' # ignore gtk errors
 alias vi='vim'
+alias python=python3
+alias ipython=ipython3
+alias pip=pip3
 
 # In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
 if which vimx > /dev/null 2>&1; then
