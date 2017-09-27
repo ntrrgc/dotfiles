@@ -1,0 +1,26 @@
+#!/usr/bin/python3
+import sys
+import re
+
+test_name = None
+bug_name = None
+
+for line in sys.stdin:
+    name_match = re.match(r".*?\s*?(\S+/\S+(?:html?|php))\b.*", line)
+    if name_match:
+        if test_name is not None: raise AssertionError(name_match.groups())
+        test_name = name_match.groups()[0]
+        bug_name = re.sub(r"\s*\*\s*Reported: ", "", line.strip())
+
+    bug_match = re.match(r".*?\b(https://bugs\.webkit\.org/show_bug\.cgi\?id=(\d+))\b.*", line)
+    if bug_match:
+        if test_name is None: raise AssertionError()
+        print(bug_name)
+        print(bug_match.groups()[0])
+        print(f"webkit.org/b/{bug_match.groups()[1]} {test_name}")
+        print()
+        test_name = None
+
+    empty_match = re.match(r"^\s+$", line)
+    if empty_match:
+        print()
