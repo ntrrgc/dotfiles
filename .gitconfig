@@ -17,4 +17,10 @@
 [url "ssh://git@git.kde.org/"]
 	pushInsteadOf = kde:
 
+[color "grep"]
+	linenumber = green bold
+	match = yellow reverse
+	filename = green bold
+	function = blue bold
+
 # vi: set noexpandtab:
