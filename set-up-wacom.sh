@@ -25,4 +25,4 @@ fi
 xsetwacom --set "Wacom Bamboo 16FG 6x8 Pad pad" Button $PAD_3 "key y"
 xsetwacom --set "Wacom Bamboo 16FG 6x8 Pad pad" Button $PAD_4 "key z"
 
-xsetwacom --set "Wacom Bamboo 16FG 6x8 Pen stylus" Button $STYLUS_BOTTOM "key del"
+#xsetwacom --set "Wacom Bamboo 16FG 6x8 Pen stylus" Button $STYLUS_BOTTOM "key del"
