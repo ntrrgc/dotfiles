@@ -268,6 +268,10 @@ function cmbuild() {
 function download_time() {
   qalc "($1Byte) / (${2:-120 k}Byte/s) to hours"
 }
+function debug-web-process() {
+  env WEB_PROCESS_CMD_PREFIX='/usr/bin/gdbserver localhost:9080' "$@"
+}
+
 shopt -s autocd
 shopt -s histappend
 export DROPBOX="$HOME/Dropbox"
