@@ -3,6 +3,7 @@ set linebreak ts=4 sw=4 expandtab
 set number relativenumber
 let mapleader='\'
 set completeopt=menuone
+set foldlevel=20
 
 set nofixeol
 
