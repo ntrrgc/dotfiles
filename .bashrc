@@ -2,7 +2,10 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-# If not running interactively, don't do anything
+DOTFILES_DIR=$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )
+export PATH="$PATH:$DOTFILES_DIR/bin"
+
+# If not running interactively, don't do anything more
 [ -z "$PS1" ] && return
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -383,9 +386,6 @@ PROMPT_COMMAND='__prompt_command'
 
 # http://stackoverflow.com/a/23710535/1777162
 cl() { history -p '!!'|tr -d \\n|clip; }
-
-DOTFILES_DIR=$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )
-export PATH="$PATH:$DOTFILES_DIR/bin"
 
 if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
