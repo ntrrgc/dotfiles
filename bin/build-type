@@ -1,0 +1,40 @@
+#!/bin/bash
+set -eu
+
+show_usage() {
+  cat <<END
+Usage: build-type [<release|debug|unset>]
+
+Get or set the default build mode to use in this project.
+
+You can use this value in other scripts instead of using environment variables.
+By doing it this way you avoid accidentally running commands from history on
+the wrong type of build, as usually happens with WebKit scripts.
+END
+}
+
+if [[ $# -eq 1 ]] && ( [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]] ); then
+  show_usage
+  exit 0
+fi
+
+git_root="$(git rev-parse --show-toplevel 2>/dev/null || (
+  echo "Not in a git repository." >/dev/stderr
+  exit 1
+))"
+
+if [[ $# -eq 0 ]]; then
+  cat "$git_root/.git/build-type" 2>/dev/null || (
+    echo "Build type not set in $git_root (see build-type --help)" >/dev/stderr
+    exit 1
+  )
+elif [[ $# -eq 1 ]] && [[ "$1" =~ ^d.* ]]; then
+  echo debug > "$git_root/.git/build-type"
+elif [[ $# -eq 1 ]] && [[ "$1" =~ ^r.* ]]; then
+  echo release > "$git_root/.git/build-type"
+elif [[ $# -eq 1 ]] && [[ "$1" =~ ^u.* ]]; then
+  rm "$git_root/.git/build-type"
+else
+  show_usage
+  exit 1
+fi

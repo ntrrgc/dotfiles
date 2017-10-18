@@ -324,13 +324,33 @@ PS_USER="${COLOR_HOST}\u@\h${COLOR_RESET}"
 PS_STAR="${COLOR_ORANGE}$(echo -ne '\xe2\x98\x85')${COLOR_RESET}"
 PS_SNOW="${COLOR_CYAN}$(echo -ne '\xe2\x9d\x85')${COLOR_RESET}"
 
+function _ps1_project_build_type() {
+  local git_root="$(git rev-parse --show-toplevel 2> /dev/null)"
+  if [[ ! -z "$git_root" ]]; then
+    local build_type="$(cat "$git_root/.git/build-type" 2> /dev/null)"
+    case "$build_type" in
+      debug)
+	echo -e " \e[38;5;205;1m[Debug]\033[21m"
+	;;
+      release)
+	echo -e " \e[38;5;39;1m[Release]\033[21m"
+	;;
+      "")
+	;; # No build type set for this repository
+      *)
+	echo -e " \e[48;5;196;1m[Invalid .git/build-type]\033[21;49m"
+	;;
+    esac
+  fi
+}
+
 function _ps1_git_branch() {
   # Adapted from:
   # https://coderwall.com/p/fasnya/add-git-branch-name-to-bash-prompt
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* (\?\([^)]*\?\))\?$/ (\1)/'
 }
 
-PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}${COLOR_YELLOW}\$(_ps1_git_branch)
+PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}\$(_ps1_project_build_type)${COLOR_YELLOW}\$(_ps1_git_branch)
 ${PS_USER}${COLOR_HOST}❯ ${COLOR_RESET}"
 
 PS_FIRST_TIME=true
