@@ -324,7 +324,13 @@ PS_USER="${COLOR_HOST}\u@\h${COLOR_RESET}"
 PS_STAR="${COLOR_ORANGE}$(echo -ne '\xe2\x98\x85')${COLOR_RESET}"
 PS_SNOW="${COLOR_CYAN}$(echo -ne '\xe2\x9d\x85')${COLOR_RESET}"
 
-PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}
+function _ps1_git_branch() {
+  # Adapted from:
+  # https://coderwall.com/p/fasnya/add-git-branch-name-to-bash-prompt
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* (\?\([^)]*\?\))\?$/ (\1)/'
+}
+
+PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}${COLOR_YELLOW}\$(_ps1_git_branch)
 ${PS_USER}${COLOR_HOST}❯ ${COLOR_RESET}"
 
 PS_FIRST_TIME=true
