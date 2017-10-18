@@ -324,10 +324,8 @@ PS_USER="${COLOR_HOST}\u@\h${COLOR_RESET}"
 PS_STAR="${COLOR_ORANGE}$(echo -ne '\xe2\x98\x85')${COLOR_RESET}"
 PS_SNOW="${COLOR_CYAN}$(echo -ne '\xe2\x9d\x85')${COLOR_RESET}"
 
-function __update_ps1() {
-  PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}
+PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}
 ${PS_USER}${COLOR_HOST}❯ ${COLOR_RESET}"
-}
 
 PS_FIRST_TIME=true
 function __prompt_command() {
@@ -352,12 +350,7 @@ function __prompt_command() {
     # Print always a newline except if it's the first line
     echo
   fi
-
-  __update_ps1
 }
-
-# Set the PS1 variable now
-__update_ps1
 
 # Update the PS1 variable after each command (and also shows exit codes)
 PROMPT_COMMAND='__prompt_command'
