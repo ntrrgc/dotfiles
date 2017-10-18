@@ -65,7 +65,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
 alias ll='ls -alFh'
 alias la='ls -A'
 alias l='ls -CF'
@@ -74,6 +73,7 @@ alias vi='vim'
 alias python=python3
 alias ipython=ipython3
 alias pip=pip3
+alias bt=build-type
 
 # In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
 if which vimx > /dev/null 2>&1; then
