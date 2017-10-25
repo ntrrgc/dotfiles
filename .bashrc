@@ -271,6 +271,14 @@ function cmbuild() {
 function download_time() {
   qalc "($1Byte) / (${2:-120 k}Byte/s) to hours"
 }
+function join_by { 
+  # https://stackoverflow.com/a/17841619/1777162
+  local d=$1
+  shift
+  echo -n "$1"
+  shift
+  printf "%s" "${@/#/$d}"
+}
 function debug-web-process() {
   env WEB_PROCESS_CMD_PREFIX='/usr/bin/gdbserver localhost:9080' "$@"
 }
