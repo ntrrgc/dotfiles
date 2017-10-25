@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+grep --color=auto -n -R "$1" \
+  /webkit/LayoutTests/TestExpectations \
+  /webkit/LayoutTests/platform/{wk2,gtk,gtk-wayland,wpe}/TestExpectations
