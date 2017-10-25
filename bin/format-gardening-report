@@ -1,0 +1,24 @@
+#!/usr/bin/python3
+import sys
+import re
+from datetime import datetime
+
+now = datetime.now()
+
+def make_link(line):
+    return re.sub(r"webkit.org/b/(\d+)", 
+                  r"[https://bugs.webkit.org/show_bug.cgi?id=\1 webkit.org/b/\1]", 
+                  line)
+
+print(f"=== {now.strftime('%Y-%m-%d')} ===\n")
+print('{{{#!td style="background: #eef"')
+print("Done:\n")
+
+for line in sys.stdin:
+    line = line[:-1]
+    trailing = " [[BR]]" if line.strip() != "" else ""
+    print(f" {make_link(line)}{trailing}")
+
+print()
+print(f"-- !aboya@igalia.com - {now.strftime('%a %b %d %Y')}")
+print("}}}")
