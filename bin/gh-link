@@ -23,6 +23,9 @@ case "$repo_url" in
   "git://git.webkit.org/WebKit.git")
     repo_url=https://github.com/webkit/webkit
     ;;
+  https://anongit.freedesktop.org/git/gstreamer/*.git)
+    repo_url=https://github.com/gstreamer/"$(echo "$repo_url" |sed 's|^.*/\(.*\?\)\.git$|\1|')"
+    ;;
 esac
 
 # Replace ssh to https
