@@ -3,7 +3,7 @@ set -eu
 
 show_usage() {
   cat <<END
-Usage: build-type [<release|debug|unset>]
+Usage: build-type [--first-upper] [<release|debug|unset>]
 
 Get or set the default build mode to use in this project.
 
@@ -23,8 +23,21 @@ git_root="$(git rev-parse --show-toplevel 2>/dev/null || (
   exit 1
 ))"
 
+first_upper=false
+
+if [[ $# -ge 1 ]] && [[ "$1" == "--first-upper" ]]; then
+  first_upper=true
+  shift
+fi
+
 if [[ $# -eq 0 ]]; then
-  cat "$git_root/.git/build-type" 2>/dev/null || (
+  cat "$git_root/.git/build-type" 2>/dev/null | (
+    if $first_upper; then
+      awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}'
+    else
+      cat
+    fi
+  ) || (
     echo "Build type not set in $git_root (see build-type --help)" >/dev/stderr
     exit 1
   )
