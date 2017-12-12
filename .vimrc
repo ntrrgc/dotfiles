@@ -227,6 +227,8 @@ Plugin 'udalov/kotlin-vim'
 
 Plugin 'tpope/vim-sleuth'
 
+Plugin 'ntpeters/vim-better-whitespace'
+
 set laststatus=2
 
 set incsearch hlsearch
