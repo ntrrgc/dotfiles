@@ -10,7 +10,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
-*.patch
+/00*.patch
 *.pro.user.*
 *.pro.user
 .directory
