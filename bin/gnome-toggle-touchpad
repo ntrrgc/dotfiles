@@ -1,0 +1,10 @@
+#!/bin/bash
+current_value=$(gsettings get org.gnome.desktop.peripherals.touchpad send-events)
+
+if [ "$current_value" == "'enabled'" ]; then
+  gsettings set org.gnome.desktop.peripherals.touchpad send-events "'disabled'"
+  notify-send -u normal -a Wacom -i /usr/share/icons/gnome/16x16/devices/input-tablet.png -h int:transient:1 "Touch input" "Touch gestures <b>disabled</b>"
+else
+  gsettings set org.gnome.desktop.peripherals.touchpad send-events "'enabled'"
+  notify-send -u normal -a Wacom -i /usr/share/icons/gnome/16x16/devices/input-tablet.png -h int:transient:1 "Touch input" "Touch gestures <b>enabled</b>"
+fi
