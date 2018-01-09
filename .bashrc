@@ -233,7 +233,7 @@ function mangrep() {
     echo "Example of usage: mangrep wget -r"
     return 1
   fi
-  LESS="${LESS:-} -+I" man -P 'less -p "^       '"$2"'"' $1
+  LESS="${LESS:-} -+I" man -P 'less -p "^       '"$2"'\>"' $1
 }
 function topath() {
   export PATH="$1:$PATH"
