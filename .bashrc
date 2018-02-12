@@ -189,6 +189,7 @@ alias gp='git push'
 alias dif='git diff'
 alias grebase='git fetch && git rebase'
 alias pull='git pull'
+alias cherry='git cherry-pick'
 alias greset='git checkout --'
 # Just In Case, stash unstaged changes so I can run clean test on what I'm about to commit
 alias jic='git stash --keep-index --include-untracked'
