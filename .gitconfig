@@ -24,3 +24,7 @@
 	function = blue bold
 
 # vi: set noexpandtab:
+[bz]
+	browser = firefox3
+[bz-tracker "gnome"]
+	host = bugzilla.gnome.org
