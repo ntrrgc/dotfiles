@@ -1,2 +1,3 @@
 #!/bin/bash
-exec gst-launch-1.0 v4l2src device=${1:-/dev/video0} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue ! autovideosink pulsesrc ! queue ! autoaudiosink
+video_device=(/dev/v4l/by-id/usb-INOGENI*)
+exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue ! autovideosink pulsesrc ! queue ! autoaudiosink
