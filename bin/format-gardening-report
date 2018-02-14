@@ -11,7 +11,6 @@ def make_link(line):
                   line)
 
 print(f"=== {now.strftime('%Y-%m-%d')} ===\n")
-print('{{{#!td style="background: #eef"')
 
 for line in sys.stdin:
     line = line[:-1]
@@ -20,4 +19,3 @@ for line in sys.stdin:
 
 print()
 print(f"-- !aboya@igalia.com - {now.strftime('%a %b %d %Y')}")
-print("}}}")
