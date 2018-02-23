@@ -192,6 +192,7 @@ alias pull='git pull'
 alias cherry='git cherry-pick'
 alias greset='git checkout --'
 alias co='git checkout'
+alias sho='git show'
 # Just In Case, stash unstaged changes so I can run clean test on what I'm about to commit
 alias jic='git stash --keep-index --include-untracked'
 alias spop='git stash pop'
