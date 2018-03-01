@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+rm -f /tmp/*.dot
+GST_DEBUG_DUMP_DOT_DIR=/tmp exec "$@"
