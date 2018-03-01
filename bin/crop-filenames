@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""
+Trim filenames down to 130 UTF-8 bytes.
+"""
+import os
+import re
+import sys
+import logging
+from typing import Tuple
+
+import shutil
+
+dry_run = "-n" in sys.argv
+
+long_extensions = {".tar.gz", ".tar.bz", ".tar.xz"}
+
+
+def split_file_extension(file_name: str) -> Tuple[str, str]:
+    """
+    Split the given file name as (base_name, extension).
+    The extension either starts by dot or is empty string.
+    """
+    long_extension = next((
+        ext
+        for ext in long_extensions
+        if file_name.endswith(ext)), None)
+    if long_extension:
+        base_name = file_name.rsplit(long_extension, 1)[0]
+        return base_name, long_extension
+
+    split_name = file_name.rsplit(".", 1)
+    if len(split_name) == 1:
+        # Handle dot-less files like "Makefile"
+        return split_name[0], ""
+    elif len(split_name) == 2 and split_name[0] == "":
+        # Handle hidden files that start with dot, like ".directory".
+        # We don't consider ".directory" an extension, but rather the base name.
+        return split_name[1], ""
+    else:
+        # Handle normal extensions, like in "hello.txt"
+        return split_name[0], "." + split_name[1]
+
+
+def split_suffix(file_name: str) -> Tuple[str, str]:
+    name, ext = split_file_extension(file_name)
+    match = re.match(r"^(.*)( ?\[([a-fA-F0-9]{8})\]\s*)$", name)
+    if match:
+        name = match.groups()[1]
+        ext = match.groups()[2] + ext
+    return name, ext
+
+
+def rename_file(root, original_name):
+    name, suffix = split_suffix(original_name)
+    requires_rename = False
+    while len((name + suffix).encode("UTF-8")) > 130:
+        requires_rename = True
+        name = name[:-1]
+
+    if requires_rename:
+        src = os.path.join(root, original_name)
+        dst = os.path.join(root, name + suffix)
+        logging.info('%s -> %s' % (src, dst))
+        if not dry_run:
+            shutil.move(src, dst)
+
+    return name + suffix
+
+
+logging.basicConfig(level=logging.INFO, format='%(levelname)-8s %(message)s',
+                    stream=sys.stdout)
+
+for root, sub_folders, files in os.walk("."):
+    sub_folders[:] = [
+        rename_file(root, folder)
+        for folder in sub_folders
+    ]
+
+    for file in files:
+        rename_file(root, file)
+
