@@ -119,7 +119,7 @@ elif [ $# -ge 2 ] && [ "$1" == "run" ]; then
       --stderr) capture="stderr"; shift ;;
       --stdout) capture="stdout"; shift ;;
       --both) capture="both"; shift ;;
-      --none) capture="none"; shift ;;
+      --no-capture) capture="no-capture"; shift ;;
       --always) always_send=true; shift ;;
       --) shift; break ;; # end of arguments parsing (for GNU compliance)
       -*) show_usage ;; # non-existent flag
@@ -133,7 +133,7 @@ elif [ $# -ge 2 ] && [ "$1" == "run" ]; then
     stderr) "$@"      2> "$output_file" || exit_code=$? ;;
     stdout) "$@"       > "$output_file" || exit_code=$? ;;
     both)   "$@" 2>&1  > "$output_file" || exit_code=$? ;;
-    none)   "$@"                        || exit_code=$? ;;
+    no-capture) "$@"                    || exit_code=$? ;;
   esac
 
   if $always_send || [ $exit_code -ne 0 ]; then
