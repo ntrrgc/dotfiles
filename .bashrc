@@ -409,6 +409,8 @@ PROMPT_COMMAND='__prompt_command'
 # http://stackoverflow.com/a/23710535/1777162
 cl() { history -p '!!'|tr -d \\n|clip; }
 
+. h.sh
+
 if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
 fi
