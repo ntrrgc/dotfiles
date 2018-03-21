@@ -1,0 +1,54 @@
+#!/usr/bin/python3
+import logging
+import subprocess
+import sys
+from collections import namedtuple
+from argparse import ArgumentParser
+
+import dateutil.parser
+
+logging.basicConfig(stream=sys.stderr)
+
+Commit = namedtuple("Commit", ["hash", "commit_date"])
+
+
+def main(branch, searched_date):
+    commits = []
+
+    prev_date = None
+    process = subprocess.Popen(["git", "rev-list", "--pretty=%cI %H", branch], stdout=subprocess.PIPE)
+    for line in process.stdout:
+        if line.startswith(b"commit "):
+            continue  # I don't know how to avoid this useless line
+
+        # One line per commit, more recent (by tree order) first, usually the order matchs commit date, except on rare
+        # occasions.
+        commit_date_str, commit_hash = line.split(b" ", 2)
+        commit_hash = commit_hash.decode("UTF-8").strip()
+        commit_date = dateutil.parser.parse(commit_date_str)
+        if prev_date is not None and commit_date > prev_date:
+            logging.warning(f"Unordered date in commit {commit_hash} ({commit_date})")
+        prev_date = commit_date
+
+        commits.append(Commit(hash=commit_hash, commit_date=commit_date))
+
+    process.wait()
+
+    for commit in reversed(commits):
+        # One iteration per commit, oldest first
+        if commit.commit_date >= searched_date:
+            print(f"Checking out {commit.hash}...")
+            subprocess.call(["git", "checkout", commit.hash])
+            return
+
+
+parser = ArgumentParser(description="""Go to the oldest commit in a given branch whose *commit date* is equal or after a given date.
+
+View the commit dates of a repo by running `git log --pretty=fuller`.""")
+
+parser.add_argument("searched_date", type=dateutil.parser.parse)
+parser.add_argument("--branch", "-b", default="master")
+
+args = parser.parse_args()
+
+main(**vars(args))
