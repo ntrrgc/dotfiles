@@ -1,0 +1,2 @@
+#!/bin/bash
+node ~/Apps/gst-build/subprojects/gst-plugins-good/tests/check/elements/qtdemux-edit-list-generated/edit-list-test-gen.js && ninja -C ~/Apps/gst-build/build/ && (GST_DEBUG=ERROR meson test -C ~/Apps/gst-build/build/ --suite gst-plugins-good elements_qtdemux; cat /home/ntrrgc/Apps/gst-build/build/meson-logs/testlog.txt)
