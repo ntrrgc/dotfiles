@@ -1,0 +1,14 @@
+#!/usr/bin/python3
+import sys
+SECOND = 1000000000
+rest = int(sys.argv[1])
+
+def div(a, b):
+    return a // b, a % b
+
+hours, rest = div(rest, 3600 * SECOND)
+minutes, rest = div(rest, 60 * SECOND)
+seconds, rest = div(rest, SECOND)
+ns = rest
+
+print(f"{hours:02}:{minutes:02}:{seconds:02}.{ns:09}")

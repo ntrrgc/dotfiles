@@ -1,3 +1,5 @@
 #!/bin/bash
 set -eu
-gst-launch-1.0 -v filesrc location="$1" ! matroskademux ! fakesink silent=false
+path="$1"
+shift
+gst-launch-1.0 -v filesrc location="$path" ! matroskademux "$@" ! fakesink silent=false

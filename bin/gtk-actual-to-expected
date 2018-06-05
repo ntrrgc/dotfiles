@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+actual_url="$1"
+expected_output_file="platform/gtk/$(echo "$actual_url" | sed 's/.*\/r[0-9]\+%20([0-9]\+)\/\(.*\)-actual.txt$/\1-expected.txt/')"
+expected_output_dir="${expected_output_file%/*}"
+mkdir -p "$expected_output_dir"
+curl "$actual_url" -o "$expected_output_file"

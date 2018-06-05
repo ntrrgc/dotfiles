@@ -411,6 +411,20 @@ cl() { history -p '!!'|tr -d \\n|clip; }
 
 . h.sh
 
+# I get tired of typing the same paths over and over
+alias app="cd ~/Apps"
+alias gst="cd ~/Apps/gst-build"
+alias good="cd ~/Apps/gst-build/gst-plugins-good"
+alias bad="cd ~/Apps/gst-build/gst-plugins-bad"
+alias ytjs="cd ~/Apps/js_mse_eme"
+alias media="cd ~/Apps/js_mse_eme/media"
+alias wk="cd /webkit"
+alias tests="cd /webkit/LayoutTests"
+alias wkgst="cd /webkit/Source/WebCore/platform/graphics/gstreamer"
+alias mse="cd /webkit/Source/WebCore/platform/graphics/gstreamer/mse"
+alias spad="cd /home/ntrrgc/Dropbox/tmp/gst-print-mkv-duration"
+alias bpad="cd /home/ntrrgc/Dropbox/tmp/build-gst-print-mkv-duration-Desktop_*"
+
 if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
 fi

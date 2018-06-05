@@ -1,0 +1,4 @@
+#!/bin/bash
+test="${1//\//\\\/}" # escape forwad slashes
+sed -i "/$test/d" platform/*/TestExpectations TestExpectations
+git diff

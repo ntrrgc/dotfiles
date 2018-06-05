@@ -1,0 +1,2 @@
+#!/bin/bash
+grep --color -C3 "$1" TestExpectations platform/*/TestExpectations
