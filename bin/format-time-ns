@@ -1,14 +1,32 @@
 #!/usr/bin/python3
+import re
 import sys
+
 SECOND = 1000000000
-rest = int(sys.argv[1])
 
 def div(a, b):
     return a // b, a % b
 
-hours, rest = div(rest, 3600 * SECOND)
-minutes, rest = div(rest, 60 * SECOND)
-seconds, rest = div(rest, SECOND)
-ns = rest
+def format_time(time_ns):
+    if time_ns == 2**64 - 1:
+        return "99:99:99.999999999"
 
-print(f"{hours:02}:{minutes:02}:{seconds:02}.{ns:09}")
+    rest = time_ns
+    hours, rest = div(rest, 3600 * SECOND)
+    minutes, rest = div(rest, 60 * SECOND)
+    seconds, rest = div(rest, SECOND)
+    ns = rest
+
+    return f"{hours:02}:{minutes:02}:{seconds:02}.{ns:09}"
+
+def replace_time(match):
+    preffix, timestamp = match.groups()
+    return preffix + format_time(int(timestamp))
+
+def format_time_in_line(line):
+    return re.sub(r'((?:start|stop|time|duration|position|base)=\([a-z0-9]+\))(\d+)',
+                  replace_time, line)
+
+for line in sys.stdin:
+    format_time_in_line(line)
+    print(format_time_in_line(line), end="")
