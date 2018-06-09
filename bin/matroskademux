@@ -1,5 +1,16 @@
 #!/bin/bash
 set -eu
+
+demuxer="$(basename "$0")"
+
+if [[ "$1" == "--gdb" ]]; then
+    shift
+    prefix=(gdb --args)
+else
+    prefix=()
+fi
+
 path="$1"
 shift
-gst-launch-1.0 -v filesrc location="$path" ! matroskademux "$@" ! fakesink silent=false
+
+"${prefix[@]}" gst-launch-1.0 -v filesrc location="$path" ! "$demuxer" "$@" ! fakesink silent=false

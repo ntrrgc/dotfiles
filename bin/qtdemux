@@ -1,3 +1,1 @@
-#!/bin/bash
-set -eu
-gst-launch-1.0 -v filesrc location="$1" ! qtdemux ! identity silent=false ! fakesink
+matroskademux
