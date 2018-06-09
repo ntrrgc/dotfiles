@@ -2,15 +2,25 @@
 set -eu
 
 demuxer="$(basename "$0")"
+source="filesrc"
+prefix=()
 
-if [[ "$1" == "--gdb" ]]; then
-    shift
-    prefix=(gdb --args)
-else
-    prefix=()
-fi
+while true; do
+    case "$1" in
+        -g|--gdb)
+            shift
+            prefix=(gdb --args)
+            ;;
+        -p|--push)
+            shift
+            source="pushfilesrc"
+            ;;
+        *)
+            break
+    esac
+done
 
 path="$1"
 shift
 
-"${prefix[@]}" gst-launch-1.0 -v filesrc location="$path" ! "$demuxer" "$@" ! fakesink silent=false
+"${prefix[@]}" gst-launch-1.0 -v "$source" location="$path" ! "$demuxer" "$@" ! fakesink silent=false
