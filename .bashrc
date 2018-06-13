@@ -425,6 +425,8 @@ alias wkgst="cd /webkit/Source/WebCore/platform/graphics/gstreamer"
 alias mse="cd /webkit/Source/WebCore/platform/graphics/gstreamer/mse"
 alias spad="cd /home/ntrrgc/Dropbox/tmp/gst-print-mkv-duration"
 alias bpad="cd /home/ntrrgc/Dropbox/tmp/build-gst-print-mkv-duration-Desktop_*"
+alias gstb="ninja -C ~/Apps/gst-build/build"
+alias gstu="ninja -C ~/Apps/gst-build/build uninstalled"
 
 if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
