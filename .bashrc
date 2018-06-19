@@ -164,7 +164,7 @@ elif [ -x /usr/bin/apt-get ]; then
   alias pai='apt-cache show'
   alias par='sudo apt-get purge'
 elif [ -x /usr/bin/dnf ]; then
-  alias yolo='sudo dnf upgrade -y'
+  alias yolo='sudo dnf --enablerepo='*debug*' upgrade -y'
   alias pas='sudo dnf install -y'
   alias pass='sudo dnf search'
   alias pai='sudo dnf info'
