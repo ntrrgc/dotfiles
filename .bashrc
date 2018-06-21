@@ -355,15 +355,15 @@ function _ps1_project_build_type() {
     local build_type="$(cat "$git_root/.git/build-type" 2> /dev/null)"
     case "$build_type" in
       debug)
-	echo -e " \e[38;5;205;1m[Debug]\033[21m"
+	echo -e " \e[38;5;205;1m[Debug]\033[22m"
 	;;
       release)
-	echo -e " \e[38;5;39;1m[Release]\033[21m"
+	echo -e " \e[38;5;39;1m[Release]\033[22m"
 	;;
       "")
 	;; # No build type set for this repository
       *)
-	echo -e " \e[48;5;196;1m[Invalid .git/build-type]\033[21;49m"
+	echo -e " \e[48;5;196;1m[Invalid .git/build-type]\033[22;49m"
 	;;
     esac
   fi
