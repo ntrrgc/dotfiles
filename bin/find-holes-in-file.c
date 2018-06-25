@@ -88,7 +88,7 @@ void __attribute__ ((noinline)) report_hole(const char* file_name,
 {
     size_t pos_hole_end = pos_hole_start + hole_size;
 
-    printf("%s: Found hole at 0x%lx (%.2f%% until %.2f%%) of %lu bytes (0x%lx bytes, %g kiB)\n",
+    printf("%s: Found hole at 0x%zx (%.2f%% until %.2f%%) of %zu bytes (0x%zx bytes, %g kiB)\n",
             file_name, 
             pos_hole_start, 
             (100.0 * pos_hole_start) / file_size, 
