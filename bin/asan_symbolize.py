@@ -6,7 +6,8 @@
 # This file is distributed under the University of Illinois Open Source
 # License. See LICENSE.TXT for details.
 #
-# Modified by ntrrgc:
+# 2018-07-12 - Modified by ntrrgc:
+#
 # * Fixed bug where -1 was being entered as delimiter to addr2line, resulting in
 #   bogus ?? ?? lines.
 # * The addr2line now subtracts 1 byte to the received offsets in order to find
@@ -16,6 +17,8 @@
 #   a warning suffix.
 # * Allow optional symbol names in the original traceback. They must be preceded
 #   by the word "in".
+# * Added armv7l to list of valid architecture names.
+#
 #===------------------------------------------------------------------------===#
 import argparse
 import bisect
@@ -50,7 +53,8 @@ def sysroot_path_filter(binary_name):
 
 def is_valid_arch(s):
   return s in ["i386", "x86_64", "x86_64h", "arm", "armv6", "armv7", "armv7s",
-               "armv7k", "arm64", "powerpc64", "powerpc64le", "s390x", "s390"]
+               "armv7l", "armv7k", "arm64", "powerpc64", "powerpc64le",
+               "s390x", "s390"]
 
 def guess_arch(addr):
   # Guess which arch we're running. 10 = len('0x') + 8 hex digits.
@@ -542,4 +546,3 @@ if __name__ == '__main__':
     assert(allow_system_symbolizer)
   loop = SymbolizationLoop(binary_name_filter)
   loop.process_logfile()
-
