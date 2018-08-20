@@ -78,10 +78,26 @@ alias ipython=ipython3
 alias pip=pip3
 alias bt=build-type
 
-# In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
-if which vimx > /dev/null 2>&1; then
-  alias vim='vimx'
-fi
+function is_writable() {
+  if [[ -f "$1" ]]; then
+    # If the file already exists, return whether it is writable.
+    [[ -w "$1" ]]
+  else
+    # If the file does not exist yet, return whether its directory is
+    # writable and therefore the file can be created there.
+    [[ -w "$(dirname "$1")" ]]
+  fi
+}
+
+function vim() {
+  # In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
+  vim_executable=$(which vimx >/dev/null 2>&1 && echo "vimx" || echo "vim")
+  if [[ $# -eq 1 ]] && ! is_writable "$1"; then
+    sudo "$vim_executable" "$@"
+  else
+    "$vim_executable" "$@"
+  fi
+}
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
