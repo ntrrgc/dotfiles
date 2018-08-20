@@ -91,17 +91,12 @@ function is_writable() {
 
 function vim() {
   # In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
-echo 1
   vim_executable=$(which vimx >/dev/null 2>&1 && echo "vimx" || echo "vim")
-echo 2
   if [[ $# -eq 1 ]] && ! is_writable "$1"; then
-echo 3
     sudo "$vim_executable" "$@"
   else
-echo 4
     command "$vim_executable" "$@"
   fi
-echo 5
 }
 
 # Add an "alert" alias for long running commands.  Use like so:
