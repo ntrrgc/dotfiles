@@ -401,9 +401,21 @@ function __prompt_command() {
 
   # We may be overriding __vte_prompt_command, which is also set as 
   # PROMPT_COMMAND and is responsible from informing the terminal emulator
-  # what directory we're in. If that's the case, invoke it here.
+  # what directory we're in and showing "Command complete" alerts.
+  # If that's the case, invoke it here.
   if type -t __vte_prompt_command 2> /dev/null > /dev/null; then
     __vte_prompt_command
+  else
+    # Otherwise, let's do it ourselves (code adapted from Fedora's /etc/profile.d/vte.sh)
+    local chroot_prefix=""
+    if [ "${debian_chroot:-}" != "" ]; then
+        chroot_prefix="($debian_chroot) "
+    fi
+    local command=$(HISTTIMEFORMAT= history 1 | sed 's/^ *[0-9]\+ *//')
+    local command="${command//;/ }"
+    local pwd='~'
+    [ "$PWD" != "$HOME" ] && pwd=${PWD/#$HOME\//\~\/}
+    printf "\033]777;notify;${chroot_prefix}Command completed;%s\007\033]0;${chroot_prefix}%s@%s:%s\007" "${command}" "${USER}" "${HOSTNAME%%.*}" "${pwd}"
   fi
 
   if $PS_FIRST_TIME; then
