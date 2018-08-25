@@ -19,6 +19,10 @@
 #   by the word "in".
 # * Added armv7l to list of valid architecture names.
 #
+# 2018-08-20 - Modified by ntrrgc:
+#
+# * Added ELF parsing in order to handle non-PIE executables as well.
+#
 #===------------------------------------------------------------------------===#
 import argparse
 import bisect
@@ -27,6 +31,7 @@ import os
 import re
 import subprocess
 import sys
+import struct
 
 symbolizers = {}
 DEBUG = False
@@ -62,6 +67,72 @@ def guess_arch(addr):
     return 'x86_64'
   else:
     return 'i386'
+
+class InvalidELF(Exception):
+  pass
+
+def elf_file_offset_to_virtual_address(file_path, offset_to_map):
+  WORD_SIZE_32 = 1
+  WORD_SIZE_64 = 2
+  ENDIAN_LITTLE = 1
+  ENDIAN_BIG = 2
+  PT_LOAD = 1
+
+  with open(file_path, "rb") as fp:
+    magic_number, word_size, endian_code = struct.unpack(">IBB", fp.read(6))
+    if magic_number != 0x7F454C46:
+      raise InvalidELF("Not an ELF file: %s" % file_path)
+
+    def read_binary(fmt):
+      # In this function "i" stands for a "word" (32 or 64 bits), use "l" if you meant always 32-bit.
+      # Repeat prefixes (e.g. "3i") are not supported.
+      if word_size == WORD_SIZE_64:
+        fmt = fmt.replace("i", "q").replace("I", "Q")
+      else:
+        fmt = fmt.replace("i", "l").replace("I", "L")
+
+      total_size = sum(
+        {
+          "C": 1,
+          "B": 1,
+          "?": 1,
+          "H": 2,
+          "L": 4,
+          "Q": 8
+        }[letter.upper()]
+        for letter in fmt
+      )
+
+      endian_prefix = "<" if endian_code == ENDIAN_LITTLE else ">"
+      return struct.unpack(endian_prefix + fmt, fp.read(total_size))
+
+    fp.seek(0x1C if word_size == WORD_SIZE_32 else 0x20)
+    program_header_pointer, = read_binary("I")
+
+    fp.seek(0x2A if word_size == WORD_SIZE_32 else 0x36)
+    program_header_entry_size, count_program_header_entries = read_binary("HH")
+
+    if DEBUG:
+      print(file_path, program_header_pointer, program_header_entry_size, count_program_header_entries)
+    for num_program_header_entry in range(0, count_program_header_entries):
+      fp.seek(program_header_pointer)
+      p_type, = read_binary("L")
+      if word_size == WORD_SIZE_64:
+        # Skip p_flags (only present in 64-bit)
+        fp.seek(4, os.SEEK_CUR)
+      p_offset, p_vaddr, p_paddr, p_filesz = read_binary("IIII")
+
+      if DEBUG:
+        print("%x %x <= %x < %x" % (p_type, p_offset, offset_to_map, (p_offset + p_filesz)))
+      if p_type == PT_LOAD and p_offset <= offset_to_map < (p_offset + p_filesz):
+        mapped_address = p_vaddr + offset_to_map - p_offset
+        if DEBUG:
+          print("%x => %x" % (offset_to_map, mapped_address))
+        return mapped_address
+
+      program_header_pointer += program_header_entry_size
+
+    raise InvalidELF("Could not map file offset to a virtual address: 0x%x" % offset_to_map)
 
 class Symbolizer(object):
   def __init__(self):
@@ -179,18 +250,24 @@ class Addr2LineSymbolizer(Symbolizer):
     if self.binary != binary:
       return None
 
-    call_offset = int(offset, 16)
+    # addr2line expects a pointer as declared in the program header virtual memory ranges,
+    # but what we get in a traceback is an absolute file offset in the object file. These often
+    # coincide as most ELF files set the start virtual memory address to zero (expecting it to
+    # be later remapped to whatever the OS deems fit) but this is not the case for non PIE
+    # executable files; these usually have a non-zero base virtual address like 0x400000 or
+    # 0x10000.
+    return_pointer = elf_file_offset_to_virtual_address(binary, int(offset, 16))
     if self.arch.startswith("arm"):
       # Unset thumb bit.
-      call_offset = call_offset & ~0x1
+      return_pointer = return_pointer & ~0x1
     # addr2line shows the line of code for the provided address, but we have return addresses, so we actually want
     # the line of code of the previous instruction (the caller instruction). Subtracting one gives us the last byte
     # of the previous instruction.
-    call_offset -= 1
+    call_instruction_pointer = return_pointer - 1
 
     lines = []
     try:
-      self.pipe.stdin.write("0x%x\n" % call_offset)
+      self.pipe.stdin.write("0x%x\n" % call_instruction_pointer)
       self.pipe.stdin.close()
       is_first_frame = True
       while True:
