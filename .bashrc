@@ -459,7 +459,7 @@ alias amse="cd /webkit/Source/WebCore/Modules/mediasource"
 alias spad="cd /home/ntrrgc/Dropbox/tmp/gst-print-mkv-duration"
 alias bpad="cd /home/ntrrgc/Dropbox/tmp/build-gst-print-mkv-duration-Desktop_*"
 alias gstb="ninja -C ~/Apps/gst-build/build"
-alias gstu="ninja -C ~/Apps/gst-build/build uninstalled"
+alias gstu="~/Apps/gst-build/gst-uninstalled.py --builddir=$HOME/Apps/gst-build/build --srcdir=$HOME/Apps/gst-build"
 alias backup="~/Dropbox/backup-pc.sh"
 
 if [ -f "$HOME/.bashrc_local" ]; then
