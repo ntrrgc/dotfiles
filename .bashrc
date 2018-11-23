@@ -208,6 +208,16 @@ alias pull='git pull'
 alias cherry='git cherry-pick'
 alias greset='git checkout --'
 alias co='git checkout'
+function tmpb() {
+  # Create a throwaway branch
+  if [ $# -ne 1 ]; then
+    echo "Usage: $0 <bug-name>"
+    echo "Creates a temporary git branch with the current date and the name of the bug."
+    return 1
+  fi
+  git checkout -b "$(date +%y-%m-%d)-$1"
+}
+alias tmpbr='echo git checkout -b $(date +%y-%m-%d)-$1'
 alias sho='git show'
 # Just In Case, stash unstaged changes so I can run clean test on what I'm about to commit
 alias jic='git stash --keep-index --include-untracked'
