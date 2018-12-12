@@ -1,3 +1,15 @@
 #!/bin/bash
 video_device=(/dev/v4l/by-id/usb-INOGENI*)
-exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue ! autovideosink pulsesrc ! queue ! autoaudiosink
+
+videosink_options=()
+for arg in "$@"; do
+    case "$arg" in
+        -f|--no-video-lag)
+        # Sacrifice A/V synchronization in exchange for better responsiveness of the video
+        videosink_options=(sync=false max-lateness=0)
+        shift
+        ;;
+    esac
+done
+
+exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue ! xvimagesink "${videosink_options[@]}" pulsesrc ! queue ! autoaudiosink
