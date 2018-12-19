@@ -4,7 +4,7 @@ if [ $# -lt 3 ]; then
     echo "Rebaseline a WebKit test."
     echo
     echo "Usage: rebaseline.sh <results.html URL> <comma separated list of platforms> <test> [ [<test>] ... ]"
-    echo "Run from WebKit repo root directory."
+    echo "Run from inside the WebKit repo directory."
     echo
     echo "Example:"
     echo
@@ -15,6 +15,9 @@ fi
 
 results_url="$1"
 IFS="," read -ra platforms <<< "$2"
+
+# Go to the root of the repository, so this can be used in any directory within the WebKit tree.
+cd "$(git rev-parse --show-toplevel)"
 
 while [ $# -ge 3 ]; do
     test="$3"
