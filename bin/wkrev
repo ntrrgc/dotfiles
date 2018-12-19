@@ -1,0 +1,17 @@
+#!/bin/bash
+set -eu
+function rev_hash() {
+  # Allow revisions with and without the r* prefix.
+  revision=$(perl -pe 's/^r?(\d+)$/r\1/' <<< "$1")
+  git svn find-rev $revision origin/master
+}
+
+if [[ "$1" == *":"* ]]; then
+  first="${1%%:*}"
+  last="${1#*:}"
+  range="$(rev_hash $first)~..$(rev_hash $last)"
+else
+  range="$(rev_hash $1)~..$(rev_hash $1)"
+fi
+
+git log -p "$range"
