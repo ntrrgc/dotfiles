@@ -23,11 +23,11 @@ while [ $# -ge 3 ]; do
 
     test_actual_path="$(perl -pe 's/-expected\.txt$/-actual.txt/' <<< "$test_expected_path")"
     test_expected_url="$(t="$test_actual_path" perl -pe 's/\/results.html.*/\/$ENV{t}/' <<< "$results_url")"
-    test_expected_tmp_file="$(mktemp)"
-    function finish {
+    test_expected_tmp_file="$(mktemp -t "rebaseline.XXXXXXXXXX")"
+    function remove_tmp_file {
        rm "$test_expected_tmp_file"
     }
-    trap finish EXIT
+    trap remove_tmp_file EXIT
     curl -s -o "$test_expected_tmp_file" "$test_expected_url"
 
     for platform in "${platforms[@]}"; do
@@ -45,4 +45,6 @@ while [ $# -ge 3 ]; do
     done
 
     shift
+    trap - EXIT
+    remove_tmp_file
 done
