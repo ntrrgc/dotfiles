@@ -22,7 +22,7 @@ cd "$(git rev-parse --show-toplevel)"
 while [ $# -ge 3 ]; do
     test="$3"
 
-    test_expected_path="$(perl -pe 's/\.html$/-expected.txt/' <<< "$test")"
+    test_expected_path="$(perl -pe 's/\.[^.]+$/-expected.txt/' <<< "$test")"
 
     test_actual_path="$(perl -pe 's/-expected\.txt$/-actual.txt/' <<< "$test_expected_path")"
     test_expected_url="$(t="$test_actual_path" perl -pe 's/\/results.html.*/\/$ENV{t}/' <<< "$results_url")"
