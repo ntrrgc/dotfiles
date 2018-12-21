@@ -429,7 +429,9 @@ function __prompt_command() {
     local command="${command//;/ }"
     local pwd='~'
     [ "$PWD" != "$HOME" ] && pwd=${PWD/#$HOME\//\~\/}
-    printf "\033]777;notify;${chroot_prefix}Command completed;%s\007\033]0;${chroot_prefix}%s@%s:%s\007" "${command}" "${USER}" "${HOSTNAME%%.*}" "${pwd}"
+    if [ "${_LXSESSION_PID:-}" == "" ]; then
+      printf "\033]777;notify;${chroot_prefix}Command completed;%s\007\033]0;${chroot_prefix}%s@%s:%s\007" "${command}" "${USER}" "${HOSTNAME%%.*}" "${pwd}"
+    fi
   fi
 
   if $PS_FIRST_TIME; then
