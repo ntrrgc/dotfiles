@@ -48,5 +48,6 @@ function! ActivateAutomaticTitle()
   augroup END
 
   noremap <buffer> <silent> tt :call MakeTitle()<CR>
-  noremap <buffer> <C-s> :call SaveAndMake()<CR>
+  " This is useful in some projects, but not always
+  "noremap <buffer> <C-s> :call SaveAndMake()<CR>
 endfunction
