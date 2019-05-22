@@ -1,5 +1,10 @@
 #!/bin/bash
 set -eu
+
+function parse_revision() {
+  perl -pe 's/^r?(\d+)$/\1/' <<< "$1"
+}
+
 function rev_hash() {
   # Allow revisions with and without the r* prefix.
   revision=$(perl -pe 's/^r?(\d+)$/r\1/' <<< "$1")
@@ -9,9 +14,27 @@ function rev_hash() {
 if [[ "$1" == *":"* ]]; then
   first="${1%%:*}"
   last="${1#*:}"
-  range="$(rev_hash $first)~..$(rev_hash $last)"
 else
-  range="$(rev_hash $1)~..$(rev_hash $1)"
+  first="$1"
+  last="$1"
 fi
 
+# Normalize into numbers (remove the r prefix if present)
+first="$(parse_revision "$first")"
+last="$(parse_revision "$last")"
+
+# Sometimes revisions skip numbers, so we need to skip the ones not existing
+while [ "x$(git svn find-rev r"$first")" == "x" ]; do
+  first=$(($first + 1))
+  if [ "$first" -gt "$last" ]; then
+    echo "The range does not contain actual revisions."
+    exit 1
+  fi
+done
+
+while [ "x$(git svn find-rev r"$last")" == "x" ]; do
+  last=$(($last - 1))
+done
+
+range="$(rev_hash $first)~..$(rev_hash $last)"
 git log -p "$range"
