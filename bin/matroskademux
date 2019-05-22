@@ -23,4 +23,4 @@ done
 path="$1"
 shift
 
-"${prefix[@]}" gst-launch-1.0 -v "$source" location="$path" ! "$demuxer" "$@" ! fakesink silent=false
+"${prefix[@]}" gst-launch-1.0 -v "$source" location="$path" ! "$demuxer" "$@" ! identity silent=false ! fakesink
