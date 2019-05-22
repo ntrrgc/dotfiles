@@ -30,6 +30,7 @@ esac
 
 # Replace ssh to https
 repo_url="$(echo "$repo_url" |sed 's|^git@github.com:\(.*\)/\(.*\).git$|https://github.com/\1/\2|')"
+repo_url="$(echo "$repo_url" |sed 's|.git$||')"
 
 if ! echo "$repo_url" | grep -q "^https://github.com/"; then
   echo "This remote is not tracked on GitHub: $repo_url" >&2
