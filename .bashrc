@@ -404,8 +404,21 @@ function _ps1_git_branch() {
 PS1="${PS_CHROOT}${PS_TIME} ${PS_PWD}\$(_ps1_project_build_type)${COLOR_YELLOW}\$(_ps1_git_branch)
 ${PS_USER}${COLOR_HOST}❯ ${COLOR_RESET}"
 
+# Use this technique to show the running command in the tab title:
+# https://jichu4n.com/posts/debug-trap-and-prompt_command-in-bash/
+function __pre_command() {
+  if [[ "$PS_AT_PROMPT" == false ]]; then
+    return
+  fi
+
+  PS_AT_PROMPT=false
+  echo -ne "\033]2;$(history 1 | sed "s/^[ ]*[0-9]*[ ]*//g")\007"
+}
+
 PS_FIRST_TIME=true
+PS_AT_PROMPT=false
 function __prompt_command() {
+  PS_AT_PROMPT=true
   # Save the return code of the program the user just run
   local ret=$?
 
@@ -449,6 +462,8 @@ function __prompt_command() {
 
 # Update the PS1 variable after each command (and also shows exit codes)
 PROMPT_COMMAND='__prompt_command'
+
+trap '__pre_command' DEBUG
 
 # http://stackoverflow.com/a/23710535/1777162
 cl() { history -p '!!'|tr -d \\n|clip; }
