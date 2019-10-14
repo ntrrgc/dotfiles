@@ -6,6 +6,10 @@ set disassembly-flavor intel
 
 python
 import sys, os
+
 sys.path.append(os.path.expanduser("~/dotfiles"))
 import gdbDisplayLockedThreads
+
+sys.path.insert(0, "/webkit/Tools/gdb")
+import webkit
 end
