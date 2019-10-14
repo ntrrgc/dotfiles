@@ -1,0 +1,3 @@
+#!/bin/bash
+cat > /tmp/raw
+c++filt < /tmp/raw | tee >(xclip -selection clipboard)
