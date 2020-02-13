@@ -9,6 +9,7 @@ import sys, os
 
 sys.path.append(os.path.expanduser("~/dotfiles"))
 import gdbDisplayLockedThreads
+import gdbCCasts
 
 sys.path.insert(0, "/webkit/Tools/gdb")
 import webkit
