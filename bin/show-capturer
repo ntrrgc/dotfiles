@@ -1,6 +1,7 @@
 #!/bin/bash
 video_device=(/dev/v4l/by-id/usb-INOGENI*)
 
+crop_options=()
 videosink_options=()
 rotate_options=()
 flip_options=()
@@ -15,6 +16,11 @@ for arg in "$@"; do
             ;;
         -m|--mute)
             audio_options=()
+            shift
+            ;;
+        -crop3:2|--crop3:2)
+            # Crop 3:2 into 16:9 letterboard
+            crop_options=(! videocrop left=150 right=150)
             shift
             ;;
         -90l|-l90)
@@ -32,4 +38,4 @@ for arg in "$@"; do
     esac
 done
 
-exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue "${rotate_options[@]}" "${flip_options[@]}" ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"
+exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue "${crop_options[@]}" "${rotate_options[@]}" "${flip_options[@]}" ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"
