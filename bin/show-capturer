@@ -4,7 +4,7 @@ video_device=(/dev/v4l/by-id/usb-INOGENI*)
 crop_options=()
 videosink_options=()
 rotate_options=()
-flip_options=()
+flip_options=(! videoflip video-direction=horiz ! videoflip video-direction=horiz) # Do useless double flipping to avoid errors in videocrop https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/issues/640
 audio_options=(pulsesrc ! queue ! autoaudiosink)
 
 for arg in "$@"; do
