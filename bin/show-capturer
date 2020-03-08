@@ -1,4 +1,5 @@
 #!/bin/bash
+DIR="$(realpath "$(dirname "$0")")"
 video_device=(/dev/v4l/by-id/usb-INOGENI*)
 
 crop_options=()
@@ -6,6 +7,7 @@ videosink_options=()
 rotate_options=()
 flip_options=(! videoflip video-direction=horiz ! videoflip video-direction=horiz) # Do useless double flipping to avoid errors in videocrop https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/issues/640
 audio_options=(pulsesrc ! queue ! autoaudiosink)
+overlay_options=()
 
 for arg in "$@"; do
     case "$arg" in
@@ -35,7 +37,13 @@ for arg in "$@"; do
             flip_options=(! videoflip video-direction=horiz)
             shift
             ;;
+        -o|--overlay)
+            overlay="$2"
+            overlay_options=(! gdkpixbufoverlay location="$DIR/../capturer-overlays/$overlay.png")
+            shift
+            shift
+            ;;
     esac
 done
 
-exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue "${crop_options[@]}" "${rotate_options[@]}" "${flip_options[@]}" ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"
+exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue "${crop_options[@]}" "${overlay_options[@]}" "${rotate_options[@]}" "${flip_options[@]}" ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"

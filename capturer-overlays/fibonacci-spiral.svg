@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0beta2 (unknown)"
+   inkscape:export-ydpi="96"
+   inkscape:export-xdpi="96"
+   inkscape:export-filename="/home/ntrrgc/dotfiles/fibonacci-spiral-13.png"
+   sodipodi:docname="fibonacci-spiral.svg"
+   id="svg130"
+   version="1.1"
+   width="1620"
+   height="1080"
+   fill="none"
+   stroke="#000">
+  <metadata
+     id="metadata136">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs134" />
+  <sodipodi:namedview
+     inkscape:current-layer="svg130"
+     inkscape:window-maximized="1"
+     inkscape:window-y="27"
+     inkscape:window-x="0"
+     inkscape:cy="540"
+     inkscape:cx="960"
+     inkscape:zoom="0.69166667"
+     showgrid="false"
+     id="namedview132"
+     inkscape:window-height="1016"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     inkscape:document-rotation="0"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <g
+     id="g226-6"
+     transform="matrix(1,0,0,-1,-0.4628572,1086.3871)">
+    <g
+       inkscape:export-ydpi="96"
+       inkscape:export-xdpi="96"
+       inkscape:export-filename="/home/ntrrgc/dotfiles/fibonacci-spiral-l4.png"
+       style="stroke:#ff0000"
+       transform="matrix(1.8010461,0,0,-1.8010461,-10.814143,1069.591)"
+       id="g110-1"
+       stroke-width="2.5">
+      <rect
+         style="stroke:#ff0000"
+         id="rect92-8"
+         x="639.88"
+         y="402.5"
+         width="16"
+         height="16" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect94-7"
+         x="639.88"
+         y="418.5"
+         width="16"
+         height="16" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect96-9"
+         x="655.88"
+         y="402.62"
+         width="32"
+         height="31.875999"
+         ry="0" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect98-2"
+         x="639.88"
+         y="354.5"
+         width="48"
+         height="48" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect100-0"
+         x="559.88"
+         y="354.5"
+         width="80"
+         height="80" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect102-2"
+         x="559.88"
+         y="434.09"
+         width="128"
+         height="128.41" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect104-3"
+         x="687.84998"
+         y="354.60999"
+         width="208.14999"
+         height="207.78" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect106-7"
+         x="560"
+         y="18.5"
+         width="336"
+         height="336" />
+      <rect
+         style="stroke:#ff0000"
+         id="rect108-5"
+         x="16"
+         y="18.5"
+         width="544"
+         height="544" />
+    </g>
+    <g
+       inkscape:export-ydpi="96"
+       inkscape:export-xdpi="96"
+       inkscape:export-filename="/home/ntrrgc/dotfiles/fibonacci-spiral-l4.png"
+       style="stroke:#ff0000"
+       transform="matrix(1.8010461,0,0,-1.8010461,-10.814143,1069.591)"
+       id="g128-9"
+       stroke-width="5">
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path112-2"
+         transform="translate(255.88,648.31)"
+         d="m 400,-213.81 a 16,16 0 0 1 -16,-16" />
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path114-2"
+         transform="translate(255.88,648.31)"
+         d="m 432,-245.81 a 32,32 0 0 1 -32,32" />
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path116-8"
+         transform="translate(255.88,648.31)"
+         d="m 384,-293.81 a 48,48 0 0 1 48,48" />
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path118-9"
+         transform="translate(255.88,648.31)"
+         d="m 304,-213.81 a 80,80 0 0 1 80,-80" />
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path120-7"
+         transform="translate(255.88,648.31)"
+         d="m 432,-85.812 a 128,128 0 0 1 -128,-128" />
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path122-3"
+         transform="translate(255.88,648.31)"
+         d="m 640,-293.81 a 208,208 0 0 1 -208,208" />
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path124-6"
+         d="M 16,562.5 A 544,544 0 0 1 560,18.5" />
+      <path
+         style="stroke:#ff0000"
+         inkscape:connector-curvature="0"
+         id="path126-1"
+         d="m 560,18.5 a 336,336 0 0 1 336,336" />
+    </g>
+  </g>
+</svg>
