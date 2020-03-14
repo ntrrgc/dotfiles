@@ -64,7 +64,6 @@ if has('gui_running')
         let g:vimrc_sourced=1
     endif
 else
-    set background=dark
     set mouse=a
 endif
 
