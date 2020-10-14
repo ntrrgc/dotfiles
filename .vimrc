@@ -235,5 +235,12 @@ set incsearch hlsearch
 set ts=8
 noremap <F6> :YcmCompleter GoTo<CR>
 
+augroup BigPatch
+  autocmd!
+  autocmd BufWinEnter *.big.patch :set foldmethod=marker foldmarker=diff\ --git,enddiff
+  autocmd BufWinEnter *.big.patch silent! loadview
+  autocmd BufWinLeave *.big.patch mkview
+augroup END
+
 filetype plugin indent on
 syntax on
