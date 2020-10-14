@@ -1,4 +1,6 @@
 #!/bin/bash
 set -eu
-rm -f /tmp/*.dot
-GST_DEBUG_DUMP_DOT_DIR=/tmp exec "$@"
+export GST_DEBUG_DUMP_DOT_DIR=/home/ntrrgc/Dropbox/pipeline-dump
+mkdir -p "$GST_DEBUG_DUMP_DOT_DIR"
+rm -f "$GST_DEBUG_DUMP_DOT_DIR/*.dot"
+exec "$@"
