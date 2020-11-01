@@ -1,0 +1,36 @@
+#!/usr/bin/python3
+from argparse import ArgumentParser
+import os
+import re
+import shutil
+
+re_img_src = re.compile(r'^<IMG SRC = "(.*)">')
+
+def find_and_copy_dpof(sd_card, dest, clear_dpof):
+  with open(os.path.join(sd_card, "MISC/AUTPRINT.MRK"), "r") as f:
+    text = f.read()
+  files = [
+    os.path.abspath(os.path.join(sd_card, "MISC", re_img_src.match(line).group(1)))
+    for line in text.split("\n")
+    if line.startswith("<IMG SRC = ")
+  ]
+  for src_path in files:
+    print(f"Copying {os.path.basename(src_path)}")
+    shutil.copy(src_path, os.path.join(dest, os.path.basename(src_path)))
+
+  if clear_dpof:
+    os.remove(os.path.join(sd_card, "MISC/AUTPRINT.MRK"))
+
+def main():
+  parser = ArgumentParser(description=
+      "Finds pictures marked as DPOF in a SD card and puts them in a directory (e.g. USB drive that will be used in a printer)")
+
+  parser.add_argument("sd_card")
+  parser.add_argument("dest")
+  parser.add_argument("--clear-dpof", action="store_true", help="Clear the DPOF marks in the card")
+
+  args = parser.parse_args()
+  find_and_copy_dpof(args.sd_card, args.dest, args.clear_dpof)
+
+if __name__ == "__main__":
+  main()
