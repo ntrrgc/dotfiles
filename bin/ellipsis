@@ -1,0 +1,30 @@
+#!/usr/bin/python3
+import sys
+import re
+from argparse import ArgumentParser
+
+def do_ellipsis(pattern, max_lines):
+  re_pattern = re.compile(pattern)
+  match_streak = 0
+  for line in sys.stdin:
+    match = re_pattern.search(line)
+    if match:
+      match_streak += 1
+    else:
+      match_streak = 0
+
+    if match_streak <= max_lines:
+      print(line, end="")
+    elif match_streak == max_lines + 1:
+      print("[...]")
+
+
+if __name__ == "__main__":
+  parser = ArgumentParser(description=
+      "When several lines in standard input in a row match a given pattern, this utility will replace any lines other than the first few with an ellipsis line.")
+
+  parser.add_argument("pattern")
+  parser.add_argument("--max-lines", default=2, type=int)
+
+  args = parser.parse_args()
+  do_ellipsis(pattern=args.pattern, max_lines=args.max_lines)
