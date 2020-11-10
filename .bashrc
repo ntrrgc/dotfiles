@@ -348,6 +348,12 @@ case "${HOSTNAME/.*}" in
   sayaka)
     COLOR_HOST="\[\e[38;5;75m\]"
     ;;
+  potato)
+    COLOR_HOST="\[\e[38;5;130m\]"
+    ;;
+  buildbox*)
+    COLOR_HOST="\[\e[38;5;10m\]"
+    ;;
   homura)
     COLOR_HOST="\[\e[38;5;249m\]"
     ;;
