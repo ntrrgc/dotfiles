@@ -101,6 +101,8 @@ def show_function_list():
     for ln in range(len(vim.current.buffer)):
         vim.current.buffer[ln] = re.sub(r"^.*?\|.*?\| ", "", vim.current.buffer[ln])
     vim.current.buffer.options["modifiable"] = False
+    # Avoid "unsaved changes" errors when closing the location window.
+    vim.current.buffer.options["modified"] = False
 EOF
 
 augroup CFuncList
