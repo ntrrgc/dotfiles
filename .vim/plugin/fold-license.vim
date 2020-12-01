@@ -5,8 +5,10 @@ function! FoldLicense()
         return
     endif
 
-    call cursor(license_line - 1, 1)
-    execute "normal! V}zf\<C-o>\<C-o>"
+    let previous_position = getpos(".")
+    keepjumps call cursor(license_line - 1, 1)
+    keepjumps normal! V}zf
+    keepjumps call setpos(".", previous_position)
 endfunction
 
 augroup FoldLicense
