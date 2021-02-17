@@ -24,8 +24,12 @@
 	filename = green bold
 	function = blue bold
 
-# vi: set noexpandtab:
 [bz]
 	browser = firefox3
 [bz-tracker "gnome"]
 	host = bugzilla.gnome.org
+
+[includeIf "gitdir:~/Apps/gst-build/"]
+	path = ~/dotfiles/.gitconfig-igalia
+
+# vi: set noexpandtab:
