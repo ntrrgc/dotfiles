@@ -24,3 +24,4 @@ CMakeLists.txt.user
 CMakeLists.txt.user.*
 .mypy_cache
 Tools/buildstream/repo
+po
