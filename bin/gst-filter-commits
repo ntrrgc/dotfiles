@@ -1,0 +1,24 @@
+#!/usr/bin/python3
+import os
+import subprocess
+import sys
+from pprint import pprint
+
+repos = []
+for root, dirs, files in os.walk(os.path.expanduser("~/Apps/gst-build")):
+    if ".git" in dirs:
+        repos.append(root)
+
+accum_lines = []
+for repo in repos:
+    output = subprocess.check_output(["git", "log", "--pretty=format:%cd %<(30)%an %s %H", "--date=format:%Y-%m-%d"] + sys.argv[1:], cwd=repo)
+    repo_name = os.path.basename(repo)
+    lines = [
+        line.replace(b" ", b" " + repo_name.ljust(27).encode(), 1)
+        for line in output.split(b"\n")
+        if line.strip() != b""
+    ]
+    accum_lines += lines
+
+accum_lines.sort()
+sys.stdout.buffer.write(b"\n".join(accum_lines))
