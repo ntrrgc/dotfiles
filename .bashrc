@@ -3,7 +3,23 @@
 # for examples
 
 DOTFILES_DIR=$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )
-export PATH="$PATH:$DOTFILES_DIR/bin"
+
+pathmunge () {
+    case ":${PATH}:" in
+        *:"$1":*)
+            ;;
+        *)
+            if [ "$2" = "after" ] ; then
+                PATH=$PATH:$1
+            else
+                PATH=$1:$PATH
+            fi
+    esac
+}
+
+# Ideally this should be in ~/.profile, but this will make sure they will work in the shell at least.
+pathmunge "$DOTFILES_DIR/bin-override"
+pathmunge "$DOTFILES_DIR/bin" after
 
 # If not running interactively, don't do anything more
 [ -z "$PS1" ] && return
