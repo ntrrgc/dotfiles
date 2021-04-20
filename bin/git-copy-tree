@@ -1,0 +1,19 @@
+#!/bin/bash
+set -eu
+
+if [ $# -lt 3 ]; then
+    echo "Usage: git copy-tree <branch> <path> <dest>"
+    echo "Recursively copies the files contained in <path> in <branch> to <dest> directory."
+    exit 1
+fi
+
+branch="$1"
+path="$2"
+dest="$3"
+
+path="$(echo "$path" | sed 's/\/*$//g')" # Remove trailing slashes
+
+for file in $(git ls-tree --name-only -r "$branch":"$path"); do
+    mkdir -p "$dest/$(dirname "$file")"
+    git show "$branch:$path/$file" > "$dest/$file"
+done
