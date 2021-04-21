@@ -1,0 +1,46 @@
+#!/bin/bash
+# Multiple grep. Like an OR of each of the individual expressions.
+# Options (some of them affect grep, others affect h):
+#  -nc     No color
+#  -n      Invert colors
+#  -A n    Print n lines after every match
+#  -B n    Print n lines before every match
+. h.sh
+
+HIGHLIGHT=1
+GREP_OPTS=() # Empty array
+
+while true
+do
+ case "$1" in
+ -nc)
+  HIGHLIGHT=0
+  shift
+  ;;
+ -[AB])
+  GREP_OPTS+="$1"
+  GREP_OPTS+="$2"
+  shift
+  shift
+  ;;
+ *)
+  break;
+  ;;
+ esac
+done
+
+EXPR=""
+for x in "$@"
+do
+ EXPR="${EXPR}|(${x})"
+done
+
+# Omit the first character ("|")
+EXPR="${EXPR:1}"
+
+if [ ${HIGHLIGHT} == 1 ]
+then
+ egrep -i "${EXPR}" "${GREP_OPTS[@]}" | h -i "$@"
+else
+ egrep -i "${EXPR}" "${GREP_OPTS[@]}"
+fi
