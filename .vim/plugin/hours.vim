@@ -82,4 +82,5 @@ endfunction
 
 augroup calculatehours
     autocmd BufReadPost horas.txt :noremap <silent> <F8> :call CalculateHours()<CR>
+    autocmd BufReadPost tasks-*.txt :noremap <silent> <F8> :call CalculateHours()<CR>
 augroup END
