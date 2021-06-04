@@ -2,5 +2,5 @@
 set -eu
 
 # In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
-vim_executable=$(which vimx >/dev/null 2>&1 && echo "vimx" || echo "vim")
+vim_executable=$(which vimx >/dev/null 2>&1 && echo "vimx" || echo "/usr/bin/vim")
 exec "$vim_executable" "$@"
