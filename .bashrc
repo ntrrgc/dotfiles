@@ -212,7 +212,6 @@ fi
 alias ll='ls -lh'
 alias pgr='ps aux | grep'
 alias sys='sudo systemctl'
-alias clip='xclip -selection clipboard'
 alias clone='git clone'
 alias log='git log'
 alias gs='git status'
