@@ -1,6 +1,13 @@
 #!/bin/bash
 if [ "$XDG_SESSION_TYPE" == wayland ]; then
-    exec wl-copy "$@"
+    if [ $# -eq 1 ]; then
+        wl-copy < "$1"
+    elif [ $# -eq 0 ]; then
+        wl-copy
+    else
+        echo "clip: Invalid number of arguments."
+        exit 1
+    fi
 else
     exec xclip -selection clipboard "$@"
 fi
