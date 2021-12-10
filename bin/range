@@ -1,0 +1,26 @@
+#!/usr/bin/python3 -u
+import argparse
+import sys
+from io import SEEK_SET
+
+parser = argparse.ArgumentParser("range", description="Read a range from a file and write it to standard output.")
+parser.add_argument("input_file")
+parser.add_argument("start", type=int, nargs='?', default=0)
+group = parser.add_mutually_exclusive_group()
+group.add_argument("--size", "--length", type=int, metavar="size")
+group.add_argument("--end", "--stop", type=int, metavar="end")
+args = parser.parse_args()
+
+with open(args.input_file, "rb") as input_file:
+    if args.start:
+        input_file.seek(args.start, SEEK_SET)
+
+    if args.end is not None:
+        size = args.end - args.start
+    elif args.size is not None:
+        size = args.size
+    else:
+        size = -1
+
+    data = input_file.read(size)
+    sys.stdout.buffer.write(data)
