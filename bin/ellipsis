@@ -1,30 +1,74 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -u
 import sys
 import re
+import errno
 from argparse import ArgumentParser
 
-def do_ellipsis(pattern, max_lines):
-  re_pattern = re.compile(pattern)
-  match_streak = 0
-  for line in sys.stdin:
-    match = re_pattern.search(line)
-    if match:
-      match_streak += 1
-    else:
-      match_streak = 0
 
-    if match_streak <= max_lines:
-      print(line, end="")
-    elif match_streak == max_lines + 1:
-      print("[...]")
+# returns: has_removed
+def remove_all_except_last_n(a_list, n):
+  has_removed = False
+  while len(a_list) > n:
+    a_list.pop(0)
+    has_removed = True
+  return has_removed
+
+
+def print_buffered_lines(buffered_lines, count_omitted_lines):
+  if count_omitted_lines:
+    print(f"      [ ... {count_omitted_lines} more lines ... ]")
+  for line in buffered_lines:
+    print(line, end="")
+
+
+def do_ellipsis(pattern, first, last):
+  re_pattern = re.compile(pattern)
+
+  first_remaining = first
+  for line in sys.stdin:
+    if re_pattern.search(line):
+      first_remaining -= 1
+    else:
+      first_remaining = first
+
+    print(line, end="")
+
+    if first_remaining == 0:
+      # We have reached the `first` treshold.
+      queue_last = []
+
+      # Eat lines until one doesn't match the pattern.
+      count_omitted_lines = 0
+      try:
+        while True:
+          # Only keep the last `last` lines buffered for printing.
+          if remove_all_except_last_n(queue_last, last):
+            count_omitted_lines += 1
+          line = next(sys.stdin)
+          if re_pattern.search(line):
+            queue_last.append(line)
+          else:
+            # Print previously buffered lines, and then the new non-matching line.
+            print_buffered_lines(queue_last, count_omitted_lines)
+            print(line, end="")
+            break
+      except StopIteration:
+        print_buffered_lines(queue_last, count_omitted_lines)
 
 
 if __name__ == "__main__":
   parser = ArgumentParser(description=
-      "When several lines in standard input in a row match a given pattern, this utility will replace any lines other than the first few with an ellipsis line.")
+      "When several lines in standard input in a row match a given pattern, this utility will replace any lines other than the first and the last few with ellipsis lines.")
 
   parser.add_argument("pattern")
-  parser.add_argument("--max-lines", default=2, type=int)
+  parser.add_argument("--first", "--before", default=3, type=int)
+  parser.add_argument("--last", "--after", default=1, type=int)
 
   args = parser.parse_args()
-  do_ellipsis(pattern=args.pattern, max_lines=args.max_lines)
+  try:
+    do_ellipsis(args.pattern, args.first, args.last)
+  except KeyboardInterrupt:
+    pass
+  except IOError as err:
+    if err.errno != errno.EPIPE:
+      raise
