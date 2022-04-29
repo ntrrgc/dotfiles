@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [ $# -eq 0 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+    echo "Usage: ryzen-power {powersave|balanced|performance}"
+    exit 1
+fi
+
+RYZENADJ="$HOME/Apps/RyzenAdj/build/ryzenadj"
+
+case "$1" in
+powersave)
+    sudo "$RYZENADJ" --tctl-temp=95 \
+        --slow-limit=10000 \
+        --stapm-limit=10000 \
+        --fast-limit=100000 \
+        --power-saving
+    sudo cpupower frequency-set -g powersave
+    ;;
+balanced)
+    sudo "$RYZENADJ" --tctl-temp=95 \
+        --slow-limit=15000 \
+        --stapm-limit=15000 \
+        --fast-limit=250000
+    sudo cpupower frequency-set -g schedutil
+    ;;
+performance)
+    sudo "$RYZENADJ" --tctl-temp=95 \
+        --slow-limit=70000 \
+        --stapm-limit=80000 \
+        --fast-limit=100000 \
+        --max-performance
+    sudo cpupower frequency-set -g performance
+    ;;
+*)
+    echo "Unknown profile: $1"
+    exit 1
+esac
