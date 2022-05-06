@@ -5,7 +5,7 @@ import sys
 from pprint import pprint
 
 repos = []
-for root, dirs, files in os.walk(os.path.expanduser("~/Apps/gst-build")):
+for root, dirs, files in os.walk(os.path.expanduser("~/Apps/gstreamer")):
     if ".git" in dirs:
         repos.append(root)
 

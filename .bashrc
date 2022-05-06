@@ -493,9 +493,9 @@ cl() { history -p '!!'|tr -d \\n|clip; }
 
 # I get tired of typing the same paths over and over
 alias app="cd ~/Apps"
-alias gst="cd ~/Apps/gst-build"
-alias good="cd ~/Apps/gst-build/gst-plugins-good"
-alias bad="cd ~/Apps/gst-build/gst-plugins-bad"
+alias gst="cd ~/Apps/gstreamer"
+alias good="cd ~/Apps/gstreamer/subprojects/gst-plugins-good"
+alias bad="cd ~/Apps/gstreamer/subprojects/gst-plugins-bad"
 alias dotfiles="cd ~/dotfiles"
 alias ytjs="cd ~/Apps/js_mse_eme"
 alias media="cd ~/Apps/js_mse_eme/media"
@@ -506,8 +506,8 @@ alias mse='cd $(find-webkit.sh)/Source/WebCore/platform/graphics/gstreamer/mse'
 alias amse='cd $(find-webkit.sh)/Source/WebCore/Modules/mediasource'
 alias spad="cd /home/ntrrgc/Dropbox/tmp/gst-print-mkv-duration"
 alias bpad="cd /home/ntrrgc/Dropbox/tmp/build-gst-print-mkv-duration-Desktop_*"
-alias gstb="ninja -C ~/Apps/gst-build/build"
-alias gstu="~/Apps/gst-build/gst-uninstalled.py --builddir=$HOME/Apps/gst-build/build --srcdir=$HOME/Apps/gst-build"
+alias gstb="ninja -C ~/Apps/gstreamer/build"
+alias gstu="~/Apps/gstreamer/gst-env.py"
 alias backup="~/Dropbox/backup-pc.sh"
 
 if [ -f "$HOME/.bashrc_local" ]; then
