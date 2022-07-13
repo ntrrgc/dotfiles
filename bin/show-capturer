@@ -8,6 +8,9 @@ rotate_options=()
 flip_options=(! videoflip video-direction=horiz ! videoflip video-direction=horiz) # Do useless double flipping to avoid errors in videocrop https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/issues/640
 audio_options=(pulsesrc ! queue ! autoaudiosink)
 overlay_options=()
+frame_width=1920
+frame_height=1080
+frame_rate=60/1
 
 for arg in "$@"; do
     case "$arg" in
@@ -43,7 +46,24 @@ for arg in "$@"; do
             shift
             shift
             ;;
+        -s|--resolution)
+            resolution_expr="$2"
+            frame_width="${resolution_expr%x*}"
+            frame_height="${resolution_expr#*x}"
+            shift
+            shift
+            ;;
+        -r|--framerate|--frame-rate)
+            framerate_expr="$2"
+            # GStreamer expects a fraction. Convert integer numbers into fractions:
+            if [ $(expr index "$framerate_expr" '/') -eq 0 ]; then
+                framerate_expr="$framerate_expr/1"
+            fi
+            frame_rate="$framerate_expr"
+            shift
+            shift
+            ;;
     esac
 done
 
-exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width=1920,height=1080,framerate=60/1 ! queue "${crop_options[@]}" "${overlay_options[@]}" "${rotate_options[@]}" "${flip_options[@]}" ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"
+exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width="$frame_width",height="$frame_height",framerate="$frame_rate" ! queue "${crop_options[@]}" "${overlay_options[@]}" "${rotate_options[@]}" "${flip_options[@]}" ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"
