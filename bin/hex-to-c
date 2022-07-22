@@ -1,0 +1,13 @@
+#!/usr/bin/python3
+import binascii
+
+from argparse import ArgumentParser
+
+parser = ArgumentParser(description="Takes a hex string and turns it into a C array")
+
+parser.add_argument("hex_string", type=str)
+
+args = parser.parse_args()
+
+parsed_bytes = binascii.unhexlify(args.hex_string)
+print("{ " + ", ".join(f"0x{x:x}" for x in parsed_bytes) + " }")
