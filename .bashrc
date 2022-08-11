@@ -523,3 +523,4 @@ stty stop undef
 # Undefine variables set by Debian bashrc (above)... currently they are unused,
 # but they should be read in order to know if colors should be omitted in PS1
 unset color_prompt force_color_prompt
+. "$HOME/.cargo/env"
