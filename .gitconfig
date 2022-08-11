@@ -32,4 +32,13 @@
 [includeIf "gitdir:~/Apps/gst-build/"]
 	path = ~/dotfiles/.gitconfig-igalia
 
+[sendemail]
+  confirm = auto
+  smtpServer = smtp.gmail.com
+  smtpServerPort = 587
+  smtpEncryption = tls
+  smtpUser = ntrrgc@gmail.com
+[include]
+  path = ~/.gitconfig_local
+
 # vi: set noexpandtab:
