@@ -212,6 +212,7 @@ fi
 alias ll='ls -lh'
 alias pgr='ps aux | grep'
 alias sys='sudo systemctl'
+alias ipy='ipython3'
 alias clone='git clone'
 alias log='git log'
 alias gs='git status'
