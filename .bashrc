@@ -4,22 +4,8 @@
 
 DOTFILES_DIR=$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd )
 
-pathmunge () {
-    case ":${PATH}:" in
-        *:"$1":*)
-            ;;
-        *)
-            if [ "$2" = "after" ] ; then
-                PATH=$PATH:$1
-            else
-                PATH=$1:$PATH
-            fi
-    esac
-}
-
 # Ideally this should be in ~/.profile, but this will make sure they will work in the shell at least.
-pathmunge "$DOTFILES_DIR/bin-override"
-pathmunge "$DOTFILES_DIR/bin" after
+. "$DOTFILES_DIR/exported-paths.sh"
 
 # If not running interactively, don't do anything more
 [ -z "$PS1" ] && return
@@ -290,9 +276,6 @@ function mangrep() {
     return 1
   fi
   LESS="${LESS:-} -+I" man -P 'less -p "^       '"$2"'\>"' $1
-}
-function topath() {
-  export PATH="$1:$PATH"
 }
 function implode { # array to string, joined with a given delimiter
   local IFS="$1"; shift; echo "$*"; 

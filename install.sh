@@ -35,4 +35,10 @@ if [ ! -L "$HOME/.vim/spell" ]; then
   ln -s "$HOME/Dropbox/vim-spell" "$HOME/.vim/spell"
 fi
 
+if [[ ! -f ~/.bash_profile ]] || ! grep -q exported-paths.sh ~/.bash_profile; then
+  echo >> ~/.bash_profile
+  echo '. "'"$DIR"'/exported-paths.sh"' >> ~/.bash_profile
+  echo "~/.bash_profile has been updated. A session restart is needed for PATH changes to take effect."
+fi
+
 vim +PluginInstall +qall
