@@ -92,12 +92,18 @@ function is_writable() {
 }
 
 function vim() {
-  # In Fedora, use X11-enabled Vim when possible, so that system clipboard is accessible
-  vim_executable=$(which vimx >/dev/null 2>&1 && echo "vimx" || echo "vim")
+  # In Fedora, use X11-enabled Vim when possible (vimx), so that system clipboard is accessible.
+  # Also, unset PYTHONHOME and PYTHONPATH unless told otherwise. Often third-party Python environments
+  # mess up with installed Vim plugins.
+  local env_prefix=""
+  if [[ -z "${VIM_ALLOW_PYTHON_ENV:-}" ]]; then
+    env_prefix="env --unset=PYTHONHOME --unset=PYTHONPATH"
+  fi
+  local vim_executable=($env_prefix "$(which vimx >/dev/null 2>&1 && echo "vimx" || echo "vim")")
   if [[ $# -eq 1 ]] && ! is_writable "$1"; then
-    sudo "$vim_executable" "$@"
+    sudo "${vim_executable[@]}" "$@"
   else
-    command "$vim_executable" "$@"
+    command "${vim_executable[@]}" "$@"
   fi
 }
 
