@@ -27,3 +27,4 @@ Tools/buildstream/repo
 po
 outgoing
 .vscode
+tags
