@@ -87,7 +87,7 @@ register_path PATH "$HOME/webkit-scripts"
 register_path PATH "/webkit/Tools/Scripts"
 register_path PATH "$HOME/Apps/Bento4-SDK-1-5-1-621.x86_64-unknown-linux/bin"
 
-register_path PATH "$HOME/Apps/nrf-command-line-tools-10.18.0_linux-amd64/nrf-command-line-tools/bin/"
+register_path PATH "$HOME/Apps/nrf-command-line-tools-10.17.3_linux-amd64/nrf-command-line-tools/bin"
 register_path PATH "$HOME/Apps/JLink_Linux_V766a_x86_64"
 register_path LD_LIBRARY_PATH "$HOME/Apps/jlink-dlls"
 
