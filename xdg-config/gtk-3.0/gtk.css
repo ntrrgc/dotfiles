@@ -1,0 +1,10 @@
+/* Style for the Zim desktop wiki.
+ * Nicely documented in: https://zim-wiki.org/manual/Help/Config_Files.html */
+
+#zim-pageview text {
+    background-color: #f9f6f2;  /* changes the background color of the Zim's page editor */
+}
+
+#zim-pageview text {
+    color: #130324; /* foreground text color */
+}

@@ -31,6 +31,9 @@ ln -r -s "$RELADIR/sxhkdrc" "$HOME/.config/sxhkd/sxhkdrc"
 mkdir -p "$HOME/.config/fish/"
 ln -r -s "$RELADIR/fish/config.fish" "$HOME/.config/fish/config.fish"
 
+mkdir -p "$HOME/.config/gtk-3.0/"
+ln -r -s "$RELADIR/xdg-config/gtk-3.0/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
+
 if [ ! -L "$HOME/.vim/spell" ]; then
   ln -s "$HOME/Dropbox/vim-spell" "$HOME/.vim/spell"
 fi
