@@ -1,0 +1,18 @@
+#!/bin/bash
+set -eu
+
+if [[ "$#" -ge 1 && ( "$1" == "-h" || "$1" == "--help" ) ]]; then
+    echo "Simple shell to a typical 3D printer, with readline support."
+    echo
+    echo "Usage: gcode-shell [serial-device]"
+    exit
+fi
+
+DEVICE="${1:-/dev/ttyUSB0}"
+
+# This inputrc file is needed to tell rlwrap to let C-a sequences pass directly
+# to picocom, so that we can e.g. use C-a C-x to quit.
+export INPUTRC="$(realpath "$(dirname "$0")/../picocom-rlwrap-inputrc")"
+
+exec rlwrap --always-readline --no-children \
+    picocom -b 115200 --echo --imap lfcrlf "$DEVICE"
