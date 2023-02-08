@@ -8,11 +8,14 @@ parser = ArgumentParser(description=
 
 parser.add_argument("port", type=int, nargs='?', default=8000)
 parser.add_argument("root_path", type=str, nargs='?', default='.')
+parser.add_argument("-H", "--host", type=str, default="0.0.0.0",
+    help="Host to listen on. Use [::] to listen for all addresses in IPv6 instead of IPv4")
 
 conf_template = """
 server.modules += ( "mod_accesslog" )
 
 server.document-root = "{root_path}"
+server.bind = "{host}"
 server.port = {port}
 
 mimetype.assign = (
@@ -43,7 +46,8 @@ if __name__ == "__main__":
 
     conf_content = conf_template.format(
         root_path=os.path.abspath(args.root_path),  # can't escape (AFAIK)
-        port=args.port
+        port=args.port,
+        host=args.host,
     )
 
     conf_path = '/tmp/quick-server-lighttpd.conf'
