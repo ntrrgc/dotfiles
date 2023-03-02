@@ -34,6 +34,9 @@ ln -r -s "$RELADIR/fish/config.fish" "$HOME/.config/fish/config.fish"
 mkdir -p "$HOME/.config/gtk-3.0/"
 ln -r -s "$RELADIR/xdg-config/gtk-3.0/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
 
+mkdir -p ~/.config/mc
+ln -r -s "$RELADIR/mc.keymap" "$HOME/.config/mc/mc.keymap"
+
 if [ ! -L "$HOME/.vim/spell" ]; then
   ln -s "$HOME/Dropbox/vim-spell" "$HOME/.vim/spell"
 fi
