@@ -6,6 +6,8 @@ set adjust-open best-fit
 set scroll-hstep 300
 set scroll-step 300
 set zoom-step 50
+set guioptions vh
+set zoom-center true
 
 set selection-clipboard clipboard
 
