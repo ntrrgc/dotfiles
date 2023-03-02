@@ -2,5 +2,5 @@
 set -eu
 export GST_DEBUG_DUMP_DOT_DIR=/home/ntrrgc/Dropbox/pipeline-dump
 mkdir -p "$GST_DEBUG_DUMP_DOT_DIR"
-rm -f "$GST_DEBUG_DUMP_DOT_DIR/*.dot"
+rm -f "$GST_DEBUG_DUMP_DOT_DIR/"*.dot
 exec "$@"
