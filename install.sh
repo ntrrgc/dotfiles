@@ -37,6 +37,9 @@ ln -r -s "$RELADIR/xdg-config/gtk-3.0/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
 mkdir -p ~/.config/mc
 ln -r -s "$RELADIR/mc.keymap" "$HOME/.config/mc/mc.keymap"
 
+mkdir -p ~/.config/zathura
+ln -r -s "$RELADIR/zathurarc" "$HOME/.config/zathura/zathurarc"
+
 if [ ! -L "$HOME/.vim/spell" ]; then
   ln -s "$HOME/Dropbox/vim-spell" "$HOME/.vim/spell"
 fi

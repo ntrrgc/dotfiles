@@ -6,4 +6,4 @@ set -eu
 input="$1"
 file="$(mktemp --suffix=".from-dot.pdf")"
 dot -Tpdf "$input" > "$file"
-okular "$file"
+zathura "$file"

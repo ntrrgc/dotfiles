@@ -1,0 +1,15 @@
+# zathurarc
+
+set window-width 4500
+set window-height 3000
+set adjust-open best-fit
+set scroll-hstep 300
+set scroll-step 300
+set zoom-step 50
+
+set selection-clipboard clipboard
+
+map 0 zoom 0
+map [fullscreen] 0 zoom 0
+map <C-0> zoom 0
+map z adjust_window best-fit
