@@ -1,0 +1,35 @@
+#!/usr/bin/python3
+from gst_log_parsing import GstLogEntry
+import sys
+
+indent_level_per_thread = {}
+
+def get_indent_level(thread):
+    indent_level_per_thread.setdefault(thread, 0)
+    return indent_level_per_thread[thread]
+
+def inc_indent_level(thread):
+    indent_level_per_thread[thread] = get_indent_level(thread) + 1
+
+def dec_indent_level(thread):
+    indent_level_per_thread[thread] = get_indent_level(thread) - 1
+    if indent_level_per_thread[thread] < 0:
+        indent_level_per_thread[thread] = 0
+
+try:
+    for line in sys.stdin:
+        entry = GstLogEntry.parse(line)
+        if not entry:
+            sys.stdout.write(line)
+            continue
+
+        if "_post:" in entry.function_context:
+            dec_indent_level(entry.thread_str)
+        modified_line = entry.original_line_with_incision(" → " * get_indent_level(entry.thread_str))
+        sys.stdout.write(modified_line)
+        if "_pre:" in entry.function_context:
+            inc_indent_level(entry.thread_str)
+except BrokenPipeError:
+    pass
+except KeyboardInterrupt:
+    pass

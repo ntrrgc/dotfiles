@@ -1,0 +1,92 @@
+#!/usr/bin/python3
+from itertools import chain
+from typing import Tuple
+
+from gst_log_parsing import GstLogEntry
+import sys
+import hashlib
+import struct
+
+def xterm_block(block_start: int) -> list[int]:
+    def xterm_row(row_start: int) -> list[int]:
+        return list(range(row_start, row_start + 6))
+    row_headers = [block_start + n * 36 for n in range(6)]
+    return list(chain(*(
+        xterm_row(row_start)
+        for row_start in row_headers
+    )))
+
+def xterm_blocks(block_headers: list[int]) ->list[int]:
+    return list(chain(*(
+        xterm_block(n)
+        for n in block_headers
+    )))
+
+# https://robotmoon.com/256-colors/
+suitable_colors_list = xterm_blocks([16, 22])
+assert(len(suitable_colors_list) == len(set(suitable_colors_list))) # no duplicates
+already_chosen_colors = set()
+color_code_per_thread = {}
+
+def hash_bytes(data: bytes):
+    # I could use Python's built-in hash(), but that could change between versions.
+    return struct.unpack("<L", hashlib.md5(data).digest()[:4])[0]
+
+def color_for_hash(hash: int):
+    return suitable_colors_list[hash % len(suitable_colors_list)]
+
+def choose_new_thread_color(thread: str):
+    has_exhausted_colors = len(already_chosen_colors) >= len(suitable_colors_list)
+
+    a_hash = hash_bytes(thread.encode("UTF-8"))
+    while True:
+        thread_color = color_for_hash(a_hash)
+        if thread_color not in already_chosen_colors:
+            already_chosen_colors.add(thread_color)
+            color_code_per_thread[thread] = thread_color
+            return thread_color
+        # Predictable outputs are nice, but not thinking two threads are the same because they landed in the same color
+        # is more important. Therefore, if we have a collision, we re-hash until we don't.
+        # This at least maintains colors constant given the same input.
+        a_hash = hash_bytes(a_hash)
+
+def get_or_create_color_for_thread(thread):
+    if thread not in color_code_per_thread:
+        choose_new_thread_color(thread)
+    return color_code_per_thread[thread]
+
+def split_trailing_newlines(text: str) -> Tuple[str, str]:
+    i = len(text)
+    while i > 0:
+        i -= 1
+        if text[i] != "\n":
+            return text[:i+1], text[i+1:]
+    # The entire string is newlines
+    return "", text
+
+assert split_trailing_newlines("abc\n") == ("abc", "\n")
+assert split_trailing_newlines("abc\n\n") == ("abc", "\n\n")
+assert split_trailing_newlines("abc") == ("abc", "")
+assert split_trailing_newlines("\n\n") == ("", "\n\n")
+assert split_trailing_newlines("\n") == ("", "\n")
+assert split_trailing_newlines("") == ("", "")
+
+try:
+    for line in sys.stdin:
+        entry = GstLogEntry.parse(line)
+        if not entry:
+            sys.stdout.write(line)
+            continue
+
+        text, newlines = split_trailing_newlines(entry.original_line)
+        color_code = get_or_create_color_for_thread(entry.thread_str)
+        color_start = f"\x1b[48;5;{color_code}m"
+        color_end = "\x1b[K\x1b[00m" # clear to end of line (to fill with background), reset attributes
+        overrides_removed = text.replace("\x1b[00m", "\x1b[00m" + color_start)\
+            .replace("\x1b[00;", "\x1b[00m" + color_start + "\x1b[")
+        modified_line = color_start + overrides_removed + color_end + newlines
+        sys.stdout.write(modified_line)
+except BrokenPipeError:
+    pass
+except KeyboardInterrupt:
+    pass
