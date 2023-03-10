@@ -512,6 +512,13 @@ stty stop undef
 # Undefine variables set by Debian bashrc (above)... currently they are unused,
 # but they should be read in order to know if colors should be omitted in PS1
 unset color_prompt force_color_prompt
-if [ -f "~/.cargo/env" ]; then
+
+if [ -f ~/.cargo/env ]; then
   . "$HOME/.cargo/env"
+fi
+if [ -d ~/Apps/pyenv ]; then
+  export PYENV_ROOT="$HOME/Apps/pyenv"
+  command -v pyenv >/dev/null || register_path PATH "$PYENV_ROOT/bin"
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
 fi
