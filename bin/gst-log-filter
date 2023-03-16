@@ -1,0 +1,158 @@
+#!/usr/bin/python3
+import io
+import re
+import sys
+from argparse import Namespace, ArgumentParser
+from dataclasses import dataclass
+from typing import List, Optional, Callable, Any, TypeVar, Set
+
+from gst_log_parsing import GstLogEntry, LogProcessingApp, GstLogLevel
+
+@dataclass
+class CategoryFilter:
+    category: str
+    level: GstLogLevel
+
+    def matches(self, entry: GstLogEntry):
+        return (self.category == "*" or entry.category == self.category) and entry.log_level <= self.level
+
+class InvalidCategoryExprError(Exception):
+    def __init__(self, category_expr: str):
+        super().__init__(f"Couldn't parse category expression within category filter: '{category_expr}'")
+
+
+def parse_log_level(expr: str) -> Optional[GstLogLevel]:
+    if expr.isnumeric():
+        return GstLogLevel(int(expr))
+    else:
+        return GstLogLevel[expr]
+
+def parse_gst_debug(expr: str) -> List[CategoryFilter]:
+    collected_filters = []
+    for category_expression in expr.split(","):
+        if ":" in category_expression:
+            # Expression is category:log-level
+            category, level_str = category_expression.split(":", 1)
+        elif category_expression.isnumeric() or category_expression in {c.name for c in GstLogLevel}:
+            # Expression is log-level only
+            category = "*"
+            level_str = category_expression
+        else:
+            # Expression is category only
+            category = category_expression
+            level_str = "LOG"
+
+        try:
+            level = parse_log_level(level_str)
+        except (KeyError, ValueError):
+            raise InvalidCategoryExprError(level_str)
+        collected_filters.append(CategoryFilter(category, level))
+
+    return collected_filters
+
+def identity(x: str) -> str:
+    return x
+
+T = TypeVar("T")
+def parse_optional_comma_separated_set(expr: Optional[str], parser: Optional[Callable[[str], T]] = identity) -> Optional[Set[T]]:
+    if expr is None:
+        return
+
+    return set(
+        parser(x.strip())
+        for x in expr.split(",")
+    )
+
+tracer_functions = {
+    'do_bin_add_post',
+    'do_bin_add_pre',
+    'do_bin_remove_post',
+    'do_bin_remove_pre',
+    'do_element_add_pad',
+    'do_element_change_state_post',
+    'do_element_change_state_pre',
+    'do_element_new',
+    'do_element_query_post',
+    'do_element_query_pre',
+    'do_element_remove_pad',
+    'do_pad_link_post',
+    'do_pad_link_pre',
+    'do_pad_query_post',
+    'do_pad_query_pre',
+    'do_pad_unlink_post',
+    'do_pad_unlink_pre',
+    'do_post_message_post',
+    'do_post_message_pre',
+    'do_pull_range_post',
+    'do_pull_range_pre',
+    'do_push_buffer_list_post',
+    'do_push_buffer_list_pre',
+    'do_push_buffer_post',
+    'do_push_buffer_pre',
+    'do_push_event_post',
+    'do_push_event_pre'
+}
+re_any_tracer = re.compile(r"\b(?:" + r"|".join(tracer_functions) + r")\b")
+
+class GstLogFilter(LogProcessingApp):
+    description = """
+    Filters a GStreamer log, hiding entries that do not match the provided conditions.
+    """.strip()
+
+    def configure_argparse(self, argparse: ArgumentParser):
+        super().configure_argparse(argparse)
+
+        argparse.add_argument("-c", "--categories", default="*:MEMDUMP", help=
+            "Select only log entries from the provided categories and log levels. Same syntax as the GST_DEBUG environment variable.")
+        argparse.add_argument("-g", "--grep", type=str, default=r".*", help=
+            "Select only log entries that contain a match for the provided regular expression (Python regexp format).")
+        argparse.add_argument("-w", "--word-regexp", action="store_true", help=
+            "Require matches of the regexp provided for --grep to be at word boundaries.")
+        argparse.add_argument("-p", "--pid", type=str, help=
+            "Select only log entries occuring in the specified process id(s), separated by commas.")
+        argparse.add_argument("-t", "--thread", type=str, help=
+            "Select only log entries occuring in the specified thread id pointers, separated by commas.")
+
+        argparse.add_argument("-v", "--invert-match", "--not", action="store_true", help=
+            "Print entries do NOT meet all the provided filters. Default is to print entries that match all the provided filters.")
+        argparse.add_argument("-C", "--gst-only", action="store_true", help=
+            "Do not print lines that are not GStreamer log entries. Note this is unaffected by --invert-match.")
+        argparse.add_argument("-k", "--keep-tracers", action="store_true", help=
+            "Keep GstTracer hook entries regardless of all the other filters.")
+
+
+    def process_input_file(self, input_file: io.TextIOBase, output_file: io.TextIOBase, args: Namespace):
+        def wrap_pattern(pattern: str):
+            if args.word_regexp:
+                return f"\b{pattern}\b"
+            else:
+                return pattern
+        try:
+            regexp = re.compile(wrap_pattern(args.grep))
+            category_filters = parse_gst_debug(args.categories)
+            threads = parse_optional_comma_separated_set(args.thread)
+            pids = parse_optional_comma_separated_set(args.pid, parser=int)
+        except (InvalidCategoryExprError, SyntaxError, ValueError) as err:
+            print(str(err), file=sys.stderr)
+            raise SystemExit(1)
+
+        for line in input_file:
+            if entry := GstLogEntry.parse(line):
+                if args.keep_tracers and re_any_tracer.search(entry.function_context) is not None:
+                    should_print = True
+                else:
+                    matches_category_filters = any(f.matches(entry) for f in category_filters)
+                    matches_threads = threads is None or entry.thread_str in threads
+                    matches_pids = pids is None or entry.pid
+                    matches_regexp = re.search(regexp, entry.reformat_as_plain_text()) is not None
+                    matches_all_conditions = matches_category_filters and matches_regexp and matches_pids and matches_threads
+                    should_print = matches_all_conditions if not args.invert_match else not matches_all_conditions
+            else:
+                should_print = not args.gst_only
+
+            if should_print:
+                output_file.write(line)
+
+
+if __name__ == '__main__':
+    GstLogFilter().main()

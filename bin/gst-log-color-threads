@@ -1,8 +1,10 @@
 #!/usr/bin/python3
+import io
+from argparse import Namespace
 from itertools import chain
 from typing import Tuple
 
-from gst_log_parsing import GstLogEntry
+from gst_log_parsing import GstLogEntry, LogProcessingApp
 import sys
 import hashlib
 import struct
@@ -71,22 +73,25 @@ assert split_trailing_newlines("\n\n") == ("", "\n\n")
 assert split_trailing_newlines("\n") == ("", "\n")
 assert split_trailing_newlines("") == ("", "")
 
-try:
-    for line in sys.stdin:
-        entry = GstLogEntry.parse(line)
-        if not entry:
-            sys.stdout.write(line)
-            continue
 
-        text, newlines = split_trailing_newlines(entry.original_line)
-        color_code = get_or_create_color_for_thread(entry.thread_str)
-        color_start = f"\x1b[48;5;{color_code}m"
-        color_end = "\x1b[K\x1b[00m" # clear to end of line (to fill with background), reset attributes
-        overrides_removed = text.replace("\x1b[00m", "\x1b[00m" + color_start)\
-            .replace("\x1b[00;", "\x1b[00m" + color_start + "\x1b[")
-        modified_line = color_start + overrides_removed + color_end + newlines
-        sys.stdout.write(modified_line)
-except BrokenPipeError:
-    pass
-except KeyboardInterrupt:
-    pass
+class GstLogColorThreads(LogProcessingApp):
+    description = "Re-colors a GStreamer log using a different color for each thread"
+
+    def process_input_file(self, input_file: io.TextIOBase, output_file: io.TextIOBase, args: Namespace):
+        for line in input_file:
+            entry = GstLogEntry.parse(line)
+            if not entry:
+                output_file.write(line)
+                continue
+
+            text, newlines = split_trailing_newlines(entry.original_line)
+            color_code = get_or_create_color_for_thread(entry.thread_str)
+            color_start = f"\x1b[48;5;{color_code}m\x1b[38;5;255m"
+            color_end = "\x1b[K\x1b[0m"  # clear to end of line (to fill with background), reset attributes
+            new_content = entry.reformat_as_plain_text()
+            modified_line = color_start + new_content + color_end + newlines
+            output_file.write(modified_line)
+
+
+if __name__ == '__main__':
+    GstLogColorThreads().main()
