@@ -87,7 +87,7 @@ class GstLogColorThreads(LogProcessingApp):
             text, newlines = split_trailing_newlines(entry.original_line)
             color_code = get_or_create_color_for_thread(entry.thread_str)
             color_start = f"\x1b[48;5;{color_code}m\x1b[38;5;255m"
-            color_end = "\x1b[K\x1b[0m"  # clear to end of line (to fill with background), reset attributes
+            color_end = "\x1b[0m"  # reset attributes
             new_content = entry.reformat_as_plain_text()
             modified_line = color_start + new_content + color_end + newlines
             output_file.write(modified_line)

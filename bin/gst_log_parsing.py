@@ -132,8 +132,6 @@ def rich_text_to_gst_log_text(text: Text):
     with dummy_console.capture() as capture:
         dummy_console.print(text, no_wrap=True, emoji=True, overflow="ignore", crop=False, soft_wrap=False)
     text_with_codes = capture.get()
-    # Prepend a '\x1b[K' to any reset codes so that the background colors extend to the right side of the terminal
-    text_with_codes = re.sub(r"(\x1b\[0+m)+\n$", "\x1b[K\x1b[0m\n", text_with_codes)
     return text_with_codes
 
 
