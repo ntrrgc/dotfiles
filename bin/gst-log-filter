@@ -112,13 +112,13 @@ class GstLogFilter(LogProcessingApp):
             "Select only log entries occuring in the specified process id(s), separated by commas.")
         argparse.add_argument("-t", "--thread", type=str, help=
             "Select only log entries occuring in the specified thread id pointers, separated by commas.")
+        argparse.add_argument("-k", "--keep-tracers", action="store_true", help=
+            "Select GstTracer hook entries regardless of the category filter.")
 
         argparse.add_argument("-v", "--invert-match", "--not", action="store_true", help=
             "Print entries do NOT meet all the provided filters. Default is to print entries that match all the provided filters.")
         argparse.add_argument("-C", "--gst-only", action="store_true", help=
             "Do not print lines that are not GStreamer log entries. Note this is unaffected by --invert-match.")
-        argparse.add_argument("-k", "--keep-tracers", action="store_true", help=
-            "Keep GstTracer hook entries regardless of all the other filters.")
 
 
     def process_input_file(self, input_file: io.TextIOBase, output_file: io.TextIOBase, args: Namespace):
@@ -138,15 +138,13 @@ class GstLogFilter(LogProcessingApp):
 
         for line in input_file:
             if entry := GstLogEntry.parse(line):
-                if args.keep_tracers and re_any_tracer.search(entry.function_context) is not None:
-                    should_print = True
-                else:
-                    matches_category_filters = any(f.matches(entry) for f in category_filters)
-                    matches_threads = threads is None or entry.thread_str in threads
-                    matches_pids = pids is None or entry.pid
-                    matches_regexp = re.search(regexp, entry.reformat_as_plain_text()) is not None
-                    matches_all_conditions = matches_category_filters and matches_regexp and matches_pids and matches_threads
-                    should_print = matches_all_conditions if not args.invert_match else not matches_all_conditions
+                matches_category_filters = any(f.matches(entry) for f in category_filters) or \
+                    (args.keep_tracers and re_any_tracer.search(entry.function_context) is not None)
+                matches_threads = threads is None or entry.thread_str in threads
+                matches_pids = pids is None or entry.pid
+                matches_regexp = re.search(regexp, entry.reformat_as_plain_text()) is not None
+                matches_all_conditions = matches_category_filters and matches_regexp and matches_pids and matches_threads
+                should_print = matches_all_conditions if not args.invert_match else not matches_all_conditions
             else:
                 should_print = not args.gst_only
 
