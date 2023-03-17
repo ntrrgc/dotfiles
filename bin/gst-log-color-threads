@@ -30,12 +30,13 @@ assert(len(suitable_colors_list) == len(set(suitable_colors_list))) # no duplica
 already_chosen_colors = set()
 color_code_per_thread = {}
 
-def hash_bytes(data: bytes):
+def hash_bytes(data: bytes) -> bytes:
     # I could use Python's built-in hash(), but that could change between versions.
-    return struct.unpack("<L", hashlib.md5(data).digest()[:4])[0]
+    return hashlib.md5(data).digest()
 
-def color_for_hash(hash: int):
-    return suitable_colors_list[hash % len(suitable_colors_list)]
+def color_for_hash(a_hash: bytes) -> bytes:
+    hash_number = struct.unpack("<L", a_hash[:4])[0]
+    return suitable_colors_list[hash_number % len(suitable_colors_list)]
 
 def choose_new_thread_color(thread: str):
     has_exhausted_colors = len(already_chosen_colors) >= len(suitable_colors_list)
