@@ -62,6 +62,7 @@ tracer_functions_styles = {
 }
 
 pad_style = Style(bgcolor=Color.from_ansi(229), color=Color.from_ansi(234))
+pad_unlinked_style = Style(bgcolor=Color.from_ansi(203), color=Color.from_ansi(229), italic=True)
 
 event_color_codes = {
     # subprojects/gstreamer/gst/gstevent.c: event_quarks[] = ...
@@ -119,6 +120,8 @@ def highlight_do_push_event(text: Text):
 def highlight_do_pad_link(text: Text):
     rich_text_highlight_regex(text, ", src=(<[^>]+>), sink=(<[^>]+>)", [pad_style, pad_style])
 
+def highlight_do_pad_unlink(text: Text):
+    rich_text_highlight_regex(text, ", src=(<[^>]+>), sink=(<[^>]+>)", [pad_unlinked_style, pad_unlinked_style])
 
 def hook_general_name(function_name: str) -> str:
     return re.sub("_(pre|post)$", "", function_name)
