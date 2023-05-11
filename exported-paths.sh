@@ -89,7 +89,7 @@ register_path PATH "$HOME/Apps/Bento4-SDK-1-5-1-621.x86_64-unknown-linux/bin"
 
 register_path PATH "$HOME/Apps/nrf-command-line-tools-10.17.3_linux-amd64/nrf-command-line-tools/bin"
 register_path PATH "$HOME/Apps/JLink_Linux_V766a_x86_64"
-register_path PATH "$HOME/.platformio/penv/bin"
+register_path PATH "$HOME/.platformio/penv/bin" after
 register_path LD_LIBRARY_PATH "$HOME/Apps/jlink-dlls"
 
 register_path PATH "$HOME/.local/bin"
