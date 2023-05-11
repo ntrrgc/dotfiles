@@ -1,0 +1,99 @@
+#!/usr/bin/python
+import os
+import shutil
+import sys
+from dataclasses import dataclass
+from typing import Optional
+
+usage = """
+Usage: run-with-environ [-h] (-0|-n) environ-file command [args...]
+
+Run a provided command with a given set of environment variables provided in a file, either null-delimited (-0)
+or newline-delimited (-n), usually /proc/<pid>/environ.
+
+positional arguments:
+  environ-file          Path to a file containing the set of environment variables to use for running the command.
+  command               Command to run. It will be interpreted with the PATH defined inside environ-file.
+  args...               Any arguments that will be passed to the command that will be launched.
+
+options:
+  -h, --help               Show this help and exit.
+  -0, --null-delimiter     The environment file is NUL-delimited.
+  -n, --newline-delimiter  The environment file is newline-delimited.
+
+It is mandatory to use either -0 or -n.
+""".strip()
+
+@dataclass
+class Arguments:
+    environ_file: str
+    delimiter: bytes
+    command: str
+    command_args: list[str]
+
+def parse_args(args: list[str] = sys.argv[1:]):
+    # Argparse doesn't really work for wrapper commands, sadly :(
+    # See the warning in https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.parse_known_args
+    environ_file: Optional[str] = None
+    delimiter: Optional[bytes] = None
+
+    for i, arg in enumerate(args):
+        if arg in {"-h", "--help"}:
+            print(usage)
+            raise SystemExit(1)
+        elif arg in {"-0", "--null-delimiter", "--nul-delimiter"}:
+            if delimiter is not None:
+                print("The options -0 and -n conflict with each other")
+                raise SystemExit(1)
+            delimiter = b"\0"
+        elif arg in {"-n", "--newline-delimiter"}:
+            if delimiter is not None:
+                print("The options -0 and -n conflict with each other")
+                raise SystemExit(1)
+            delimiter = b"\n"
+        elif environ_file is None:
+            environ_file = arg
+        else:
+            command = arg
+            command_args = args[i+1:]
+            break
+    else:
+        # Print the usage if the user didn't provide enough arguments.
+        print(usage)
+        raise SystemExit(1)
+
+    return Arguments(
+        environ_file=environ_file,
+        delimiter=delimiter,
+        command=command,
+        command_args=command_args,
+    )
+
+
+def main():
+    args = parse_args()
+    try:
+        with open(args.environ_file, "rb") as f:
+            environ: dict[bytes, bytes] = {}
+            for line_number, line in enumerate(f.read().split(args.delimiter), start=1):
+                if line == b"":
+                    continue
+                elif b"=" not in line:
+                    print(f"{args.environ_file}:{line_number}: Cannot parse environment line: {line}")
+                    raise SystemExit(1)
+                name, value = line.split(b"=", maxsplit=1)
+                environ[name] = value
+    except IOError as err:
+        print(f"{err}")
+        raise SystemExit(1)
+    path_var = environ.get(b"PATH", b"")
+    command_path = shutil.which(args.command, path=path_var)
+    if command_path is None:
+        print(f"Cannot locate executable {args.command} in PATH: {path_var}")
+        raise SystemExit(1)
+
+    os.execve(command_path, [args.command] + args.command_args, environ)
+
+
+if __name__ == '__main__':
+    main()
