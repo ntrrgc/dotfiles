@@ -1,0 +1,4 @@
+#!/bin/bash
+# Split stdin on NULL characters and replace them with newlines.
+# This is useful for examining /proc/<pid>/environ
+exec perl -0x00 -ne 'print "$_\n"'
