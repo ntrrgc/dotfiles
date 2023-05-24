@@ -347,11 +347,11 @@ COLOR_ORANGE="\[\e[38;5;$((196+12))m\]"
 COLOR_CYAN="\[\e[38;5;$((29+124))m\]"
 
 case "${HOSTNAME/.*}" in
-  madoka)
-    COLOR_HOST="\[\e[38;5;213m\]"
+  chuches)
+    COLOR_HOST="\[\e[38;5;210m\]"
     ;;
-  sayaka)
-    COLOR_HOST="\[\e[38;5;75m\]"
+  cati)
+    COLOR_HOST="\[\e[38;5;228m\]"
     ;;
   potato)
     COLOR_HOST="\[\e[38;5;130m\]"
@@ -361,9 +361,6 @@ case "${HOSTNAME/.*}" in
     ;;
   homura)
     COLOR_HOST="\[\e[38;5;249m\]"
-    ;;
-  kyouko)
-    COLOR_HOST="\[\e[38;5;161m\]"
     ;;
   mami)
     COLOR_HOST="\[\e[38;5;184m\]"
