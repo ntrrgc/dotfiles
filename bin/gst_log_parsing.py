@@ -27,7 +27,7 @@ class GstLogLevel(IntEnum):
     TRACE = 7
     MEMDUMP = 9
 
-rp_color_code = r"\x1b\[(?:[^m]+m|K)"
+rp_color_code = r"\x1b\[.*?[mK]"
 rp_any_color_codes = r"(?:" + rp_color_code + ")*"
 rp_any_color_codes_or_whitespace = r"(?:" + rp_color_code + "|\s+)*"
 rp_column_spacer = rp_any_color_codes + r"\s+" + rp_any_color_codes_or_whitespace
