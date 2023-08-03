@@ -91,6 +91,12 @@ register_path PATH "$HOME/Apps/nrf-command-line-tools-10.17.3_linux-amd64/nrf-co
 register_path PATH "$HOME/Apps/JLink_Linux_V766a_x86_64"
 register_path PATH "$HOME/.platformio/penv/bin" after
 register_path LD_LIBRARY_PATH "$HOME/Apps/jlink-dlls"
+register_path PATH "$HOME/Apps/indent-2.2.12/build/bin"
 
 register_path PATH "$HOME/.local/bin"
 register_path PATH "$HOME/Apps/bin"
+
+# Rust setup in a synchronized directory
+export CARGO_HOME="$HOME/Apps/rust/cargo"
+export RUSTUP_HOME="$HOME/Apps/rust/rustup"
+register_path PATH "$HOME/Apps/rust/cargo/bin"
