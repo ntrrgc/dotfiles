@@ -92,6 +92,7 @@ register_path PATH "$HOME/Apps/JLink_Linux_V766a_x86_64"
 register_path PATH "$HOME/.platformio/penv/bin" after
 register_path LD_LIBRARY_PATH "$HOME/Apps/jlink-dlls"
 register_path PATH "$HOME/Apps/indent-2.2.12/build/bin"
+register_path PATH "$HOME/Apps/picotool/build"
 
 register_path PATH "$HOME/.local/bin"
 register_path PATH "$HOME/Apps/bin"
