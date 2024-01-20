@@ -519,3 +519,9 @@ if [ -d ~/Apps/pyenv ]; then
   eval "$(pyenv init -)"
   eval "$(pyenv virtualenv-init -)"
 fi
+
+if [ -d ~/Apps/wkdev-sdk ]; then
+  pushd ~/Apps/wkdev-sdk &>/dev/null
+  source ./register-sdk-on-host.sh
+  popd &>/dev/null
+fi
