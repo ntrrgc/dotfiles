@@ -258,6 +258,50 @@ function go() {
 }
 alias wmon='watchd-monitor'
 alias wgetr='wget -rc --no-parent -nH'
+function check_git_identity() {
+  # git will automatically stop a commit without an identity, but I'd
+  # rather get a more helpful message for it.
+  if ! git config user.email >/dev/null || ! git config user.name >/dev/null; then
+    echo "You forgot to set an identity git config file for this repository!"
+    echo ""
+    echo "To fix it, run: git config include.path ~/.git-identity-<profile>"
+    echo ""
+    echo "Alternatively, use the following shortcut function: grid <profile>"
+    return 1
+  fi
+}
+function grid() {
+  local profiles=($(_grid_profile_list))
+  if [[ "$#" -ne 1 ]]; then
+    echo "Usage: grid <profile>"
+    echo ""
+    echo "Available profiles: $(join_by ", " "${profiles[@]}")"
+    return 1
+  fi
+  local requested_profile="$1"
+  if [[ " ${profiles[*]} " != *" $requested_profile "* ]]; then
+    echo "Profile doesn't exist: $requested_profile"
+    return 1
+  fi
+  git config include.path "$HOME/.git-identity-$requested_profile"
+}
+function _grid_profile_list() {
+  for identity_file in "$HOME/.git-identity-"*; do
+    local identity_name="${identity_file##*/.git-identity-}"
+    if [[ "$identity_name" != *"-annex" ]]; then
+      echo "$identity_name"
+    fi
+  done
+}
+function _grid_complete() {
+  # Don't autocomplete more than one argument
+  if [[ "${#COMP_WORDS[@]}" -gt 2 ]]; then
+    COMPREPLY=()
+    return
+  fi
+  COMPREPLY=($(compgen -W "$(_grid_profile_list)" "${COMP_WORDS[1]}"))
+}
+complete -F _grid_complete grid
 function check_whitespace() {
   if git rev-parse --verify HEAD >/dev/null 2>&1; then
     local against=HEAD
@@ -269,6 +313,7 @@ function check_whitespace() {
 }
 alias amend='check_whitespace && git commit --amend'
 function gc() {
+  check_git_identity || return
   check_whitespace || return
   if [[ "$#" -eq 0 ]]; then
     git commit

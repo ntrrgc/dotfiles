@@ -50,4 +50,13 @@ if [[ ! -f ~/.bash_profile ]] || ! grep -q exported-paths.sh ~/.bash_profile; th
   echo "~/.bash_profile has been updated. A session restart is needed for PATH changes to take effect."
 fi
 
+for identity_file in "$DIR/git-identities/"*.config; do
+  identity_file_name="$(basename "$identity_file")"
+  identity_name="${identity_file_name%.config}"
+  identity_shortcut="$HOME/.git-identity-$identity_name"
+  if [ ! -e "$identity_shortcut" ]; then
+    ln -s "$identity_file" "$identity_shortcut"
+  fi
+done
+
 vim +PluginInstall +qall
