@@ -28,3 +28,4 @@ po
 outgoing
 .vscode
 tags
+.python-version
