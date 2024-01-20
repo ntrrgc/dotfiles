@@ -37,4 +37,6 @@
 [pull]
 	rebase = true
 
+[init]
+	defaultBranch = main
 # vi: set noexpandtab:
