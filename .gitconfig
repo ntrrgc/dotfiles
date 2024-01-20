@@ -34,6 +34,7 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 
-# vi: set noexpandtab:
 [pull]
 	rebase = true
+
+# vi: set noexpandtab:
