@@ -1,0 +1,100 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# pid,ppid,vsz,rss,%mem,pss,stat,tname,time,pcpu,args
+sub fmt_integer_col;
+sub fmt_string_col;
+sub fmt_kibibytes_col;
+sub fmt_percentage_col;
+sub fmt_args_col;
+
+my @cols = (
+    { code => "pid"    ,header => "    PID"  ,fmt => \&fmt_integer_col },
+    { code => "ppid"   ,header => "   PPID"  ,fmt => \&fmt_integer_col },
+    { code => "vsz"    ,header => "   VSZ"   ,fmt => \&fmt_kibibytes_col },
+    { code => "rss"    ,header => "   RSS"   ,fmt => \&fmt_kibibytes_col },
+    { code => "pmem"   ,header => " %MEM"    ,fmt => \&fmt_percentage_col },
+    { code => "uss"    ,header => "   USS"   ,fmt => \&fmt_kibibytes_col },
+    { code => "stat"   ,header => "STAT"    ,fmt => \&fmt_string_col },
+    { code => "tname"  ,header => "TTY    "  ,fmt => \&fmt_string_col },
+    { code => "time"   ,header => "    TIME" ,fmt => \&fmt_integer_col },
+    { code => "pcpu"   ,header => "%CPU"     ,fmt => \&fmt_percentage_col },
+    { code => "args"   ,header => "COMMAND"  ,fmt => \&fmt_args_col },
+);
+
+sub pad_col_left {
+    my ($str, $colwidth) = @_;
+    return sprintf("%-" . $colwidth . "s", $str);
+}
+sub pad_col_right {
+    my ($str, $colwidth) = @_;
+    return sprintf("%" . $colwidth . "s", $str);
+}
+
+sub fmt_integer_col {
+    my ($str, $colwidth) = @_;
+    return pad_col_right($str, $colwidth);
+}
+sub fmt_string_col {
+    my ($str, $colwidth) = @_;
+    return pad_col_left($str, $colwidth);
+}
+sub fmt_args_col {
+    return $_[0];
+}
+sub fmt_percentage_col {
+    my ($str, $colwidth) = @_;
+    return pad_col_right($str . "%", $colwidth);
+}
+sub fmt_kibibytes_col {
+    my ($str, $colwidth) = @_;
+    if ($str < 1024) {
+        $str = $str . "k";
+    } elsif ($str < 1024 * 1024) {
+        $str = sprintf("%.1fM", ($str / 1024));
+    } elsif ($str < 1024 * 1024 * 1024) {
+        $str = sprintf("%.2fG", $str / (1024 * 1024));
+    }
+    return pad_col_right($str, $colwidth);
+}
+
+my $ps_fields = join(",", map({ $$_{code} } @cols));
+my $ps_command = "ps -e -o $ps_fields";
+
+my $filter_expr;
+my $show_help = (@ARGV > 1 || (@ARGV == 1 && ($ARGV[0] eq "-h" || $ARGV[0] eq "--help")));
+if ($show_help) {
+    print "Usage: pgr [regexp]\n\n";
+    print "Runs and formats ps output `$ps_command`, optionally filtering"
+        . "by lines containing a match of the provided Perl-compatible "
+        . "regexp.\n";
+    exit 1;
+} elsif (@ARGV == 1) {
+    $filter_expr = $ARGV[0];
+}
+
+# Launch ps
+open(PS_OUTPUT, "$ps_command|") || die "Couldn't spawn ps";
+
+# Print column headers
+print join(" ", map({ $$_{header} } @cols)) . "\n";
+
+# Parse ps lines
+while (<PS_OUTPUT>) {
+    next if $. == 1;
+    my @values = split(" ", $_, @cols);
+    my $line = "";
+    for (my $col_ix = 0; $col_ix < @cols; $col_ix++) {
+        my $value = $values[$col_ix];
+        my $col = $cols[$col_ix];
+        my $field_end = ($col_ix < $#cols ? " " : "");
+
+        $line .= $$col{fmt}($value, length($$col{header})) . $field_end;
+    }
+    if ($filter_expr && $line =~ $filter_expr) {
+        # Highlight matches
+        $line =~ s/$filter_expr/\033[1m$&\033[0m/g;
+        print $line;
+    }
+}
