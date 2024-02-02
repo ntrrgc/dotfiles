@@ -92,9 +92,12 @@ while (<PS_OUTPUT>) {
 
         $line .= $$col{fmt}($value, length($$col{header})) . $field_end;
     }
-    if ($filter_expr && $line =~ $filter_expr) {
+    my $should_print = !$filter_expr || $line =~ $filter_expr;
+    if ($should_print && $filter_expr) {
         # Highlight matches
         $line =~ s/$filter_expr/\033[1m$&\033[0m/g;
+    }
+    if ($should_print) {
         print $line;
     }
 }
