@@ -202,7 +202,6 @@ elif [ -x /usr/bin/yum ]; then
 fi
 
 alias ll='ls -lh'
-alias pgr='ps aux | grep'
 alias sys='sudo systemctl'
 alias ipy='ipython3'
 alias clone='git clone'
