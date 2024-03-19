@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eu
-export GST_DEBUG_DUMP_DOT_DIR=/home/ntrrgc/Dropbox/pipeline-dump
+export GST_DEBUG_DUMP_DOT_DIR="${GST_DEBUG_DUMP_DOT_DIR:-$HOME/pipeline-dumps}"
 mkdir -p "$GST_DEBUG_DUMP_DOT_DIR"
 rm -f "$GST_DEBUG_DUMP_DOT_DIR/"*.dot
-exec "$@"
+env "$@"
+line="----------------------------------------------------------------"
+msg="Use the dot-open command to show a dump. Press ^D when done."
+bash -c "cd ${GST_DEBUG_DUMP_DOT_DIR@Q}; echo ${line@Q}; ls -1; echo ${line@Q}; echo ${msg@Q}; ${SHELL@Q}"
