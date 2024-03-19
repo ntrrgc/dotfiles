@@ -541,6 +541,22 @@ alias gstb="ninja -C ~/Apps/gstreamer/build"
 alias gstu="~/Apps/gstreamer/gst-env.py"
 alias backup="~/Dropbox/backup-pc.sh"
 
+function mam() {
+  if ([[ $# -eq 1 ]] && [[ "$1" == "--help" ]]) || [[ $# -gt 1 ]]; then
+    echo "Usage: mam [env]"
+    echo "Sources the micromamba shell hook (will shadow other Python environments like pyenv) and activates the environment with name [env]."
+    echo "If [env] is not provided, the root environment (base) is activated."
+    return
+  fi
+  env_name="base"
+  if [[ $# -gt 0 ]]; then
+    env_name="$1"
+  fi
+  export MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-$HOME/Apps/mamba-root-prefix}"
+  eval "$(micromamba shell hook --shell bash)"
+  micromamba activate "$env_name"
+}
+
 if [ -f "$HOME/.bashrc_local" ]; then
   . "$HOME/.bashrc_local"
 fi
