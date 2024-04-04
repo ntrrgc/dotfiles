@@ -2,8 +2,8 @@ pythonx << EOF
 import vim
 import os
 
-header_extensions = [".h", ".hpp"]
-source_extensions = [".c", ".cpp", ".m", ".mm"]
+header_extensions = [".h", ".hpp", ".hxx"]
+source_extensions = [".c", ".cpp", ".m", ".mm", ".cxx"]
 
 def switch_between_header_and_source():
     path = vim.current.buffer.name
