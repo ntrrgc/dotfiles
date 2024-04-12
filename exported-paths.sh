@@ -98,6 +98,7 @@ register_path PATH "$HOME/.local/bin"
 register_path PATH "$HOME/Apps/bin"
 
 # Rust setup in a synchronized directory
+export PICO_SDK_PATH="$HOME/Apps/pico-sdk"
 export CARGO_HOME="$HOME/Apps/rust/cargo"
 export RUSTUP_HOME="$HOME/Apps/rust/rustup"
 register_path PATH "$HOME/Apps/rust/cargo/bin"
