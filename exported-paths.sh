@@ -95,6 +95,7 @@ register_path PATH "$HOME/Apps/indent-2.2.12/build/bin"
 register_path PATH "$HOME/Apps/picotool/build"
 
 register_path PATH "$HOME/.local/bin"
+register_path PATH "$HOME/bin"
 register_path PATH "$HOME/Apps/bin"
 
 # Rust setup in a synchronized directory
