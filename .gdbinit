@@ -20,6 +20,6 @@ try:
 except:
     print("Couldn't load the GStreamer GDB support library.")
 
-sys.path.insert(0, "/webkit/Tools/gdb")
+sys.path.insert(0, os.path.expanduser("~/Apps/webkit/Tools/gdb"))
 import webkit
 end
