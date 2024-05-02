@@ -500,6 +500,9 @@ function __prompt_command() {
 
     __emit_desktop_notification "$notif_title" "$notif_body"
     __set_terminal_title "$USER@${HOSTNAME%%.*}:$pwd"
+    if [ "$TERM" == "xterm-kitty" ]; then
+      builtin printf "\e]7;kitty-shell-cwd://%s%s\a" "$HOSTNAME" "$PWD"
+    fi
   fi
 
   if $PS_FIRST_TIME; then
