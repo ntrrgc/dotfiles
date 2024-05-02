@@ -494,9 +494,12 @@ function __prompt_command() {
     local command="${command//;/ }"
     local pwd='~'
     [ "$PWD" != "$HOME" ] && pwd=${PWD/#$HOME\//\~\/}
-    if [ "${_LXSESSION_PID:-}" == "" ]; then
-      printf "\033]777;notify;${chroot_prefix}Command completed;%s\007\033]0;${chroot_prefix}%s@%s:%s\007" "${command}" "${USER}" "${HOSTNAME%%.*}" "${pwd}"
-    fi
+
+    local notif_title="${chroot_prefix}Command completed"
+    local notif_body="${command}"
+
+    __emit_desktop_notification "$notif_title" "$notif_body"
+    __set_terminal_title "$USER@${HOSTNAME%%.*}:$pwd"
   fi
 
   if $PS_FIRST_TIME; then
@@ -510,6 +513,29 @@ function __prompt_command() {
     # Print always a newline except if it's the first line
     echo
   fi
+}
+
+function __emit_desktop_notification() {
+  # There are several competing protocols for desktop notifications:
+  # https://github.com/gdamore/tcell/issues/499
+  local title=$1
+  local body=$2
+  # Note (because I will forget): \033\\ means ST (String Terminator), which ends an OSC.
+
+  if [ "${TERM}" == "xterm-kitty" ]; then
+    # https://github.com/kovidgoyal/kitty/blob/master/docs/desktop-notifications.rst
+    printf '\033]99;i=1:d=0:p=title:e=1;%s\033\\' "$(echo -n "$title" |base64 -)"
+    printf '\033]99;i=1:d=0:p=body:e=1;%s\033\\' "$(echo -n "$body" |base64 -)"
+    printf '\033]99;i=1:d=1:o=invisible:a=focus;\033\\'
+  else
+    # OSC 777 (e.g. VTE)
+    printf '\033]777;notify;%s;%s\033\\' "$title" "$body"
+  fi
+}
+
+function __set_terminal_title() {
+  local title=$1
+  printf '\033]0;%s\033\\' "$title"
 }
 
 # Update the PS1 variable after each command (and also shows exit codes)
