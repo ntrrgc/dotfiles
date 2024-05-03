@@ -13,3 +13,7 @@ try:
     import matplotlib as plt
 except ModuleNotFoundError:
     pass
+try:
+    import requests
+except ModuleNotFoundError:
+    pass
