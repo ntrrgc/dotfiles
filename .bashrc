@@ -237,7 +237,7 @@ fi
 alias ggrep='git grep --break --heading -p'
 alias plusx='chmod +x'
 alias rg='rg --colors path:style:bold --colors path:fg:green --colors line:style:bold --colors match:bg:yellow --colors match:style:nobold --colors match:fg:black --glob "!**/*.min.*"'
-function go() {
+function go_to() {
   # Run the provided command (which should be ripgrep or a similar command
   # printing file names and line numbers) and open the file in the specified
   # line
