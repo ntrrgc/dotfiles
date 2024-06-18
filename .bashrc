@@ -566,7 +566,7 @@ alias mse='cd $(find-webkit.sh)/Source/WebCore/platform/graphics/gstreamer/mse'
 alias amse='cd $(find-webkit.sh)/Source/WebCore/Modules/mediasource'
 alias spad="cd /home/ntrrgc/Dropbox/tmp/gst-print-mkv-duration"
 alias bpad="cd /home/ntrrgc/Dropbox/tmp/build-gst-print-mkv-duration-Desktop_*"
-alias gstb="ninja -C ~/Apps/gstreamer/build"
+alias gstb="ninja -C ~/Apps/gstreamer/builddir"
 alias gstu="~/Apps/gstreamer/gst-env.py"
 alias backup="~/Dropbox/backup-pc.sh"
 
