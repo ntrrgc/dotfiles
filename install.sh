@@ -27,6 +27,8 @@ mkdir -p "$HOME/.config/bspwm/"
 ln -r -s "$RELADIR/bspwmrc" "$HOME/.config/bspwm/bspwmrc"
 mkdir -p "$HOME/.config/sxhkd/"
 ln -r -s "$RELADIR/sxhkdrc" "$HOME/.config/sxhkd/sxhkdrc"
+mkdir -p "$HOME/.config/kitty/"
+ln -r -s "$RELADIR/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 
 mkdir -p "$HOME/.config/fish/"
 ln -r -s "$RELADIR/fish/config.fish" "$HOME/.config/fish/config.fish"
