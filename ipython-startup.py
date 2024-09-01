@@ -3,6 +3,7 @@ import time, pprint, datetime
 from pathlib import Path, PurePath, PurePosixPath, PureWindowsPath
 from enum import Enum, StrEnum
 import subprocess, shlex
+from math import *
 
 try:
     import numpy as np
