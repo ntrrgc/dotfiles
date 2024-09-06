@@ -6,6 +6,9 @@ set history remove-duplicates 1
 set history filename ~/.gdb_history
 set disassembly-flavor intel
 
+# Hack: Bad and fragile. I really hope there is a better alternative that I just don't know yet.
+set substitute-path /rustc/7cf61ebde7b22796c69757901dd346d0fe70bd97 /home/ntrrgc/Apps/rust/rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib
+
 python
 import sys, os
 
