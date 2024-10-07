@@ -5,6 +5,7 @@ set history size 2048
 set history remove-duplicates 1
 set history filename ~/.gdb_history
 set disassembly-flavor intel
+add-auto-load-safe-path /home/ntrrgc/Apps/gstreamer/*
 
 # Hack: Bad and fragile. I really hope there is a better alternative that I just don't know yet.
 # Update: The official solution is rust-gdb, which is also kind of a hack.
