@@ -9,6 +9,9 @@
 	br = branch
 	undo-commit = reset --soft HEAD^
 	unstage = reset HEAD
+	mr = "!f() { git fetch -fu ${2:-$(git remote |grep ^upstream || echo origin)} merge-requests/$1/head:mr-$1 && git checkout mr-$1; }; f"
+	pr  = "!f() { git fetch -fu ${2:-$(git remote |grep ^upstream || echo origin)} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
+
 [url "git://anongit.kde.org/"]
 	insteadOf = kde:
 [url "ssh://git@git.kde.org/"]
