@@ -1,0 +1,11 @@
+#!/bin/bash
+# Modified from https://drakeor.com/2022/02/16/kvm-gpu-passthrough-tutorial/amp/
+# to sort IOMMU groups numbers numerically instead of as strings.
+set -eu
+shopt -s nullglob
+for g in $(ls -1 /sys/kernel/iommu_groups | sort -n); do
+    echo "IOMMU Group $g:"
+    for d in /sys/kernel/iommu_groups/$g/devices/*; do
+        echo -e "\t$(lspci -nns ${d##*/})"
+    done;
+done;
