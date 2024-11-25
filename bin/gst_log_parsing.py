@@ -29,7 +29,7 @@ class GstLogLevel(IntEnum):
 
 rp_color_code = r"\x1b\[.*?[mK]"
 rp_any_color_codes = r"(?:" + rp_color_code + ")*"
-rp_any_color_codes_or_whitespace = r"(?:" + rp_color_code + "|\s+)*"
+rp_any_color_codes_or_whitespace = r"(?:" + rp_color_code + r"|\s+)*"
 rp_column_spacer = rp_any_color_codes + r"\s+" + rp_any_color_codes_or_whitespace
 
 rp_capture_column_time = r"(\d+:\d\d:\d\d\.\d{9})"
