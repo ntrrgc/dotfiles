@@ -104,3 +104,7 @@ export CARGO_HOME="$HOME/Apps/rust/cargo"
 export RUSTUP_HOME="$HOME/Apps/rust/rustup"
 register_path PATH "$HOME/Apps/rust/cargo/bin"
 export CONDA_ROOT="$HOME/Apps/conda-root"
+
+if [ -f ~/.ghcup/env ]; then
+    . ~/.ghcup/env
+fi
