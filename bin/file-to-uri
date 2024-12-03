@@ -1,0 +1,3 @@
+#!/bin/bash
+# https://unix.stackexchange.com/a/632198/39407
+python -c "import pathlib; print(pathlib.Path(input()).resolve().as_uri())" <<< "$1"
