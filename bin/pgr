@@ -12,6 +12,8 @@ sub fmt_args_col;
 my @cols = (
     { code => "pid"    ,header => "    PID"  ,fmt => \&fmt_integer_col },
     { code => "ppid"   ,header => "   PPID"  ,fmt => \&fmt_integer_col },
+    { code => "user"   ,header => "USER    " ,fmt => \&fmt_string_col },
+    { code => "group"  ,header => "GROUP   " ,fmt => \&fmt_string_col },
     { code => "vsz"    ,header => "   VSZ"   ,fmt => \&fmt_kibibytes_col },
     { code => "rss"    ,header => "   RSS"   ,fmt => \&fmt_kibibytes_col },
     { code => "pmem"   ,header => " %MEM"    ,fmt => \&fmt_percentage_col },
