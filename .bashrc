@@ -80,6 +80,12 @@ alias ipython=ipython3
 alias pip=pip3
 alias bt=build-type
 
+# Convenient less settings for analyzing GStreamer logs:
+# -R raw (allow format codes)
+# -S no line wrapping
+# #20 left and right keys move 20 characters at a time
+alias le='less -SR#20'
+
 function is_writable() {
   if [[ -f "$1" ]]; then
     # If the file already exists, return whether it is writable.
