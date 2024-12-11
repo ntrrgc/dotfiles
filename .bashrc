@@ -608,7 +608,9 @@ unset color_prompt force_color_prompt
 if [ -f ~/.cargo/env ]; then
   . "$HOME/.cargo/env"
 fi
-if [ -d ~/Apps/pyenv ]; then
+
+in_wkdev_sdk=$([ ! -d /wkdev-sdk ]; echo $?)
+if [ $in_wkdev_sdk -eq 0 ] && [ -d ~/Apps/pyenv ]; then
   export PYENV_ROOT="$HOME/Apps/pyenv"
   command -v pyenv >/dev/null || register_path PATH "$PYENV_ROOT/bin"
   eval "$(pyenv init -)"
