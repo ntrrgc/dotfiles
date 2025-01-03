@@ -105,6 +105,16 @@ export RUSTUP_HOME="$HOME/Apps/rust/rustup"
 register_path PATH "$HOME/Apps/rust/cargo/bin"
 export CONDA_ROOT="$HOME/Apps/conda-root"
 
+if [ -f "$HOME/Apps/miniforge3/bin/conda" ]; then
+    # Have conda available but not used by default.
+    # Normally I prefer to stay with pip, but conda is useful for things like
+    # SAGE, Qt, and generally mixes of native and Python code in which you
+    # cannot just ship the entire native code with the Python library as a
+    # Python wheel and expect it to work.
+    eval "$(/home/ntrrgc/Apps/miniforge3/bin/conda shell.bash hook)"
+    conda deactivate
+fi
+
 if [ -f ~/.ghcup/env ]; then
     . ~/.ghcup/env
 fi
