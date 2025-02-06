@@ -42,4 +42,7 @@
 
 [init]
 	defaultBranch = main
+[format]
+	thread = shallow
+
 # vi: set noexpandtab:
