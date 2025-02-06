@@ -223,6 +223,8 @@ class LogProcessingApp(metaclass=ABCMeta):
                 raise SystemExit(1)
         else:
             input_file = sys.stdin
+        # Ignore invalid UTF-8 sequences.
+        input_file.reconfigure(errors="replace") # type: ignore
 
         if args.output_file != "-":
             try:
