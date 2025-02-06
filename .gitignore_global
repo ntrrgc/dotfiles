@@ -29,3 +29,4 @@ outgoing
 .vscode
 tags
 .python-version
+/.cache/clangd
