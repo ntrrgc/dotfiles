@@ -42,6 +42,9 @@ ln -r -s "$RELADIR/mc.keymap" "$HOME/.config/mc/mc.keymap"
 mkdir -p ~/.config/zathura
 ln -r -s "$RELADIR/zathurarc" "$HOME/.config/zathura/zathurarc"
 
+mkdir -p ~/.config/fontconfig
+ln -r -s "$RELADIR/fonts.conf" "$HOME/.config/fontconfig/fonts.conf"
+
 mkdir -p ~/.ipython/profile_default/startup/
 ln -r -s "$RELADIR/ipython-startup.py" "$HOME/.ipython/profile_default/startup/10-dotfiles.py"
 
