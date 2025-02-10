@@ -480,9 +480,9 @@ function __prompt_command() {
   # Save the return code of the program the user just run
   local ret=$?
 
+  # Save history ASAP, but do not load it, so that the arrow keys always give
+  # the latest command of this particular tab.
   history -a
-  history -c
-  history -r
 
   # We may be overriding __vte_prompt_command, which is also set as 
   # PROMPT_COMMAND and is responsible from informing the terminal emulator
