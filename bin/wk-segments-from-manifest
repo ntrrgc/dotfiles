@@ -91,4 +91,11 @@ The word "init" represents the initialization segment.
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        # No exception printing on ^C
+        pass
+    except BrokenPipeError:
+        # No exception printing on pipe input being closed (e.g: head -n10 ... | python)
+        pass
