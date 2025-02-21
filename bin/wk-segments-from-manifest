@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""
+MIT License
+
+Copyright (c) 2025 Alicia Boya García
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
+from __future__ import annotations
+import os
+from pathlib import Path
+from typing import Any, BinaryIO, TextIO, TypedDict, cast
+import argparse
+import json
+import sys
+
+class WebKitManifest(TypedDict):
+    url: str
+    type: str
+    init: WebKitManifestInit
+    duration: float
+    media: list[WebKitManifestMedia]
+class WebKitManifestInit(TypedDict):
+    offset: int
+    size: int
+class WebKitManifestMedia(TypedDict):
+    offset: int
+    size: int
+    timestamp: float
+    duration: float
+
+def emit_range(media_file: BinaryIO, of: BinaryIO, start: int, size: int):
+    media_file.seek(start)
+    buf = media_file.read(size)
+    of.write(buf)
+
+def emit_from_segment_expr(manifest: WebKitManifest, media_file: BinaryIO, of: BinaryIO, expr: str) -> None:
+    if expr == "init":
+        emit_range(media_file, of, manifest["init"]["offset"], manifest["init"]["size"])
+        return
+    media_seg_n = int(expr)
+    media_seg = manifest["media"][media_seg_n]
+    emit_range(media_file, of, media_seg["offset"], media_seg["size"])
+
+
+def main():
+    parser = argparse.ArgumentParser(Path(sys.argv[0]).name, description="""
+Given a WebKit JSON media manifest file, output the provided segments.
+""")
+    parser.add_argument("manifest", type=str,
+        help="Path to the JSON manifest file")
+    parser.add_argument("segments", nargs="+",
+        help="""The segments to output.
+They will be output in the same order they are specified here.
+Media segments are specified with a zero-index integer.
+The word "init" represents the initialization segment.
+""")
+    parser.add_argument("-o", "--output", type=str, default="-",
+        help="Path to write the bytes. Defaults to - (stdout).")
+
+    args = parser.parse_args()
+    with open(args.manifest) as f:
+        manifest: WebKitManifest = json.load(f)
+
+    media_path = Path(args.manifest).parent / manifest["url"].split("/")[-1]
+    media_file = open(media_path, "rb")
+
+    if args.output == "-":
+        of = os.fdopen(1, "wb")
+    else:
+        of = open(args.output, "wb")
+    for expr in args.segments:
+        emit_from_segment_expr(manifest, media_file, of, expr)
+
+
+if __name__ == "__main__":
+    main()
