@@ -24,9 +24,10 @@ SOFTWARE.
 """
 
 from __future__ import annotations
+from io import FileIO, IOBase
 import os
 from pathlib import Path
-from typing import Any, BinaryIO, TextIO, TypedDict, cast
+from typing import Any, TypedDict, cast
 import argparse
 import json
 import sys
@@ -46,12 +47,12 @@ class WebKitManifestMedia(TypedDict):
     timestamp: float
     duration: float
 
-def emit_range(media_file: BinaryIO, of: BinaryIO, start: int, size: int):
+def emit_range(media_file: IOBase, of: IOBase, start: int, size: int):
     media_file.seek(start)
     buf = media_file.read(size)
     of.write(buf)
 
-def emit_from_segment_expr(manifest: WebKitManifest, media_file: BinaryIO, of: BinaryIO, expr: str) -> None:
+def emit_from_segment_expr(manifest: WebKitManifest, media_file: IOBase, of: IOBase, expr: str) -> None:
     if expr == "init":
         emit_range(media_file, of, manifest["init"]["offset"], manifest["init"]["size"])
         return
@@ -82,10 +83,17 @@ The word "init" represents the initialization segment.
     media_path = Path(args.manifest).parent / manifest["url"].split("/")[-1]
     media_file = open(media_path, "rb")
 
+    # Must use unbuffered output, otherwise you get the following error when
+    # stdout is closed early due to Python trying to flush files after
+    # sys.exit():
+    #
+    # > Exception ignored on flushing sys.stdout:
+    # > BrokenPipeError: [Errno 32] Broken pipe
     if args.output == "-":
-        of = os.fdopen(1, "wb")
+        of = sys.stdout.buffer.raw # type: ignore
+        assert isinstance(of, FileIO), type(of)
     else:
-        of = open(args.output, "wb")
+        of = open(args.output, "wb", buffering=0)
     for expr in args.segments:
         emit_from_segment_expr(manifest, media_file, of, expr)
 
