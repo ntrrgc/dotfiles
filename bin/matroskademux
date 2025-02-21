@@ -4,6 +4,7 @@ set -eu
 demuxer="$(basename "$0")"
 source="filesrc"
 prefix=()
+before_demuxer=()
 
 while true; do
     case "$1" in
@@ -15,6 +16,12 @@ while true; do
             shift
             source="pushfilesrc"
             ;;
+        --mse)
+            shift
+            if [ "$demuxer" == "qtdemux" ]; then
+                before_demuxer=( ! 'video/quicktime, variant="mse-bytestream"' )
+            fi
+            ;;
         *)
             break
     esac
@@ -23,4 +30,6 @@ done
 path="$1"
 shift
 
-"${prefix[@]}" gst-launch-1.0 -v "$source" location="$path" ! "$demuxer" "$@" ! identity silent=false ! fakesink
+"${prefix[@]}" gst-launch-1.0 -v "$source" location="$path" \
+    "${before_demuxer[@]}" ! "$demuxer" "$@" \
+    ! identity silent=false ! fakesink
