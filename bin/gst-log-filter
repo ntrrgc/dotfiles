@@ -10,22 +10,28 @@ from gst_log_parsing import GstLogEntry, LogProcessingApp, GstLogLevel
 
 @dataclass
 class CategoryFilter:
-    category: str
+    re_category: re.Pattern
     level: GstLogLevel
 
     def matches(self, entry: GstLogEntry):
-        return (self.category == "*" or entry.category == self.category) and entry.log_level <= self.level
+        return entry.log_level <= self.level and self.re_category.match(entry.category)
 
 class InvalidCategoryExprError(Exception):
     def __init__(self, category_expr: str):
         super().__init__(f"Couldn't parse category expression within category filter: '{category_expr}'")
 
 
-def parse_log_level(expr: str) -> Optional[GstLogLevel]:
+def parse_log_level(expr: str) -> GstLogLevel:
     if expr.isnumeric():
         return GstLogLevel(int(expr))
     else:
         return GstLogLevel[expr]
+
+def category_glob_to_regex(cat_glob: str) -> str:
+    return ".*".join(
+        re.escape(part)
+        for part in cat_glob.split("*")
+    ) + r"\Z"
 
 def parse_gst_debug(expr: str) -> List[CategoryFilter]:
     collected_filters = []
@@ -46,7 +52,8 @@ def parse_gst_debug(expr: str) -> List[CategoryFilter]:
             level = parse_log_level(level_str)
         except (KeyError, ValueError):
             raise InvalidCategoryExprError(level_str)
-        collected_filters.append(CategoryFilter(category, level))
+        re_category = re.compile(category_glob_to_regex(category))
+        collected_filters.append(CategoryFilter(re_category, level))
 
     return collected_filters
 
@@ -54,7 +61,7 @@ def identity(x: str) -> str:
     return x
 
 T = TypeVar("T")
-def parse_optional_comma_separated_set(expr: Optional[str], parser: Optional[Callable[[str], T]] = identity) -> Optional[Set[T]]:
+def parse_optional_comma_separated_set(expr: Optional[str], parser: Callable[[str], T] = identity) -> Optional[Set[T]]:
     if expr is None:
         return
 
