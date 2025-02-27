@@ -66,4 +66,7 @@ for arg in "$@"; do
     esac
 done
 
-exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} ! video/x-raw,width="$frame_width",height="$frame_height",framerate="$frame_rate" ! queue "${crop_options[@]}" "${overlay_options[@]}" "${rotate_options[@]}" "${flip_options[@]}" ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"
+exec gst-launch-1.0 v4l2src device=${1:-${video_device[0]}} \
+    ! video/x-raw,width="$frame_width",height="$frame_height",framerate="$frame_rate" \
+    ! queue "${crop_options[@]}" "${overlay_options[@]}" "${rotate_options[@]}" "${flip_options[@]}" \
+    ! xvimagesink "${videosink_options[@]}" "${audio_options[@]}"
