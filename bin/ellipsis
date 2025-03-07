@@ -27,8 +27,10 @@ def do_ellipsis(pattern, first, last):
   first_remaining = first
   for line in sys.stdin:
     if re_pattern.search(line):
+      # Will print this line, but we're getting closer to starting the ellipsis.
       first_remaining -= 1
     else:
+      # Reset the count of lines before a match.
       first_remaining = first
 
     print(line, end="")
@@ -51,6 +53,7 @@ def do_ellipsis(pattern, first, last):
             # Print previously buffered lines, and then the new non-matching line.
             print_buffered_lines(queue_last, count_omitted_lines)
             print(line, end="")
+            first_remaining = first
             break
       except StopIteration:
         print_buffered_lines(queue_last, count_omitted_lines)
