@@ -622,3 +622,6 @@ if [ -d ~/Apps/wkdev-sdk ]; then
   source ./register-sdk-on-host.sh
   popd &>/dev/null
 fi
+
+# I often use this variable in GST_DEBUG
+all_tracers=$(join_by , {GST_{PADS,BUFFER{,_LIST},EVENT,MESSAGE,ELEMENT_{FACTORY,PADS},STATES},query,bin}:TRACE)
