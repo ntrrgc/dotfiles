@@ -10,6 +10,7 @@ import subprocess, shlex
 from math import *
 from itertools import *
 from functools import *
+from builtins import pow  # supports modular powers and integers, unlike math.pow()
 
 try:
     import numpy as np
