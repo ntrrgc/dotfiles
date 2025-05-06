@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+import sys
+import shlex
+
+args = tuple(sys.argv[1:])
+if args in {tuple(), ("-h", ), ("--help"), ("--usage")}:
+    print("""
+Usage: readable-args ARGS...
+
+Makes long invocations readable by separating arguments into lines.
+
+A simple heuristic is used to keep command options and their values in the same
+line. This is not 100% precise, as precision requires knowing the specific
+syntax of the tool, but is still usually a big improvement.
+
+Example:
+
+$ readable-args gcc -I verylong -I otherverylong file.c
+gcc
+  -I verylong
+  -I otherverylong
+  file.c
+""".strip())
+    raise SystemExit(1)
+
+buckets: list[list[str]] = []
+i = 0
+while i < len(args):
+    is_last = (i == len(args) - 1)
+    if args[i].startswith("-") and not is_last and not args[i + 1].startswith("-"):
+        buckets.append([args[i], args[i + 1]])
+        i += 2
+    else:
+        buckets.append([args[i]])
+        i += 1
+
+for i, bucket in enumerate(buckets):
+    is_last = (i == len(buckets) - 1)
+    prefix = "" if i == 0 else "  "
+    content = " ".join(shlex.quote(arg) for arg in buckets[i])
+    print(f"{prefix}{content}")
