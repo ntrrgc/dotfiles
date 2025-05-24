@@ -30,3 +30,4 @@ outgoing
 tags
 .python-version
 /.cache/clangd
+/compile_commands.json
