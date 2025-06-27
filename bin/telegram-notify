@@ -84,7 +84,7 @@ if [ $# -eq 1 ] && [ "$1" == "link-chat" ]; then
   echo "telegram-notify: Linked chat id $chat_id"
 
 elif [ $# -eq 1 -o $# -eq 2 ] && [ "$1" == "send" ]; then
-  chat_id=$(cat "$chat_id_path" 2>/dev/null) || (echo "telegram-notify: No chat id linked. Please send any message to your bot and run `telegram-notify link-chat` first." >&2; exit 1)
+  chat_id=$(cat "$chat_id_path" 2>/dev/null) || (echo 'telegram-notify: No chat id linked. Please send any message to your bot and run `telegram-notify link-chat` first.' >&2; exit 1)
 
   if [ $# -eq 2 ]; then
     # Message from argument
