@@ -129,8 +129,13 @@ fi
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
+# Debian/Ubuntu:
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
+fi
+# Fedora
+if [ -f /etc/profile.d/bash_completion.sh ] && ! shopt -oq posix; then
+    . /etc/profile.d/bash_completion.sh
 fi
 
 # Needed so that the current directory is preserved across windows and tabs in
