@@ -21,7 +21,7 @@ try:
 except ModuleNotFoundError:
     pass
 try:
-    import matplotlib as plt
+    import matplotlib.pyplot as plt
 except ModuleNotFoundError:
     pass
 try:
