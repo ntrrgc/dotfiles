@@ -30,7 +30,7 @@ function choose() {
   fi
 }
 
-# Disable turboboost (AMD)
+# Disable turboboost
 (echo $(choose 0 1) > /sys/devices/system/cpu/cpufreq/boost) || (echo $(choose 1 0) > /sys/devices/system/cpu/intel_pstate/no_turbo)
 
 # Disable hyper threading
@@ -47,7 +47,7 @@ else
   done
 fi
 
-# Set scaling_governor to ‘performance’
+# Set scaling_governor to 'performance'
 for cpu in $(ls -1 /sys/devices/system/cpu |grep "cpu[0-9]\+$"); do
   # cpu0 is always online
   if [[ "$cpu" == "cpu0" ]] || [[ "$(cat "/sys/devices/system/cpu/$cpu/online")" -eq 1 ]]; then
@@ -57,7 +57,8 @@ for cpu in $(ls -1 /sys/devices/system/cpu |grep "cpu[0-9]\+$"); do
 done
 
 # Isolate a few CPUs for sole use of the program being tested
-# To take advantage of this, run the test program like this: tuna run --cpus=2 'stress -c 4'
+# To take advantage of this, run the test program like this:
+# $ tuna run --cpus="$(cat /tmp/isolated_cpus)" 'stress -c 4'
 isolated_cpus=4-7
 if [[ "$is_undo" == no ]]; then
   tuna isolate --cpus="$isolated_cpus"
