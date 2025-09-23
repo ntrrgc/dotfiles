@@ -394,7 +394,7 @@ fi
 COLOR_RESET="\[\e[m\]"
 COLOR_RESET_NO_PS="\e[m"
 COLOR_GREEN="\[\e[38;5;$((24+88))m\]"
-COLOR_YELLOW="\[\e[38;5;$((196+32))m\]"
+COLOR_YELLOW="\[\e[38;5;$((178))m\]"
 COLOR_BLUE="\[\e[38;5;$((22+52))m\]"
 COLOR_RED="\[\e[38;5;$((196+7))m\]"
 COLOR_RED_NO_PS="\e[38;5;$((196+7))m"
