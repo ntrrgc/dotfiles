@@ -481,7 +481,6 @@ function __pre_command() {
 PS_FIRST_TIME=true
 PS_AT_PROMPT=false
 function __prompt_command() {
-  PS_AT_PROMPT=true
   # Save the return code of the program the user just run
   local ret=$?
 
@@ -527,6 +526,7 @@ function __prompt_command() {
     # Print always a newline except if it's the first line
     echo
   fi
+  PS_AT_PROMPT=true
 }
 
 function __emit_desktop_notification() {
