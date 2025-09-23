@@ -406,7 +406,7 @@ case "${HOSTNAME/.*}" in
     COLOR_HOST="\[\e[38;5;210m\]"
     ;;
   cati)
-    COLOR_HOST="\[\e[38;5;228m\]"
+    COLOR_HOST="\[\e[38;5;178m\]"
     ;;
   potato)
     COLOR_HOST="\[\e[38;5;130m\]"
