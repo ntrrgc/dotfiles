@@ -312,7 +312,7 @@ function _grid_complete() {
   COMPREPLY=($(compgen -W "$(_grid_profile_list)" "${COMP_WORDS[1]}"))
 }
 complete -F _grid_complete grid
-alias amend='check_whitespace && git commit --amend'
+alias amend=git commit --amend
 function gc() {
   check_git_identity || return
   if [[ "$#" -eq 0 ]]; then
