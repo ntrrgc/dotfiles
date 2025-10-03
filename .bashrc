@@ -312,19 +312,9 @@ function _grid_complete() {
   COMPREPLY=($(compgen -W "$(_grid_profile_list)" "${COMP_WORDS[1]}"))
 }
 complete -F _grid_complete grid
-function check_whitespace() {
-  if git rev-parse --verify HEAD >/dev/null 2>&1; then
-    local against=HEAD
-  else
-    # Initial commit: diff against an empty tree object
-    local against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
-  fi
-  git diff-index --check --cached $against --
-}
 alias amend='check_whitespace && git commit --amend'
 function gc() {
   check_git_identity || return
-  check_whitespace || return
   if [[ "$#" -eq 0 ]]; then
     git commit
   else
