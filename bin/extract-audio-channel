@@ -1,0 +1,18 @@
+#!/bin/bash
+# https://trac.ffmpeg.org/wiki/AudioChannelManipulation#Chooseaspecificchannel
+set -eu -o pipefail
+
+if [ $# -ne 4 ]; then
+    echo "Usage: extract-audio-channel LAYOUT CHANNEL INPUT_FILE OUTPUT_FILE"
+    echo "Example: extract-audio-channel 5.1 LFE my_5.1_audio.mp4 lfe.wav"
+    exit 1
+fi
+LAYOUT="$1"
+CHANNEL="$2"
+INPUT_FILE="$3"
+OUTPUT_FILE="$4"
+rm -f "$OUTPUT_FILE"
+"${FFMPEG:-ffmpeg}" -i "$INPUT_FILE" -filter_complex \
+    "[0:a]channelsplit=channel_layout=$LAYOUT:channels=$CHANNEL[extracted]" \
+    -map "[extracted]" \
+    "$OUTPUT_FILE"
