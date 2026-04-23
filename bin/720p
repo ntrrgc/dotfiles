@@ -1,0 +1,2 @@
+#!/bin/bash
+gnome-monitor-config set -LpM eDP-1 -m 1280x720@60.008

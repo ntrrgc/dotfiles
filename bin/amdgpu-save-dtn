@@ -1,0 +1,6 @@
+#!/bin/bash
+file=~/tmp/dtn.log
+echo "=======================" >> "$file"
+date >> "$file"
+echo "=======================" >> "$file"
+sudo cat /sys/kernel/debug/dri/1/amdgpu_dm_dtn_log >> "$file"

@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo bash -c 'echo 2 0xa > /sys/kernel/debug/dri/1/eDP-1/link_settings'
