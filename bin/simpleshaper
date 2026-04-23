@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# Simple Shaper
+#
+# License GPLv2 <https://gnu.org/licenses/gpl-2.0.html>
+#
+# (c) 2026 Alicia Boya García <ntrrgc@gmail.com>
+#
+# This is a replacement for wondershaper that works on current (2026) Linux, even if it the filtering is less fancy.
+
+set -eu -o pipefail
+
+VERSION="0.1"
+
+usage() {
+cat << EOF
+USAGE: $0 [-hcs] [-a <adapter>] [-d <rate>] [-u <rate>]
+
+Limit the bandwidth of an adapter. Intentionally similar interface to wondershaper.
+
+OPTIONS:
+   -h           Show this message
+   -a <adapter> Set the adapter
+   -d <rate>    Set maximum download rate (in Kbps) and/or
+   -u <rate>    Set maximum upload rate (in Kbps)
+   -c           Clear the limits from adapter
+   -s           Show the current status of adapter
+   -v           Show the current version
+
+MODES:
+   simpleshaper -a <adapter> -d <rate> -u <rate>
+   simpleshaper -c -a <adapter>
+   simpleshaper -s -a <adapter>
+
+EXAMPLES:
+   simpleshaper -a eth0 -d 1024 -u 512
+   simpleshaper -a eth0 -u 512
+   simpleshaper -c -a eth0
+
+EOF
+}
+
+DSPEED=""
+USPEED=""
+IFACE=""
+IFB="ifb0"
+MODE=""
+
+while getopts hvd:u:a:cs o; do
+  case "$o" in
+    h) usage
+       exit 1;;
+    v) echo "Version $VERSION"
+       exit 0;;
+    f) CONF="$OPTARG";;
+    d) DSPEED="$OPTARG";;
+    u) USPEED="$OPTARG";;
+    a) IFACE="$OPTARG";;
+    c) MODE="clear";;
+    s) MODE="status";;
+    [?]) usage
+         exit 1;;
+    esac
+done
+
+if [[ -z "$IFACE" ]]; then
+    echo "Please supply the adapter name for the mode."
+    echo
+    usage
+    exit 1
+fi
+
+if [[ "$MODE" == "clear" ]] && ([[ -n "$USPEED" ]] || [[ -n "$DSPEED" ]]); then
+    echo "The clear flag (-c) is mutually exclusive with speed limits (-u and -d)."
+    exit 1
+fi
+
+if [ "$MODE" == "status" ]; then
+    tc -s qdisc ls dev "$IFACE"
+    tc -s class ls dev "$IFACE"
+    exit
+fi
+
+if [ "$MODE" == "clear" ]; then
+    (set -x; tc qdisc del dev "$IFACE" root        2> /dev/null > /dev/null) || :
+    (set -x; tc qdisc del dev "$IFACE" ingress     2> /dev/null > /dev/null) || :
+    if [[ -e /sys/class/net/"$IFB" ]]; then
+        (set -x; tc qdisc del dev "$IFB"   root    2> /dev/null > /dev/null) || :
+        (set -x; tc qdisc del dev "$IFB"   ingress 2> /dev/null > /dev/null) || :
+        (set -x; ip link del dev "$IFB")
+    fi
+    exit 0
+fi
+
+if [[ -z "$DSPEED" ]] && [[ -z "$USPEED" ]]; then
+    usage
+    exit 1
+fi
+
+# Egress
+
+if [[ -n "$USPEED" ]]; then
+    (set -x; tc qdisc replace dev "$IFACE" root tbf rate "$USPEED"kbit burst 32kbit latency 10ms)
+fi
+
+# Ingress
+
+if [[ -n "$DSPEED" ]]; then
+    if [[ ! -e /sys/class/net/"$IFB" ]]; then
+        (set -x; ip link add "$IFB" type ifb)
+    fi
+    (set -x; ip link set "$IFB" up)
+    if [[ "$(tc qdisc show dev "$IFACE" ingress | wc -l)" -eq 0 ]]; then
+        (set -x; tc qdisc add dev "$IFACE" ingress)
+    fi
+    # Redirect all inbound traffic from $IFACE to $IFB
+    (set -x; tc filter del dev "$IFACE" ingress)
+    (set -x; tc filter add dev "$IFACE" parent ffff: protocol ip u32 match u32 0 0 action mirred egress redirect dev "$IFB")
+    # Apply egress limit on the $IFB, which becomes the ingcress limit for the $IFACE
+    (set -x; tc qdisc replace dev "$IFB" root tbf rate "$DSPEED"kbit burst 32kbit latency 10ms)
+fi
