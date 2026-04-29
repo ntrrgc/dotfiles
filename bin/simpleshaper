@@ -43,7 +43,6 @@ EOF
 DSPEED=""
 USPEED=""
 IFACE=""
-IFB="ifb0"
 MODE=""
 
 while getopts hvd:u:a:cs o; do
@@ -74,6 +73,8 @@ if [[ "$MODE" == "clear" ]] && ([[ -n "$USPEED" ]] || [[ -n "$DSPEED" ]]); then
     echo "The clear flag (-c) is mutually exclusive with speed limits (-u and -d)."
     exit 1
 fi
+
+IFB="ifb$IFACE"
 
 if [ "$MODE" == "status" ]; then
     tc -s qdisc ls dev "$IFACE"
